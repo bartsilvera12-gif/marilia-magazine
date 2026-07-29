@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F7F3E6; color: #1E1B16; font-family: 'Montserrat', sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #1E1B16; text-decoration: none; transition: color .35s ease; }
+  a:hover { color: #C8962A; }
+  button { font-family: inherit; }
+  ::selection { background: #D4AF37; color: #1E1B16; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+    [data-reveal] { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+<div style="position:relative;overflow-x:hidden;background:#F7F3E6">
+
+  <header style="position:sticky;top:0;z-index:60;background:#F7F3E6;border-bottom:1px solid rgba(30,27,22,.10)">
+    <div style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px);height:96px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <nav style="flex:1 1 0;display:flex;align-items:center;gap:clamp(10px,1.1vw,22px);font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:400;min-width:0;white-space:nowrap;overflow:hidden">
+        <a href="./Marilia Magazine.dc.html">Inicio</a>
+        <a href="./Catalogo.dc.html" style="color:#C8962A">Catálogo</a>
+        <a href="./Marilia Magazine.dc.html#categorias">Categorías</a>
+        <a href="./Marilia Magazine.dc.html#esencia">Nosotros</a>
+      </nav>
+
+      <a href="./Marilia Magazine.dc.html" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px">
+        <span style="font:400 clamp(26px,3.4vw,40px)/1 'Cormorant Garamond',serif;font-style:italic;letter-spacing:.02em">Marilia</span>
+        <span style="font-size:8.5px;letter-spacing:.52em;text-transform:uppercase;color:#8A7F6A;padding-left:.52em">Magazine</span>
+      </a>
+
+      <div style="flex:1 1 0;display:flex;align-items:center;justify-content:flex-end;gap:clamp(12px,1.6vw,26px);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;min-width:0;white-space:nowrap;overflow:hidden">
+        <button data-fav-open style="background:none;border:none;padding:0;cursor:pointer;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#1E1B16">Favoritos <span data-fav-count style="color:#C8962A">(0)</span></button>
+        <button data-cart-open style="background:none;border:none;padding:0;cursor:pointer;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#1E1B16">Bolsa <span data-cart-count style="color:#C8962A">(0)</span></button>
+      </div>
+    </div>
+  </header>
+
+  <section style="position:relative;padding:clamp(60px,8vw,120px) clamp(20px,5vw,72px) clamp(30px,4vw,60px);background:url('./uploads/catalogo2.png') center right/cover no-repeat">
+    <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(247,243,230,0) 55%,#F7F3E6 100%);pointer-events:none"></div>
+    <div style="position:relative;max-width:1560px;margin:0 auto">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+        <span style="font:300 13px/1 'Cormorant Garamond',serif;color:#C8962A">01</span>
+        <span style="width:34px;height:1px;background:#D4AF37;display:block"></span>
+        <span style="font:500 10px/1 'Montserrat',sans-serif;letter-spacing:.32em;text-transform:uppercase;color:#25251F">Catálogo completo</span>
+      </div>
+      <h1 style="margin:0 0 20px;font:400 clamp(46px,7vw,108px)/1.02 'Cormorant Garamond',serif;letter-spacing:-.018em;color:#25251F">El <em style="font-style:italic;color:#C46A4A">catálogo</em></h1>
+      <p style="margin:0;max-width:640px;font:400 14.5px/1.75 'Montserrat',sans-serif;color:#4A443A;text-wrap:pretty">Todas las piezas disponibles del atelier — filtrá por categoría, ordená por precio y explorá el trabajo temporada por temporada.</p>
+    </div>
+  </section>
+
+  <section id="coleccion-grid" style="padding:0 clamp(20px,5vw,72px) clamp(80px,10vw,160px)">
+    <div style="max-width:1560px;margin:0 auto">
+
+      <div class="mm-cf-bar" style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;padding-bottom:clamp(24px,3vw,40px);border-bottom:1px solid rgba(30,27,22,.14);margin-bottom:clamp(30px,3.4vw,50px)">
+        <div style="display:flex;flex-direction:column;gap:clamp(14px,1.8vw,22px);min-width:0">
+          <div class="mm-cf-gender" role="group" aria-label="Filtrar por género">
+            <button class="mm-cf-g" data-gender="todo" data-on>Todos</button>
+            <button class="mm-cf-g" data-gender="mujer">Mujer</button>
+            <button class="mm-cf-g" data-gender="hombre">Hombre</button>
+          </div>
+          <div class="mm-cf-filters" style="display:flex;flex-wrap:wrap;gap:clamp(14px,2.4vw,32px)">
+            <button class="mm-cf-btn" data-filter="todo" data-on>Todo</button>
+            <button class="mm-cf-btn" data-filter="vestidos">Vestidos</button>
+            <button class="mm-cf-btn" data-filter="conjuntos">Conjuntos</button>
+            <button class="mm-cf-btn" data-filter="blusas">Blusas</button>
+            <button class="mm-cf-btn" data-filter="camisas">Camisas</button>
+            <button class="mm-cf-btn" data-filter="pantalones">Pantalones</button>
+            <button class="mm-cf-btn" data-filter="faldas">Faldas</button>
+            <button class="mm-cf-btn" data-filter="abrigos">Abrigos</button>
+            <button class="mm-cf-btn" data-filter="accesorios">Accesorios</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#8A7F6A">
+          <span data-count>10 piezas</span>
+          <span style="color:#D4AF37">·</span>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <span>Ordenar</span>
+            <select data-sort style="background:none;border:0;font:500 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#25251F;cursor:pointer">
+              <option value="feat">Destacados</option>
+              <option value="asc">Precio ascendente</option>
+              <option value="desc">Precio descendente</option>
+              <option value="name">Nombre A–Z</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <style>
+        #coleccion-grid .mm-cf-btn { background:none; border:0; padding:0 0 10px; cursor:pointer; position:relative;
+          font:500 11px/1 'Montserrat',sans-serif; letter-spacing:.14em; color:#8A7F6A; transition:color .4s ease; text-transform:capitalize }
+        #coleccion-grid .mm-cf-btn::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1.5px;
+          background:#D4AF37; transform:scaleX(0); transform-origin:center;
+          transition:transform .55s cubic-bezier(.22,1,.36,1) }
+        #coleccion-grid .mm-cf-btn:hover { color:#25251F }
+        #coleccion-grid .mm-cf-btn[data-on] { color:#25251F }
+        #coleccion-grid .mm-cf-btn[data-on]::after { transform:scaleX(1) }
+        #coleccion-grid .mm-cf-btn[data-empty-cat] { opacity:.3; cursor:not-allowed }
+        #coleccion-grid .mm-cf-btn[data-empty-cat]:hover { color:#8A7F6A }
+
+        /* Gender is a second, independent axis — it reads as a segmented
+           control so it is not mistaken for one more category. */
+        #coleccion-grid .mm-cf-gender { display:inline-flex; gap:0; border:1px solid rgba(30,27,22,.16); border-radius:2px; overflow:hidden; align-self:flex-start }
+        #coleccion-grid .mm-cf-g { background:none; border:0; cursor:pointer; padding:9px clamp(14px,1.6vw,22px);
+          font:500 9.5px/1 'Montserrat',sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#8A7F6A;
+          transition:background .35s ease, color .35s ease }
+        #coleccion-grid .mm-cf-g + .mm-cf-g { border-left:1px solid rgba(30,27,22,.14) }
+        #coleccion-grid .mm-cf-g:hover { color:#25251F }
+        #coleccion-grid .mm-cf-g[data-on] { background:#25251F; color:#F7F3E6 }
+
+        #coleccion-grid .mm-cg { display:grid; grid-template-columns:repeat(4, 1fr); gap:clamp(24px,2.4vw,40px) clamp(16px,1.6vw,28px) }
+        #coleccion-grid .mm-cg-card { position:relative; opacity:1; transform:none;
+          transition:opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1) }
+        #coleccion-grid .mm-cg-card[data-pending] { opacity:0; transform:translateY(28px) }
+        #coleccion-grid .mm-cg-card[data-hidden] { display:none }
+
+        #coleccion-grid .mm-cg-frame { position:relative; overflow:hidden; aspect-ratio:3/4; background:#EFE9D8; border-radius:2px; cursor:pointer;
+          background-image:linear-gradient(135deg, #EFE9D8 0%, #E4DCC6 100%) }
+        #coleccion-grid .mm-cg-frame::before { content:attr(data-ph); position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+          font:300 12px/1 'Cormorant Garamond',serif; color:#A79C86; letter-spacing:.15em; text-align:center; padding:20px; z-index:0 }
+        #coleccion-grid .mm-cg-frame img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 35%; z-index:1;
+          transition:transform 1.1s cubic-bezier(.22,1,.36,1), filter .5s ease }
+        #coleccion-grid .mm-cg-frame img[data-failed] { display:none }
+        #coleccion-grid .mm-cg-card:hover .mm-cg-frame img { transform:scale(1.05); filter:saturate(1.05) }
+        #coleccion-grid .mm-cg-fav { position:absolute; top:12px; right:12px; z-index:3; width:34px; height:34px; border:0;
+          background:rgba(247,243,230,.95); color:#1E1B16; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;
+          border-radius:50%; box-shadow:0 6px 18px -8px rgba(30,27,22,.4);
+          opacity:0; transform:translateY(-6px);
+          transition:opacity .4s ease, transform .4s cubic-bezier(.22,1,.36,1), color .3s ease }
+        #coleccion-grid .mm-cg-card:hover .mm-cg-fav { opacity:1; transform:none }
+        #coleccion-grid .mm-cg-fav[data-on] { color:#C46A4A; opacity:1; transform:none }
+        #coleccion-grid .mm-cg-actions { position:absolute; left:50%; bottom:16px; z-index:3; transform:translate(-50%,14px); opacity:0;
+          display:flex; flex-direction:column; gap:8px; align-items:center;
+          transition:opacity .5s ease, transform .5s cubic-bezier(.22,1,.36,1) }
+        #coleccion-grid .mm-cg-card:hover .mm-cg-actions { opacity:1; transform:translate(-50%,0) }
+        #coleccion-grid .mm-cg-quick { background:rgba(247,243,230,.96); border:1px solid rgba(212,175,55,.55); color:#1E1B16;
+          padding:11px 22px; font:500 9.5px/1 'Montserrat',sans-serif; letter-spacing:.22em; text-transform:uppercase; cursor:pointer; white-space:nowrap; border-radius:2px }
+        #coleccion-grid .mm-cg-detail { background:rgba(30,27,22,.88); color:#F7F3E6; padding:10px 20px; font:500 9px/1 'Montserrat',sans-serif;
+          letter-spacing:.22em; text-transform:uppercase; cursor:pointer; white-space:nowrap; border-radius:2px; text-decoration:none;
+          border:1px solid rgba(212,175,55,.35); transition:background .3s ease }
+        #coleccion-grid .mm-cg-detail:hover { background:#C46A4A; color:#F7F3E6 }
+
+        #coleccion-grid .mm-cg-meta { padding-top:16px; display:flex; flex-direction:column; gap:6px }
+        #coleccion-grid .mm-cg-cat { font:600 8.5px/1 'Montserrat',sans-serif; letter-spacing:.28em; text-transform:uppercase; color:#8A7F6A }
+        #coleccion-grid .mm-cg-name { margin:0; font:400 clamp(17px,1.5vw,21px)/1.2 'Cormorant Garamond',serif; color:#25251F;
+          display:inline-block; cursor:pointer; transition:color .3s ease }
+        #coleccion-grid .mm-cg-name:hover { color:#C46A4A }
+        #coleccion-grid .mm-cg-sub { margin:0; font:300 12px/1.5 'Montserrat',sans-serif; color:#4A443A }
+        #coleccion-grid .mm-cg-priceline { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:6px }
+        #coleccion-grid .mm-cg-price { font:500 12.5px/1 'Montserrat',sans-serif; color:#25251F }
+        #coleccion-grid .mm-cg-add { background:#1E1B16; color:#F7F3E6; border:0; padding:10px 16px;
+          font:600 9px/1 'Montserrat',sans-serif; letter-spacing:.22em; text-transform:uppercase; cursor:pointer;
+          border-radius:2px; transition:background .35s ease, color .35s ease }
+        #coleccion-grid .mm-cg-add:hover { background:#C46A4A }
+        #coleccion-grid .mm-cg-add[data-added] { background:#7D8A5A }
+        #coleccion-grid .mm-cg-swatches { display:flex; gap:7px; margin-top:8px }
+        #coleccion-grid .mm-cg-sw { width:14px; height:14px; border-radius:50%; display:block; border:1px solid rgba(30,27,22,.14) }
+
+        #coleccion-grid .mm-cg-empty { grid-column:1/-1; text-align:center; padding:80px 20px; font:300 15px/1.8 'Cormorant Garamond',serif; color:#8A7F6A }
+
+        @media (max-width: 1100px) { #coleccion-grid .mm-cg { grid-template-columns:repeat(3, 1fr) } }
+        @media (max-width: 780px)  { #coleccion-grid .mm-cg { grid-template-columns:repeat(2, 1fr); gap:26px 14px }
+          #coleccion-grid .mm-cf-bar { gap:14px }
+          #coleccion-grid .mm-cf-filters { overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; -ms-overflow-style:none; width:100%; padding-bottom:4px }
+          #coleccion-grid .mm-cf-filters::-webkit-scrollbar { display:none }
+          #coleccion-grid .mm-cf-btn { white-space:nowrap }
+          #coleccion-grid .mm-cg-fav, #coleccion-grid .mm-cg-actions { opacity:1 !important; transform:translate(-50%,0) !important }
+          #coleccion-grid .mm-cg-fav { opacity:1 !important; transform:none !important }
+          #coleccion-grid .mm-cg-add { padding:9px 12px; font-size:8.5px }
+        }
+      </style>
+
+      <div class="mm-cg" data-cg>
+        <article class="mm-cg-card" data-cg-card data-id="p1" data-cat="mujer vestidos" data-name="Vestido Aurelia" data-price="1290000" data-sub="Vestido midi en lino lavado" data-img="./uploads/mujer.png" data-sizes="XS,S,M,L" data-colors="#C46A4A,#E4DCC6,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/mujer.png" alt="Vestido Aurelia" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Vestidos</div>
+            <h3 class="mm-cg-name">Vestido Aurelia</h3>
+            <p class="mm-cg-sub">Vestido midi en lino lavado</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.290.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#C46A4A"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p2" data-cat="mujer conjuntos" data-name="Conjunto Sienna" data-price="980000" data-sub="Camisa y pantalón en algodón peinado" data-img="./uploads/1.jpeg" data-sizes="S,M,L" data-colors="#8A7F6A,#E4DCC6">
+          <div class="mm-cg-frame">
+            <img src="./uploads/1.jpeg" alt="Conjunto Sienna" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Conjuntos</div>
+            <h3 class="mm-cg-name">Conjunto Sienna</h3>
+            <p class="mm-cg-sub">Camisa y pantalón en algodón peinado</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 980.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#8A7F6A"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p3" data-cat="mujer blusas" data-name="Blusa Loreta" data-price="540000" data-sub="Blusa de seda lavada, manga globo" data-img="./uploads/2.jpeg" data-sizes="XS,S,M,L" data-colors="#F7F3E6,#C46A4A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/2.jpeg" alt="Blusa Loreta" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Blusas</div>
+            <h3 class="mm-cg-name">Blusa Loreta</h3>
+            <p class="mm-cg-sub">Blusa de seda lavada, manga globo</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 540.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#F7F3E6"></span><span class="mm-cg-sw" style="background:#C46A4A"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p4" data-cat="mujer accesorios" data-name="Bolso Nieve" data-price="820000" data-sub="Bolso estructurado en cuero vegetal" data-img="./uploads/3.jpeg" data-sizes="Único" data-colors="#1E1B16,#8A7F6A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/3.jpeg" alt="Bolso Nieve" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Accesorios</div>
+            <h3 class="mm-cg-name">Bolso Nieve</h3>
+            <p class="mm-cg-sub">Bolso estructurado en cuero vegetal</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 820.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#1E1B16"></span><span class="mm-cg-sw" style="background:#8A7F6A"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p5" data-cat="mujer faldas" data-name="Falda Amaranta" data-price="690000" data-sub="Falda plisada midi en gasa" data-img="./uploads/explorar/falda.png" data-sizes="XS,S,M" data-colors="#C46A4A,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/explorar/falda.png" alt="Falda Amaranta" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Faldas</div>
+            <h3 class="mm-cg-name">Falda Amaranta</h3>
+            <p class="mm-cg-sub">Falda plisada midi en gasa</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 690.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#C46A4A"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p6" data-cat="mujer vestidos" data-name="Vestido Bruna" data-price="1150000" data-sub="Vestido largo en seda con cinturón" data-img="./uploads/explorar/vestido2.png" data-sizes="S,M,L" data-colors="#C46A4A,#E4DCC6,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/explorar/vestido2.png" alt="Vestido Bruna" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Vestidos</div>
+            <h3 class="mm-cg-name">Vestido Bruna</h3>
+            <p class="mm-cg-sub">Vestido largo en seda con cinturón</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.150.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#C46A4A"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p7" data-cat="mujer camisas" data-name="Blusa Cándida" data-price="620000" data-sub="Blusa de algodón con cuello alto" data-img="./uploads/explorar/camisa.png" data-sizes="XS,S,M,L" data-colors="#C46A4A,#F7F3E6,#8A7F6A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/explorar/camisa.png" alt="Blusa Cándida" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Camisas</div>
+            <h3 class="mm-cg-name">Blusa Cándida</h3>
+            <p class="mm-cg-sub">Blusa de algodón con cuello alto</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 620.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#C46A4A"></span><span class="mm-cg-sw" style="background:#F7F3E6"></span><span class="mm-cg-sw" style="background:#8A7F6A"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p8" data-cat="mujer abrigos" data-name="Abrigo Duna" data-price="1780000" data-sub="Abrigo de lana con corte recto" data-img="./uploads/explorar/abrigo.png" data-sizes="S,M,L,XL" data-colors="#C9B79A,#8A7F6A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/explorar/abrigo.png" alt="Abrigo Duna" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Abrigos</div>
+            <h3 class="mm-cg-name">Abrigo Duna</h3>
+            <p class="mm-cg-sub">Abrigo de lana con corte recto</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.780.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#C9B79A"></span><span class="mm-cg-sw" style="background:#8A7F6A"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p9" data-cat="mujer accesorios" data-name="Pañuelo Olivar" data-price="310000" data-sub="Pañuelo de seda estampado a mano" data-img="./uploads/explorar/panuelo.png" data-sizes="Único" data-colors="#7D8A5A,#C46A4A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/explorar/panuelo.png" alt="Pañuelo Olivar" loading="lazy" />
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Accesorios</div>
+            <h3 class="mm-cg-name">Pañuelo Olivar</h3>
+            <p class="mm-cg-sub">Pañuelo de seda estampado a mano</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 310.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#7D8A5A"></span><span class="mm-cg-sw" style="background:#C46A4A"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="p10" data-cat="mujer accesorios" data-name="Sandalia Rea" data-price="740000" data-sub="Sandalia de cuero con tira fina" data-img="./uploads/explorar/sandalia.png" data-sizes="36,37,38,39,40" data-colors="#B0764A,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/explorar/sandalia.png" alt="Sandalia Rea" loading="lazy" style="object-position:center 60%"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Accesorios</div>
+            <h3 class="mm-cg-name">Sandalia Rea</h3>
+            <p class="mm-cg-sub">Sandalia de cuero con tira fina</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 740.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#B0764A"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h1" data-cat="hombre camisas" data-name="Camisa Sauce" data-price="590000" data-sub="Camisa de lino en azul profundo" data-img="./uploads/destacado/camisa-azul.png" data-sizes="S,M,L,XL" data-colors="#1F4E6B,#E4DCC6,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/camisa-azul.png" alt="Camisa Sauce" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Camisas · Hombre</div>
+            <h3 class="mm-cg-name">Camisa Sauce</h3>
+            <p class="mm-cg-sub">Camisa de lino en azul profundo</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 590.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#1F4E6B"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h2" data-cat="hombre abrigos" data-name="Blazer Roble" data-price="1490000" data-sub="Blazer de lana en verde oscuro" data-img="./uploads/destacado/blazer-verde.png" data-sizes="S,M,L,XL" data-colors="#2C3B2E,#4A443A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/blazer-verde.png" alt="Blazer Roble" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Abrigos · Hombre</div>
+            <h3 class="mm-cg-name">Blazer Roble</h3>
+            <p class="mm-cg-sub">Blazer de lana en verde oscuro</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.490.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#2C3B2E"></span><span class="mm-cg-sw" style="background:#4A443A"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h3" data-cat="hombre pantalones" data-name="Pantalón Arenal" data-price="720000" data-sub="Pantalón de franela con pinzas" data-img="./uploads/destacado/pantalon-gris.png" data-sizes="S,M,L,XL" data-colors="#4A4A4E,#E4DCC6,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/pantalon-gris.png" alt="Pantalón Arenal" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Pantalones · Hombre</div>
+            <h3 class="mm-cg-name">Pantalón Arenal</h3>
+            <p class="mm-cg-sub">Pantalón de franela con pinzas</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 720.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#4A4A4E"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h4" data-cat="hombre conjuntos" data-name="Traje Sendero" data-price="2450000" data-sub="Traje de lana en gris claro" data-img="./uploads/destacado/traje-gris.png" data-sizes="S,M,L,XL" data-colors="#B9B4AC,#1F4E6B">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/traje-gris.png" alt="Traje Sendero" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Conjuntos · Hombre</div>
+            <h3 class="mm-cg-name">Traje Sendero</h3>
+            <p class="mm-cg-sub">Traje de lana en gris claro</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 2.450.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#B9B4AC"></span><span class="mm-cg-sw" style="background:#1F4E6B"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h5" data-cat="hombre abrigos" data-name="Abrigo Norte" data-price="1890000" data-sub="Abrigo largo de lana en burdeos" data-img="./uploads/destacado/abrigo-burdeos.png" data-sizes="S,M,L,XL" data-colors="#5C2A2E,#4A4A4E">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/abrigo-burdeos.png" alt="Abrigo Norte" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Abrigos · Hombre</div>
+            <h3 class="mm-cg-name">Abrigo Norte</h3>
+            <p class="mm-cg-sub">Abrigo largo de lana en burdeos</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.890.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#5C2A2E"></span><span class="mm-cg-sw" style="background:#4A4A4E"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h6" data-cat="hombre accesorios" data-name="Cinturón Cedro" data-price="340000" data-sub="Cinturón de cuero con hebilla dorada" data-img="./uploads/accesorios.png" data-sizes="85,90,95,100" data-colors="#4A3428,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/accesorios.png" alt="Cinturón Cedro" loading="lazy" style="object-position:35% 65%"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Accesorios · Hombre</div>
+            <h3 class="mm-cg-name">Cinturón Cedro</h3>
+            <p class="mm-cg-sub">Cinturón de cuero con hebilla dorada</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 340.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#4A3428"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h7" data-cat="hombre abrigos" data-name="Blazer Oliva" data-price="1390000" data-sub="Blazer de lino en verde oliva" data-img="./uploads/destacado/blazer-oliva.png" data-sizes="S,M,L,XL" data-colors="#5A6248,#E4DCC6">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/blazer-oliva.png" alt="Blazer Oliva" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Abrigos · Hombre</div>
+            <h3 class="mm-cg-name">Blazer Oliva</h3>
+            <p class="mm-cg-sub">Blazer de lino en verde oliva</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.390.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#5A6248"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h8" data-cat="hombre camisas" data-name="Polo Duna" data-price="480000" data-sub="Polo de punto de algodón peinado" data-img="./uploads/destacado/polo-marfil.png" data-sizes="S,M,L,XL" data-colors="#F0E9D8,#5A6248">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/polo-marfil.png" alt="Polo Duna" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Camisas · Hombre</div>
+            <h3 class="mm-cg-name">Polo Duna</h3>
+            <p class="mm-cg-sub">Polo de punto de algodón peinado</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 480.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#F0E9D8"></span><span class="mm-cg-sw" style="background:#5A6248"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h9" data-cat="hombre abrigos" data-name="Abrigo Camel" data-price="1980000" data-sub="Abrigo largo de lana en camel" data-img="./uploads/destacado/abrigo-camel.png" data-sizes="S,M,L,XL" data-colors="#C2A47C,#E4DCC6">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/abrigo-camel.png" alt="Abrigo Camel" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Abrigos · Hombre</div>
+            <h3 class="mm-cg-name">Abrigo Camel</h3>
+            <p class="mm-cg-sub">Abrigo largo de lana en camel</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.980.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#C2A47C"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="h10" data-cat="hombre conjuntos" data-name="Traje Olivar" data-price="2290000" data-sub="Traje de lino en marfil" data-img="./uploads/destacado/traje-lino.png" data-sizes="S,M,L,XL" data-colors="#EFE6D2,#C2A47C">
+          <div class="mm-cg-frame">
+            <img src="./uploads/destacado/traje-lino.png" alt="Traje Olivar" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Conjuntos · Hombre</div>
+            <h3 class="mm-cg-name">Traje Olivar</h3>
+            <p class="mm-cg-sub">Traje de lino en marfil</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 2.290.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#EFE6D2"></span><span class="mm-cg-sw" style="background:#C2A47C"></span></div>
+          </div>
+        </article>
+
+
+        <article class="mm-cg-card" data-cg-card data-id="t1" data-cat="mujer vestidos" data-name="Vestido Amaranta" data-price="1390000" data-sub="Vestido cruzado en crepé burdeos" data-img="./uploads/temporada/vestido-burdeos.png" data-sizes="XS,S,M,L" data-colors="#6B1F2E,#1E1B16,#E4DCC6">
+          <div class="mm-cg-frame">
+            <img src="./uploads/temporada/vestido-burdeos.png" alt="Vestido Amaranta" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Vestidos · Mujer</div>
+            <h3 class="mm-cg-name">Vestido Amaranta</h3>
+            <p class="mm-cg-sub">Vestido cruzado en crepé burdeos</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.390.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#6B1F2E"></span><span class="mm-cg-sw" style="background:#1E1B16"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="t2" data-cat="mujer camisas" data-name="Blusa Glicina" data-price="640000" data-sub="Blusa de seda en lila con lazada" data-img="./uploads/temporada/blusa-lila.png" data-sizes="S,M,L,XL" data-colors="#B49AC9,#F7F3E6,#8A7F6A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/temporada/blusa-lila.png" alt="Blusa Glicina" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Blusas · Mujer</div>
+            <h3 class="mm-cg-name">Blusa Glicina</h3>
+            <p class="mm-cg-sub">Blusa de seda en lila con lazada</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 640.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#B49AC9"></span><span class="mm-cg-sw" style="background:#F7F3E6"></span><span class="mm-cg-sw" style="background:#8A7F6A"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="t3" data-cat="mujer conjuntos" data-name="Conjunto Esmeralda" data-price="1290000" data-sub="Chaleco y pantalón en verde esmeralda" data-img="./uploads/temporada/conjunto-verde.png" data-sizes="S,M,L,XL" data-colors="#0F5C46,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/temporada/conjunto-verde.png" alt="Conjunto Esmeralda" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Conjuntos · Mujer</div>
+            <h3 class="mm-cg-name">Conjunto Esmeralda</h3>
+            <p class="mm-cg-sub">Chaleco y pantalón en verde esmeralda</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.290.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#0F5C46"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="t4" data-cat="mujer faldas" data-name="Falda Sol" data-price="750000" data-sub="Falda plisada midi en mostaza" data-img="./uploads/temporada/falda-mostaza.png" data-sizes="XS,S,M,L" data-colors="#C8901A,#E4DCC6,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/temporada/falda-mostaza.png" alt="Falda Sol" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Faldas · Mujer</div>
+            <h3 class="mm-cg-name">Falda Sol</h3>
+            <p class="mm-cg-sub">Falda plisada midi en mostaza</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 750.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#C8901A"></span><span class="mm-cg-sw" style="background:#E4DCC6"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="t5" data-cat="mujer conjuntos" data-name="Traje Marino" data-price="1980000" data-sub="Traje de crepé en azul marino" data-img="./uploads/temporada/traje-azul.png" data-sizes="S,M,L,XL" data-colors="#1B2A4A,#1E1B16">
+          <div class="mm-cg-frame">
+            <img src="./uploads/temporada/traje-azul.png" alt="Traje Marino" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Trajes · Mujer</div>
+            <h3 class="mm-cg-name">Traje Marino</h3>
+            <p class="mm-cg-sub">Traje de crepé en azul marino</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 1.980.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#1B2A4A"></span><span class="mm-cg-sw" style="background:#1E1B16"></span></div>
+          </div>
+        </article>
+
+        <article class="mm-cg-card" data-cg-card data-id="t6" data-cat="mujer abrigos" data-name="Abrigo Cacao" data-price="2190000" data-sub="Abrigo largo de lana en cacao" data-img="./uploads/temporada/abrigo-marron.png" data-sizes="S,M,L,XL" data-colors="#4A3428,#8A7F6A">
+          <div class="mm-cg-frame">
+            <img src="./uploads/temporada/abrigo-marron.png" alt="Abrigo Cacao" loading="lazy"/>
+            <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
+            <div class="mm-cg-actions">
+              <button class="mm-cg-quick" data-quick>Vista rápida</button>
+              <a class="mm-cg-detail" data-detail>Ver completa</a>
+            </div>
+          </div>
+          <div class="mm-cg-meta">
+            <div class="mm-cg-cat">Abrigos · Mujer</div>
+            <h3 class="mm-cg-name">Abrigo Cacao</h3>
+            <p class="mm-cg-sub">Abrigo largo de lana en cacao</p>
+            <div class="mm-cg-priceline">
+              <span class="mm-cg-price">Gs. 2.190.000</span>
+              <button class="mm-cg-add" data-add>Añadir</button>
+            </div>
+            <div class="mm-cg-swatches"><span class="mm-cg-sw" style="background:#4A3428"></span><span class="mm-cg-sw" style="background:#8A7F6A"></span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#7D8A5A;color:#F7F3E6;padding:clamp(64px,8vw,120px) clamp(20px,5vw,72px);text-align:center">
+    <div style="max-width:720px;margin:0 auto">
+      <div style="font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:rgba(247,243,230,.72);margin-bottom:20px">Atelier Marilia</div>
+      <h2 style="margin:0 0 16px;font:400 clamp(34px,4.6vw,64px)/1.1 'Cormorant Garamond',serif">Cada pieza, <em style="font-style:italic">a medida</em>.</h2>
+      <p style="margin:0 0 30px;font-size:13.5px;line-height:1.9;font-weight:300;color:rgba(247,243,230,.86);text-wrap:pretty">Reservá una cita en nuestro atelier de Villa Morra y probate la colección con acompañamiento personalizado.</p>
+      <a href="https://wa.me/595981000000" style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(247,243,230,.6);color:#F7F3E6;padding:14px 28px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;transition:all .45s ease" style-hover="background:#F7F3E6;color:#1E1B16">Reservar por WhatsApp</a>
+    </div>
+  </section>
+
+  <footer style="background:#1E1B16;color:#F7F3E6;padding:clamp(56px,7vw,100px) clamp(20px,5vw,72px) 36px">
+    <div style="max-width:1560px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(30px,4vw,72px);padding-bottom:clamp(40px,5vw,72px);border-bottom:1px solid rgba(247,243,230,.16)">
+        <div style="flex:1.4 1 280px;min-width:250px">
+          <div style="font:400 34px/1 'Cormorant Garamond',serif;font-style:italic;margin-bottom:8px">Marilia</div>
+          <div style="font-size:8.5px;letter-spacing:.52em;text-transform:uppercase;color:#A79C86;margin-bottom:26px">Magazine</div>
+          <p style="margin:0 0 22px;max-width:300px;font-size:12.5px;line-height:2;font-weight:300;color:rgba(247,243,230,.72);text-wrap:pretty">Atelier y showroom: Av. Mariscal López 2340, Villa Morra, Asunción. Lunes a sábados de 10 a 19 h.</p>
+        </div>
+        <div style="flex:1 1 160px;min-width:150px">
+          <div style="font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#D4AF37;margin-bottom:22px">Navegación</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:12px;line-height:1.6">
+            <a href="./Marilia Magazine.dc.html" style="color:rgba(247,243,230,.78)">Inicio</a>
+            <a href="./Catalogo.dc.html" style="color:rgba(247,243,230,.78)">Catálogo</a>
+            <a href="./Privacidad.dc.html" style="color:rgba(247,243,230,.78)">Política de privacidad</a>
+            <a href="./Marilia Magazine.dc.html#categorias" style="color:rgba(247,243,230,.78)">Categorías</a>
+            <a href="./Marilia Magazine.dc.html#esencia" style="color:rgba(247,243,230,.78)">Nosotros</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;padding-top:28px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(247,243,230,.5)">
+        <span>© 2026 Marilia Magazine · Asunción, Paraguay</span>
+        <span>Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noopener noreferrer" style="color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.45)">Neura</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/595981000000" style="position:fixed;right:clamp(16px,2.5vw,32px);bottom:clamp(16px,2.5vw,32px);z-index:50;background:#1E1B16;color:#F7F3E6;border:1px solid rgba(212,175,55,.5);padding:15px 22px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;box-shadow:0 20px 50px -30px rgba(30,27,22,.8);transition:background .45s ease,color .45s ease" style-hover="background:#D4AF37;color:#1E1B16">WhatsApp</a>
+
+  <!-- Cart drawer -->
+  <div data-cart-backdrop style="position:fixed;inset:0;background:rgba(20,15,10,.55);z-index:80;opacity:0;pointer-events:none;transition:opacity .4s ease"></div>
+  <aside data-cart-drawer style="position:fixed;top:0;right:0;height:100vh;width:min(440px,100vw);background:#F7F3E6;z-index:90;transform:translateX(100%);transition:transform .5s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;box-shadow:-30px 0 80px -30px rgba(30,27,22,.4)">
+    <header style="display:flex;justify-content:space-between;align-items:center;padding:26px 28px;border-bottom:1px solid rgba(30,27,22,.12)">
+      <div>
+        <div style="font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:#8A7F6A;margin-bottom:6px">Tu bolsa</div>
+        <div style="font:400 22px/1 'Cormorant Garamond',serif;color:#25251F"><span data-drawer-count>0</span> <span data-drawer-count-lbl>piezas</span></div>
+      </div>
+      <button data-cart-close aria-label="Cerrar bolsa" style="background:none;border:0;font:300 30px/1 'Cormorant Garamond',serif;color:#1E1B16;cursor:pointer;padding:0 4px">×</button>
+    </header>
+
+    <div data-cart-items style="flex:1;overflow-y:auto;padding:20px 28px"></div>
+
+    <div data-cart-empty style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px 28px">
+      <div>
+        <div style="font:300 22px/1.5 'Cormorant Garamond',serif;color:#8A7F6A;margin-bottom:14px">Tu bolsa está vacía.</div>
+        <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8A7F6A">Empezá por el catálogo</div>
+      </div>
+    </div>
+
+    <footer data-cart-footer style="padding:20px 28px 28px;border-top:1px solid rgba(30,27,22,.12);display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8A7F6A">
+        <span>Subtotal</span><span data-cart-sub>Gs. 0</span>
+      </div>
+      <div style="font-size:10.5px;color:#8A7F6A;margin-bottom:16px">Envío calculado al finalizar. Envío sin costo desde Gs. 750.000.</div>
+      <button data-checkout style="width:100%;background:#1E1B16;color:#F7F3E6;border:0;padding:16px;font:600 10px/1 'Montserrat',sans-serif;letter-spacing:.28em;text-transform:uppercase;cursor:pointer;transition:background .35s ease" style-hover="background:#C46A4A">Finalizar compra</button>
+      <a data-checkout-wa href="https://wa.me/595981000000" style="display:block;text-align:center;margin-top:14px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#8A7F6A">o comprar por WhatsApp</a>
+    </footer>
+  </aside>
+
+  <!-- Quick view modal -->
+  <div data-qv-backdrop style="position:fixed;inset:0;background:rgba(20,15,10,.6);z-index:100;opacity:0;pointer-events:none;transition:opacity .4s ease;display:flex;align-items:center;justify-content:center;padding:24px">
+    <div data-qv-modal style="background:#F7F3E6;max-width:920px;width:100%;max-height:88vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:0;transform:translateY(20px);transition:transform .45s cubic-bezier(.22,1,.36,1);border-radius:2px">
+      <div data-qv-imgbox style="background:#EFE9D8;aspect-ratio:3/4;position:relative;overflow:hidden">
+        <img data-qv-img style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%" />
+      </div>
+      <div style="padding:36px 32px;display:flex;flex-direction:column;gap:14px;position:relative">
+        <button data-qv-close aria-label="Cerrar" style="position:absolute;top:14px;right:16px;background:none;border:0;font:300 26px/1 'Cormorant Garamond',serif;color:#1E1B16;cursor:pointer">×</button>
+        <div data-qv-cat style="font:600 9px/1 'Montserrat',sans-serif;letter-spacing:.3em;text-transform:uppercase;color:#8A7F6A"></div>
+        <h3 data-qv-name style="margin:0;font:400 clamp(26px,3vw,38px)/1.1 'Cormorant Garamond',serif;color:#25251F"></h3>
+        <p data-qv-sub style="margin:0;font:300 13px/1.7 'Montserrat',sans-serif;color:#4A443A"></p>
+        <div data-qv-price style="font:500 15px/1 'Montserrat',sans-serif;color:#25251F;margin-top:6px"></div>
+
+        <div style="margin-top:8px">
+          <div style="font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#8A7F6A;margin-bottom:10px">Color</div>
+          <div data-qv-colors style="display:flex;gap:10px"></div>
+        </div>
+        <div>
+          <div style="font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#8A7F6A;margin-bottom:10px">Talle</div>
+          <div data-qv-sizes style="display:flex;flex-wrap:wrap;gap:8px"></div>
+        </div>
+
+        <button data-qv-add style="margin-top:auto;background:#1E1B16;color:#F7F3E6;border:0;padding:15px;font:600 10px/1 'Montserrat',sans-serif;letter-spacing:.28em;text-transform:uppercase;cursor:pointer">Añadir a la bolsa</button>
+      </div>
+    </div>
+  </div>
+
+  <div data-toast style="position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);background:#25251F;color:#F7F3E6;padding:14px 22px;font:500 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;border-radius:2px;z-index:110;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .35s cubic-bezier(.22,1,.36,1);border:1px solid rgba(212,175,55,.4)">Añadido a la bolsa</div>
+
+  <style>
+    [data-cart-backdrop][data-open], [data-qv-backdrop][data-open] { opacity:1 !important; pointer-events:auto !important }
+    [data-cart-drawer][data-open] { transform:translateX(0) !important }
+    [data-qv-backdrop][data-open] [data-qv-modal] { transform:translateY(0) !important }
+    [data-toast][data-show] { opacity:1 !important; transform:translate(-50%,0) !important }
+    .mm-line-item { display:grid; grid-template-columns:70px 1fr; gap:14px; padding:16px 0; border-bottom:1px solid rgba(30,27,22,.08) }
+    .mm-line-item img { width:70px; height:88px; object-fit:cover; background:#EFE9D8 }
+    .mm-line-info { display:flex; flex-direction:column; gap:4px }
+    .mm-line-name { font:400 15px/1.15 'Cormorant Garamond',serif; color:#25251F; margin:0 }
+    .mm-line-meta { font-size:10px; letter-spacing:.18em; color:#8A7F6A; text-transform:uppercase }
+    .mm-line-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:6px }
+    .mm-qty { display:inline-flex; align-items:center; border:1px solid rgba(30,27,22,.2) }
+    .mm-qty button { background:none; border:0; width:26px; height:26px; cursor:pointer; font-size:14px; color:#1E1B16 }
+    .mm-qty span { min-width:22px; text-align:center; font:500 11px/1 'Montserrat',sans-serif }
+    .mm-line-price { font:500 12px/1 'Montserrat',sans-serif; color:#25251F }
+    .mm-line-remove { background:none; border:0; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#8A7F6A; cursor:pointer; padding:0; margin-top:4px }
+    .mm-line-remove:hover { color:#C46A4A }
+    .mm-qv-size, .mm-qv-color { border:1px solid rgba(30,27,22,.2); background:none; padding:9px 14px; font:500 10.5px/1 'Montserrat',sans-serif; letter-spacing:.14em; cursor:pointer; color:#25251F }
+    .mm-qv-size[data-on], .mm-qv-color[data-on] { border-color:#25251F; background:#25251F; color:#F7F3E6 }
+    .mm-qv-color { padding:0; width:26px; height:26px; border-radius:50% }
+    .mm-qv-color[data-on] { outline:2px solid #D4AF37; outline-offset:2px }
+    @media (max-width:700px) { [data-qv-modal] { grid-template-columns:1fr !important; max-height:92vh } [data-qv-imgbox] { aspect-ratio:4/3 } }
+  </style>
+
+</div>
+
+<script>
+  function initMariliaCatalog(){
+    var LS_CART = 'mm_cart_v1';
+    var LS_FAV = 'mm_fav_v1';
+
+    var grid = document.querySelector('#coleccion-grid .mm-cg');
+    if(!grid){ return setTimeout(initMariliaCatalog, 80); }
+    var cards = Array.from(grid.querySelectorAll('.mm-cg-card'));
+    if(cards.length === 0){ return setTimeout(initMariliaCatalog, 80); }
+    var filterBtns = document.querySelectorAll('#coleccion-grid .mm-cf-btn');
+    var genderBtns = document.querySelectorAll('#coleccion-grid .mm-cf-g');
+    var countEl = document.querySelector('#coleccion-grid [data-count]');
+    var emptyEl = document.querySelector('#coleccion-grid [data-empty]');
+    var sortSel = document.querySelector('#coleccion-grid [data-sort]');
+    var cartCountEls = document.querySelectorAll('[data-cart-count]');
+    var favCountEls = document.querySelectorAll('[data-fav-count]');
+    var drawer = document.querySelector('[data-cart-drawer]');
+    var backdrop = document.querySelector('[data-cart-backdrop]');
+    var drawerItems = document.querySelector('[data-cart-items]');
+    var drawerEmpty = document.querySelector('[data-cart-empty]');
+    var drawerFooter = document.querySelector('[data-cart-footer]');
+    var drawerCount = document.querySelector('[data-drawer-count]');
+    var drawerCountLbl = document.querySelector('[data-drawer-count-lbl]');
+    var subEl = document.querySelector('[data-cart-sub]');
+    var waLink = document.querySelector('[data-checkout-wa]');
+    var toast = document.querySelector('[data-toast]');
+    var currentFilter = 'todo';
+    var currentGender = 'todo';
+
+    var qvBack = document.querySelector('[data-qv-backdrop]');
+    var qvImg = document.querySelector('[data-qv-img]');
+    var qvCat = document.querySelector('[data-qv-cat]');
+    var qvName = document.querySelector('[data-qv-name]');
+    var qvSub = document.querySelector('[data-qv-sub]');
+    var qvPrice = document.querySelector('[data-qv-price]');
+    var qvColors = document.querySelector('[data-qv-colors]');
+    var qvSizes = document.querySelector('[data-qv-sizes]');
+    var qvAdd = document.querySelector('[data-qv-add]');
+    var qvCurrent = null;
+
+    var products = {};
+    cards.forEach(function(c){
+      products[c.dataset.id] = {
+        id: c.dataset.id, name: c.dataset.name, price: +c.dataset.price,
+        sub: c.dataset.sub, img: c.dataset.img, cat: c.dataset.cat,
+        sizes: (c.dataset.sizes || '').split(',').filter(Boolean),
+        colors: (c.dataset.colors || '').split(',').filter(Boolean)
+      };
+    });
+
+    function load(k){ try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch(e){ return []; } }
+    function save(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+    var cart = load(LS_CART);
+    var favs = load(LS_FAV);
+
+    function fmtGs(n){ return 'Gs. ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+    function fmtCount(n){ return n === 1 ? '1 pieza' : n + ' piezas'; }
+
+    // Filters / sort
+    // data-cat is a space-separated tag list ("hombre camisas"), so one piece
+    // answers to a gender tag and a garment tag at the same time.
+    function hasTag(card, tag){
+      return tag === 'todo' || (card.dataset.cat || '').split(/\s+/).indexOf(tag) > -1;
+    }
+    // Gender and category are independent axes, combined with AND.
+    function applyFilter(){
+      var visible = 0;
+      cards.forEach(function(c){
+        var ok = hasTag(c, currentGender) && hasTag(c, currentFilter);
+        if(ok){ c.removeAttribute('data-hidden'); visible++; }
+        else c.setAttribute('data-hidden','');
+      });
+      // A category with nothing behind it under the active gender is a dead end
+      // (no women's trousers, no men's dresses) — dim it rather than let it
+      // open an empty grid.
+      filterBtns.forEach(function(b){
+        var k = b.dataset.filter;
+        if(k === 'todo') return;
+        var any = cards.some(function(c){ return hasTag(c, currentGender) && hasTag(c, k); });
+        b.toggleAttribute('data-empty-cat', !any);
+        b.disabled = !any;
+      });
+      countEl.textContent = fmtCount(visible);
+      if(emptyEl) emptyEl.hidden = visible > 0;
+    }
+    function sortBy(mode){
+      var arr = cards.slice();
+      arr.sort(function(a,b){
+        if(mode === 'asc')  return (+a.dataset.price) - (+b.dataset.price);
+        if(mode === 'desc') return (+b.dataset.price) - (+a.dataset.price);
+        if(mode === 'name') return a.dataset.name.localeCompare(b.dataset.name);
+        return 0;
+      });
+      arr.forEach(function(c){ grid.appendChild(c); });
+    }
+    filterBtns.forEach(function(b){
+      b.addEventListener('click', function(){
+        if(b.hasAttribute('data-empty-cat')) return;
+        filterBtns.forEach(function(x){ x.removeAttribute('data-on'); });
+        b.setAttribute('data-on','');
+        currentFilter = b.dataset.filter;
+        applyFilter();
+      });
+    });
+    genderBtns.forEach(function(b){
+      b.addEventListener('click', function(){
+        genderBtns.forEach(function(x){ x.removeAttribute('data-on'); });
+        b.setAttribute('data-on','');
+        currentGender = b.dataset.gender;
+        // Switching gender can strand the active category (e.g. "Vestidos"
+        // while on Hombre) — fall back to "Todo" so the grid is never empty.
+        var stillHas = cards.some(function(c){ return hasTag(c, currentGender) && hasTag(c, currentFilter); });
+        if(!stillHas){
+          currentFilter = 'todo';
+          filterBtns.forEach(function(x){ x.toggleAttribute('data-on', x.dataset.filter === 'todo'); });
+        }
+        applyFilter();
+      });
+    });
+    if(sortSel) sortSel.addEventListener('change', function(){ sortBy(sortSel.value); });
+
+    // Reveal (progressive: cards visible by default; if JS runs we do a subtle fade-in)
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!reduced && 'IntersectionObserver' in window){
+      cards.forEach(function(c){ c.setAttribute('data-pending',''); });
+      requestAnimationFrame(function(){
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if(!e.isIntersecting) return;
+            e.target.removeAttribute('data-pending');
+            io.unobserve(e.target);
+          });
+        }, { threshold: .05 });
+        cards.forEach(function(c){ io.observe(c); });
+      });
+    }
+
+    // Cart logic
+    function cartTotalUnits(){ return cart.reduce(function(a,i){ return a + i.qty; }, 0); }
+    function cartSubtotal(){ return cart.reduce(function(a,i){ return a + i.qty * i.price; }, 0); }
+
+    function renderCart(){
+      var units = cartTotalUnits();
+      cartCountEls.forEach(function(el){ el.textContent = '(' + units + ')'; });
+      drawerCount.textContent = units;
+      drawerCountLbl.textContent = units === 1 ? 'pieza' : 'piezas';
+
+      if(cart.length === 0){
+        drawerItems.innerHTML = '';
+        drawerItems.style.display = 'none';
+        drawerEmpty.style.display = 'flex';
+        drawerFooter.style.display = 'none';
+      } else {
+        drawerItems.style.display = 'block';
+        drawerEmpty.style.display = 'none';
+        drawerFooter.style.display = 'block';
+        drawerItems.innerHTML = cart.map(function(i){
+          var meta = [];
+          if(i.size) meta.push('Talle ' + i.size);
+          return '<div class="mm-line-item">' +
+            '<img src="'+ i.img +'" alt="'+ i.name +'" />' +
+            '<div class="mm-line-info">' +
+              '<h4 class="mm-line-name">'+ i.name +'</h4>' +
+              (meta.length ? '<div class="mm-line-meta">'+ meta.join(' · ') +'</div>' : '') +
+              '<div class="mm-line-bottom">' +
+                '<div class="mm-qty" data-line="'+ i.key +'">' +
+                  '<button data-dec aria-label="Restar">−</button>' +
+                  '<span>'+ i.qty +'</span>' +
+                  '<button data-inc aria-label="Sumar">+</button>' +
+                '</div>' +
+                '<div class="mm-line-price">'+ fmtGs(i.qty * i.price) +'</div>' +
+              '</div>' +
+              '<button class="mm-line-remove" data-remove="'+ i.key +'">Quitar</button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+      subEl.textContent = fmtGs(cartSubtotal());
+
+      var waMsg = 'Hola Marilia, quiero llevar:%0A' + cart.map(function(i){
+        return '• ' + i.name + (i.size ? ' (Talle ' + i.size + ')' : '') + ' x' + i.qty + ' — ' + fmtGs(i.qty * i.price);
+      }).join('%0A') + '%0A%0ATotal: ' + fmtGs(cartSubtotal());
+      waLink.href = 'https://wa.me/595981000000?text=' + waMsg;
+    }
+
+    function keyOf(id, size){ return id + '::' + (size || ''); }
+
+    function addToCart(prod, size){
+      var key = keyOf(prod.id, size);
+      var found = cart.find(function(i){ return i.key === key; });
+      if(found) found.qty += 1;
+      else cart.push({ key:key, id:prod.id, name:prod.name, price:prod.price, img:prod.img, size:size || '', qty:1 });
+      save(LS_CART, cart);
+      renderCart();
+      showToast(prod.name + ' añadido');
+    }
+
+    function removeFromCart(key){
+      cart = cart.filter(function(i){ return i.key !== key; });
+      save(LS_CART, cart); renderCart();
+    }
+    function changeQty(key, delta){
+      var it = cart.find(function(i){ return i.key === key; });
+      if(!it) return;
+      it.qty += delta;
+      if(it.qty <= 0) return removeFromCart(key);
+      save(LS_CART, cart); renderCart();
+    }
+
+    function openCart(){ drawer.setAttribute('data-open',''); backdrop.setAttribute('data-open',''); document.body.style.overflow='hidden'; }
+    function closeCart(){ drawer.removeAttribute('data-open'); backdrop.removeAttribute('data-open'); document.body.style.overflow=''; }
+    document.querySelectorAll('[data-cart-open]').forEach(function(b){ b.addEventListener('click', openCart); });
+    document.querySelector('[data-cart-close]').addEventListener('click', closeCart);
+    backdrop.addEventListener('click', closeCart);
+
+    drawerItems.addEventListener('click', function(ev){
+      var rem = ev.target.closest('[data-remove]');
+      if(rem){ return removeFromCart(rem.dataset.remove); }
+      var qtyRow = ev.target.closest('[data-line]');
+      if(!qtyRow) return;
+      if(ev.target.matches('[data-inc]')) changeQty(qtyRow.dataset.line, +1);
+      if(ev.target.matches('[data-dec]')) changeQty(qtyRow.dataset.line, -1);
+    });
+
+    // Favorites
+    function renderFavs(){
+      favCountEls.forEach(function(el){ el.textContent = '(' + favs.length + ')'; });
+      cards.forEach(function(c){
+        var btn = c.querySelector('[data-fav]');
+        if(favs.indexOf(c.dataset.id) > -1){ btn.setAttribute('data-on',''); btn.textContent = '♥'; }
+        else { btn.removeAttribute('data-on'); btn.textContent = '♡'; }
+      });
+    }
+    function toggleFav(id){
+      var idx = favs.indexOf(id);
+      if(idx > -1) favs.splice(idx,1); else favs.push(id);
+      save(LS_FAV, favs); renderFavs();
+    }
+
+    // Quick view
+    function openQv(id){
+      var p = products[id]; if(!p) return;
+      qvCurrent = { prod:p, size:p.sizes[0] || '', color:p.colors[0] || '' };
+      qvImg.src = p.img; qvImg.alt = p.name;
+      qvCat.textContent = p.cat;
+      qvName.textContent = p.name;
+      qvSub.textContent = p.sub;
+      qvPrice.textContent = fmtGs(p.price);
+      qvColors.innerHTML = p.colors.map(function(c,i){
+        return '<button class="mm-qv-color" data-color="'+ c +'" style="background:'+ c +'"'+ (i===0?' data-on':'') +' aria-label="Color '+ c +'"></button>';
+      }).join('');
+      qvSizes.innerHTML = p.sizes.map(function(s,i){
+        return '<button class="mm-qv-size" data-size="'+ s +'"'+ (i===0?' data-on':'') +'>'+ s +'</button>';
+      }).join('');
+      qvBack.setAttribute('data-open',''); document.body.style.overflow='hidden';
+    }
+    function closeQv(){ qvBack.removeAttribute('data-open'); document.body.style.overflow=''; qvCurrent = null; }
+    qvBack.addEventListener('click', function(ev){ if(ev.target === qvBack) closeQv(); });
+    document.querySelector('[data-qv-close]').addEventListener('click', closeQv);
+    qvSizes.addEventListener('click', function(ev){
+      var b = ev.target.closest('.mm-qv-size'); if(!b || !qvCurrent) return;
+      qvSizes.querySelectorAll('.mm-qv-size').forEach(function(x){ x.removeAttribute('data-on'); });
+      b.setAttribute('data-on',''); qvCurrent.size = b.dataset.size;
+    });
+    qvColors.addEventListener('click', function(ev){
+      var b = ev.target.closest('.mm-qv-color'); if(!b || !qvCurrent) return;
+      qvColors.querySelectorAll('.mm-qv-color').forEach(function(x){ x.removeAttribute('data-on'); });
+      b.setAttribute('data-on',''); qvCurrent.color = b.dataset.color;
+    });
+    qvAdd.addEventListener('click', function(){
+      if(!qvCurrent) return;
+      addToCart(qvCurrent.prod, qvCurrent.size);
+      closeQv(); openCart();
+    });
+
+    // Set detail links
+    cards.forEach(function(c){
+      var link = c.querySelector('[data-detail]');
+      if(link){ link.setAttribute('href', './Producto.dc.html?id=' + c.dataset.id); }
+    });
+
+    // Card interactions
+    grid.addEventListener('click', function(ev){
+      var card = ev.target.closest('.mm-cg-card'); if(!card) return;
+      var favBtn = ev.target.closest('[data-fav]');
+      if(favBtn){ ev.preventDefault(); toggleFav(card.dataset.id); return; }
+      var detail = ev.target.closest('[data-detail]');
+      if(detail){ return; /* let anchor navigate */ }
+      var quick = ev.target.closest('[data-quick]');
+      if(quick){ ev.preventDefault(); openQv(card.dataset.id); return; }
+      var add = ev.target.closest('[data-add]');
+      if(add){
+        ev.preventDefault();
+        var p = products[card.dataset.id];
+        addToCart(p, p.sizes[0] || '');
+        add.setAttribute('data-added',''); add.textContent = 'Añadido';
+        setTimeout(function(){ add.removeAttribute('data-added'); add.textContent = 'Añadir'; }, 1400);
+        return;
+      }
+      var name = ev.target.closest('.mm-cg-name');
+      if(name){ window.location.href = './Producto.dc.html?id=' + card.dataset.id; return; }
+      var frame = ev.target.closest('.mm-cg-frame');
+      if(frame){ window.location.href = './Producto.dc.html?id=' + card.dataset.id; }
+    });
+
+    // Toast
+    var toastT;
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.setAttribute('data-show','');
+      clearTimeout(toastT);
+      toastT = setTimeout(function(){ toast.removeAttribute('data-show'); }, 1800);
+    }
+
+    // Escape closes drawer / modal
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape'){ closeCart(); closeQv(); }
+    });
+
+    // Placeholders on frame + image error handling
+    cards.forEach(function(c){
+      var frame = c.querySelector('.mm-cg-frame');
+      var img = frame && frame.querySelector('img');
+      if(frame) frame.setAttribute('data-ph', c.dataset.name);
+      if(img){
+        img.addEventListener('error', function(){ img.setAttribute('data-failed',''); });
+        if(img.complete && img.naturalWidth === 0) img.setAttribute('data-failed','');
+      }
+    });
+
+    // Deep link desde las tarjetas de categoría del home:
+    // ./Catalogo.dc.html?genero=hombre  ·  ?cat=accesorios  ·  ?genero=mujer&cat=vestidos
+    (function(){
+      var q = new URLSearchParams(location.search);
+      var g = (q.get('genero') || '').trim().toLowerCase();
+      var f = (q.get('cat') || '').trim().toLowerCase();
+      var gBtn = g ? Array.from(genderBtns).find(function(b){ return b.dataset.gender === g; }) : null;
+      if(gBtn){
+        genderBtns.forEach(function(x){ x.removeAttribute('data-on'); });
+        gBtn.setAttribute('data-on','');
+        currentGender = g;
+      }
+      var fBtn = f ? Array.from(filterBtns).find(function(b){ return b.dataset.filter === f; }) : null;
+      // Sólo respetamos la categoría si el género activo tiene piezas ahí,
+      // para no aterrizar en una grilla vacía.
+      if(fBtn && cards.some(function(c){ return hasTag(c, currentGender) && hasTag(c, f); })){
+        filterBtns.forEach(function(x){ x.removeAttribute('data-on'); });
+        fBtn.setAttribute('data-on','');
+        currentFilter = f;
+      }
+      if(gBtn || fBtn){
+        var target = document.getElementById('coleccion-grid');
+        if(target) requestAnimationFrame(function(){
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+    })();
+
+    applyFilter();
+    renderCart();
+    renderFavs();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(initMariliaCatalog, 50); });
+  } else {
+    setTimeout(initMariliaCatalog, 50);
+  }
+</script>
+
+</x-dc>
+</body>
+</html>

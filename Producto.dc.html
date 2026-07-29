@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F7F3E6; color: #1E1B16; font-family: 'Montserrat', sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #1E1B16; text-decoration: none; transition: color .35s ease; }
+  a:hover { color: #C8962A; }
+  button { font-family: inherit; }
+  ::selection { background: #D4AF37; color: #1E1B16; }
+</style>
+</helmet>
+
+<div style="position:relative;overflow-x:hidden;background:#F7F3E6">
+
+  <header style="position:sticky;top:0;z-index:60;background:#F7F3E6;border-bottom:1px solid rgba(30,27,22,.10)">
+    <div style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px);height:96px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <nav style="flex:1 1 0;display:flex;align-items:center;gap:clamp(10px,1.1vw,22px);font-size:10px;letter-spacing:.13em;text-transform:uppercase">
+        <a href="./Marilia Magazine.dc.html">Inicio</a>
+        <a href="./Catalogo.dc.html">Catálogo</a>
+        <a href="./Marilia Magazine.dc.html#categorias">Categorías</a>
+      </nav>
+      <a href="./Marilia Magazine.dc.html" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px">
+        <span style="font:400 clamp(26px,3.4vw,40px)/1 'Cormorant Garamond',serif;font-style:italic">Marilia</span>
+        <span style="font-size:8.5px;letter-spacing:.52em;text-transform:uppercase;color:#8A7F6A;padding-left:.52em">Magazine</span>
+      </a>
+      <div style="flex:1 1 0;display:flex;align-items:center;justify-content:flex-end;gap:clamp(12px,1.6vw,26px);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase">
+        <a href="./Catalogo.dc.html">Favoritos <span data-fav-count style="color:#C8962A">(0)</span></a>
+        <a href="./Catalogo.dc.html">Bolsa <span data-cart-count style="color:#C8962A">(0)</span></a>
+      </div>
+    </div>
+  </header>
+
+  <nav aria-label="Breadcrumb" style="padding:22px clamp(20px,5vw,72px) 0;max-width:1560px;margin:0 auto;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8A7F6A">
+    <a href="./Marilia Magazine.dc.html" style="color:#8A7F6A">Inicio</a>
+    <span style="margin:0 10px;color:#D4AF37">›</span>
+    <a href="./Catalogo.dc.html" style="color:#8A7F6A">Catálogo</a>
+    <span style="margin:0 10px;color:#D4AF37">›</span>
+    <span data-crumb style="color:#25251F">—</span>
+  </nav>
+
+  <section style="padding:clamp(30px,4vw,60px) clamp(20px,5vw,72px) clamp(80px,10vw,140px)">
+    <div style="max-width:1560px;margin:0 auto">
+      <div class="mm-pd-grid" style="display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(28px,4vw,72px);align-items:start">
+
+        <style>
+          /* Cap the WIDTH, not the height. These are full-body portrait shots at
+             ~4:5; capping height instead turns the frame landscape and crops the
+             garment off at the knees. A narrower column keeps the whole look. */
+          .mm-pd-gallery { display:flex; flex-direction:column; gap:clamp(10px,1.1vw,16px);
+            max-width:min(100%,440px) }
+          .mm-pd-hero { position:relative; aspect-ratio:4/5;
+            background:linear-gradient(135deg,#EFE9D8,#E4DCC6); overflow:hidden; border-radius:2px }
+          .mm-pd-hero img { position:absolute; inset:0; width:100%; height:100%;
+            object-fit:cover; object-position:center center;
+            opacity:1; transition:opacity .45s cubic-bezier(.22,1,.36,1) }
+          .mm-pd-hero[data-swapping] img { opacity:0 }
+
+          .mm-pd-navrow { position:absolute; inset:0; display:flex; align-items:center;
+            justify-content:space-between; padding:0 10px; pointer-events:none; z-index:3 }
+          .mm-pd-nav { pointer-events:auto; width:40px; height:40px; border:0; border-radius:50%;
+            background:rgba(247,243,230,.92); color:#25251F; cursor:pointer;
+            font:400 20px/1 'Cormorant Garamond',serif; display:flex; align-items:center;
+            justify-content:center; box-shadow:0 6px 20px -10px rgba(30,27,22,.5);
+            opacity:0; transform:scale(.92);
+            transition:opacity .35s ease, transform .35s cubic-bezier(.22,1,.36,1), background .3s ease }
+          .mm-pd-hero:hover .mm-pd-nav, .mm-pd-nav:focus-visible { opacity:1; transform:none }
+          .mm-pd-nav:hover { background:#25251F; color:#F7F3E6 }
+          @media (hover: none) { .mm-pd-nav { opacity:1; transform:none } }
+
+          .mm-pd-thumbs { display:flex; gap:clamp(8px,.9vw,12px); flex-wrap:wrap }
+          .mm-pd-thumb { position:relative; width:clamp(62px,6vw,86px); aspect-ratio:3/4;
+            padding:0; border:1px solid rgba(30,27,22,.14); border-radius:2px; overflow:hidden;
+            background:#EFE9D8; cursor:pointer;
+            transition:border-color .35s ease, transform .35s cubic-bezier(.22,1,.36,1) }
+          .mm-pd-thumb img { position:absolute; inset:0; width:100%; height:100%;
+            object-fit:cover; object-position:center center }
+          .mm-pd-thumb:hover { transform:translateY(-2px) }
+          .mm-pd-thumb[data-on] { border-color:#D4AF37; border-width:2px }
+          .mm-pd-thumb:focus-visible { outline:2px solid #D4AF37; outline-offset:2px }
+          @media (prefers-reduced-motion: reduce) {
+            .mm-pd-hero img, .mm-pd-thumb, .mm-pd-nav { transition:none }
+          }
+        </style>
+
+        <div class="mm-pd-gallery">
+          <div class="mm-pd-hero" data-hero-box>
+            <img data-hero alt="" />
+            <div class="mm-pd-navrow">
+              <button class="mm-pd-nav" data-prod-prev aria-label="Producto anterior">‹</button>
+              <button class="mm-pd-nav" data-prod-next aria-label="Producto siguiente">›</button>
+            </div>
+          </div>
+          <div class="mm-pd-thumbs" data-thumbs role="group" aria-label="Fotos del producto"></div>
+        </div>
+
+        <div class="mm-pd-info" style="position:sticky;top:120px;display:flex;flex-direction:column;gap:16px;padding-top:8px">
+          <div data-cat-lbl style="font:600 10px/1 'Montserrat',sans-serif;letter-spacing:.3em;text-transform:uppercase;color:#8A7F6A">—</div>
+          <h1 data-name style="margin:0;font:400 clamp(38px,5vw,72px)/1.02 'Cormorant Garamond',serif;letter-spacing:-.015em;color:#25251F">Producto</h1>
+          <p data-sub style="margin:0;font:300 15px/1.75 'Montserrat',sans-serif;color:#4A443A">—</p>
+          <div data-price style="font:500 20px/1 'Montserrat',sans-serif;color:#25251F;margin-top:6px">Gs. —</div>
+
+          <div style="display:flex;align-items:center;gap:10px;font-size:10.5px;letter-spacing:.16em;color:#7D8A5A;text-transform:uppercase">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="#7D8A5A"/><circle cx="12" cy="12" r="10" stroke="#7D8A5A" stroke-width="1"/></svg>
+            <span>En stock · Envío en 48 h</span>
+          </div>
+
+          <div style="margin-top:14px">
+            <div style="font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:#8A7F6A;margin-bottom:12px">Color</div>
+            <div data-colors style="display:flex;gap:10px"></div>
+          </div>
+
+          <div style="margin-top:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div style="font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:#8A7F6A">Talle</div>
+              <button data-size-guide style="background:none;border:0;font:400 10px/1 'Montserrat',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8A7F6A;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Guía de talles</button>
+            </div>
+            <div data-sizes style="display:flex;flex-wrap:wrap;gap:8px"></div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:stretch;margin-top:22px">
+            <div class="mm-qty-big" style="display:inline-flex;align-items:center;border:1px solid rgba(30,27,22,.25)">
+              <button data-qty-dec aria-label="Restar" style="background:none;border:0;width:44px;height:52px;font-size:18px;cursor:pointer;color:#1E1B16">−</button>
+              <span data-qty style="min-width:34px;text-align:center;font:500 13px/1 'Montserrat',sans-serif">1</span>
+              <button data-qty-inc aria-label="Sumar" style="background:none;border:0;width:44px;height:52px;font-size:18px;cursor:pointer;color:#1E1B16">+</button>
+            </div>
+            <button data-add-cart style="flex:1;background:#1E1B16;color:#F7F3E6;border:0;padding:0 22px;font:600 11px/1 'Montserrat',sans-serif;letter-spacing:.28em;text-transform:uppercase;cursor:pointer;transition:background .35s ease">Añadir a la bolsa</button>
+            <button data-add-fav aria-label="Favorito" style="background:#F7F3E6;color:#1E1B16;border:1px solid rgba(30,27,22,.25);width:52px;font-size:18px;cursor:pointer;transition:color .3s ease">♡</button>
+          </div>
+
+          <a data-wa href="https://wa.me/595981000000" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;border:1px solid #7D8A5A;color:#7D8A5A;padding:14px;font:500 10.5px/1 'Montserrat',sans-serif;letter-spacing:.24em;text-transform:uppercase;transition:all .35s ease" onmouseover="this.style.background='#7D8A5A';this.style.color='#F7F3E6'" onmouseout="this.style.background='';this.style.color='#7D8A5A'">Consultar por WhatsApp</a>
+
+          <div style="margin-top:28px;border-top:1px solid rgba(30,27,22,.14);padding-top:22px">
+            <details open style="border-bottom:1px solid rgba(30,27,22,.1);padding:14px 0">
+              <summary style="cursor:pointer;font:500 11px/1 'Montserrat',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#25251F;list-style:none;display:flex;justify-content:space-between">Descripción <span style="color:#C8962A">+</span></summary>
+              <p data-desc style="margin:14px 0 4px;font:300 13.5px/1.85 'Montserrat',sans-serif;color:#4A443A"></p>
+            </details>
+            <details style="border-bottom:1px solid rgba(30,27,22,.1);padding:14px 0">
+              <summary style="cursor:pointer;font:500 11px/1 'Montserrat',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#25251F;list-style:none;display:flex;justify-content:space-between">Materiales y cuidado <span style="color:#C8962A">+</span></summary>
+              <ul style="margin:14px 0 4px;padding-left:18px;font:300 13px/1.85 'Montserrat',sans-serif;color:#4A443A">
+                <li>Fibras naturales seleccionadas</li>
+                <li>Lavar a mano con agua fría</li>
+                <li>Secar a la sombra, sin escurrir</li>
+                <li>Planchar del revés a temperatura media</li>
+              </ul>
+            </details>
+            <details style="border-bottom:1px solid rgba(30,27,22,.1);padding:14px 0">
+              <summary style="cursor:pointer;font:500 11px/1 'Montserrat',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#25251F;list-style:none;display:flex;justify-content:space-between">Envío y devoluciones <span style="color:#C8962A">+</span></summary>
+              <p style="margin:14px 0 4px;font:300 13px/1.85 'Montserrat',sans-serif;color:#4A443A">Envío sin costo dentro de Asunción para compras desde Gs. 750.000. Interior a coordinar. Cambios dentro de 30 días con etiqueta original.</p>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section data-related style="padding:0 clamp(20px,5vw,72px) clamp(80px,10vw,140px);border-top:1px solid rgba(30,27,22,.12)">
+    <div style="max-width:1560px;margin:0 auto;padding-top:clamp(48px,6vw,90px)">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:34px">
+        <span style="font:300 13px/1 'Cormorant Garamond',serif;color:#C8962A">02</span>
+        <span style="width:34px;height:1px;background:#D4AF37;display:block"></span>
+        <span style="font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:#25251F">Podría gustarte</span>
+      </div>
+      <div data-related-grid style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,2vw,32px)"></div>
+    </div>
+  </section>
+
+  <footer style="background:#1E1B16;color:#F7F3E6;padding:clamp(56px,7vw,100px) clamp(20px,5vw,72px) 36px">
+    <div style="max-width:1560px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(30px,4vw,72px);padding-bottom:clamp(40px,5vw,72px);border-bottom:1px solid rgba(247,243,230,.16)">
+        <div style="flex:1.4 1 280px;min-width:250px">
+          <div style="font:400 34px/1 'Cormorant Garamond',serif;font-style:italic;margin-bottom:8px">Marilia</div>
+          <div style="font-size:8.5px;letter-spacing:.52em;text-transform:uppercase;color:#A79C86;margin-bottom:26px">Magazine</div>
+          <p style="margin:0;max-width:300px;font-size:12.5px;line-height:2;font-weight:300;color:rgba(247,243,230,.72)">Av. Mariscal López 2340, Villa Morra, Asunción.</p>
+        </div>
+        <div style="flex:1 1 160px;min-width:150px">
+          <div style="font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#D4AF37;margin-bottom:22px">Navegación</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:12px">
+            <a href="./Marilia Magazine.dc.html" style="color:rgba(247,243,230,.78)">Inicio</a>
+            <a href="./Catalogo.dc.html" style="color:rgba(247,243,230,.78)">Catálogo</a>
+            <a href="./Privacidad.dc.html" style="color:rgba(247,243,230,.78)">Política de privacidad</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;padding-top:28px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(247,243,230,.5)">
+        <span>© 2026 Marilia Magazine · Asunción, Paraguay</span>
+        <span>Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noopener noreferrer" style="color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.45)">Neura</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div data-toast style="position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);background:#25251F;color:#F7F3E6;padding:14px 22px;font:500 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;border-radius:2px;z-index:110;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .35s cubic-bezier(.22,1,.36,1);border:1px solid rgba(212,175,55,.4)">Añadido</div>
+
+  <style>
+    @media (max-width:960px){
+      .mm-pd-grid { grid-template-columns:1fr !important }
+      .mm-pd-info { position:static !important }
+      [data-related-grid] { grid-template-columns:repeat(2,1fr) !important }
+    }
+    .mm-pd-size, .mm-pd-color { border:1px solid rgba(30,27,22,.22); background:none; padding:11px 16px; font:500 11px/1 'Montserrat',sans-serif; letter-spacing:.14em; cursor:pointer; color:#25251F; min-width:52px }
+    .mm-pd-size[data-on] { border-color:#25251F; background:#25251F; color:#F7F3E6 }
+    .mm-pd-color { padding:0; width:32px; height:32px; border-radius:50%; min-width:0 }
+    .mm-pd-color[data-on] { outline:2px solid #D4AF37; outline-offset:2px }
+    [data-add-cart]:hover { background:#C46A4A !important }
+    [data-add-fav][data-on] { color:#C46A4A !important; border-color:#C46A4A !important }
+    [data-toast][data-show] { opacity:1 !important; transform:translate(-50%,0) !important }
+    .mm-rel-card { display:block; text-decoration:none; color:inherit }
+    .mm-rel-frame { position:relative; aspect-ratio:3/4; background:linear-gradient(135deg,#EFE9D8,#E4DCC6); overflow:hidden; border-radius:2px }
+    .mm-rel-frame img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;transition:transform 1s cubic-bezier(.22,1,.36,1) }
+    .mm-rel-card:hover .mm-rel-frame img { transform:scale(1.04) }
+    .mm-rel-meta { padding-top:14px }
+    .mm-rel-cat { font:600 8.5px/1 'Montserrat',sans-serif; letter-spacing:.28em; text-transform:uppercase; color:#8A7F6A; margin-bottom:6px }
+    .mm-rel-name { font:400 17px/1.2 'Cormorant Garamond',serif; color:#25251F; margin:0 0 4px }
+    .mm-rel-price { font:500 12px/1 'Montserrat',sans-serif; color:#25251F; margin-top:4px }
+  </style>
+
+</div>
+</x-dc>
+
+<script>
+  var MM_PRODUCTS = {
+    p1: {id:'p1',cat:'vestidos',name:'Vestido Aurelia',price:1290000,sub:'Vestido midi en lino lavado',img:'./uploads/mujer.png',sizes:['XS','S','M','L'],colors:['#C46A4A','#E4DCC6','#1E1B16'],desc:'Vestido midi en lino lavado, corte fluido con cintura marcada. Confección artesanal en el atelier con tejido de origen paraguayo.'},
+    p2: {id:'p2',cat:'conjuntos',name:'Conjunto Sienna',price:980000,sub:'Camisa y pantalón en algodón peinado',img:'./uploads/1.jpeg',sizes:['S','M','L'],colors:['#8A7F6A','#E4DCC6'],desc:'Conjunto de dos piezas en algodón peinado. Camisa boxy y pantalón wide-leg con pinzas.'},
+    p3: {id:'p3',cat:'blusas',name:'Blusa Loreta',price:540000,sub:'Blusa de seda lavada, manga globo',img:'./uploads/2.jpeg',sizes:['XS','S','M','L'],colors:['#F7F3E6','#C46A4A'],desc:'Blusa de seda lavada con manga globo y cuello redondo. Caída ligera, ideal para media temporada.'},
+    p4: {id:'p4',cat:'accesorios',name:'Bolso Nieve',price:820000,sub:'Bolso estructurado en cuero vegetal',img:'./uploads/3.jpeg',sizes:['Único'],colors:['#1E1B16','#8A7F6A'],desc:'Bolso estructurado en cuero de curtido vegetal, con herrajes dorados y forro de algodón. Piezas numeradas.'},
+    p5: {id:'p5',cat:'faldas',name:'Falda Amaranta',price:690000,sub:'Falda plisada midi en gasa',img:'./uploads/explorar/falda.png',img2:'./uploads/explorar/falda2.png',sizes:['XS','S','M'],colors:['#C46A4A','#1E1B16'],desc:'Falda plisada midi en gasa con cintura elástica interior y forro. Movimiento fluido, silueta clásica.'},
+    p6: {id:'p6',cat:'vestidos',name:'Vestido Bruna',price:1150000,sub:'Vestido largo en seda con cinturón',img:'./uploads/explorar/vestido2.png',img2:'./uploads/explorar/vestido.png',sizes:['S','M','L'],colors:['#C46A4A','#E4DCC6','#1E1B16'],desc:'Vestido largo en seda con cinturón del mismo material. Cuello en V y espalda descubierta.'},
+    p7: {id:'p7',cat:'camisas',name:'Blusa Cándida',price:620000,sub:'Blusa de algodón con cuello alto',img:'./uploads/explorar/camisa.png',img2:'./uploads/explorar/camisa2.png',sizes:['XS','S','M','L'],colors:['#C46A4A','#F7F3E6','#8A7F6A'],desc:'Blusa de algodón egipcio con cuello alto y detalle de pinzas en el pecho.'},
+    p8: {id:'p8',cat:'abrigos',name:'Abrigo Duna',price:1780000,sub:'Abrigo de lana con corte recto',img:'./uploads/explorar/abrigo.png',img2:'./uploads/explorar/abrigo2.png',sizes:['S','M','L','XL'],colors:['#C9B79A','#8A7F6A'],desc:'Abrigo de lana peinada con corte recto, botonadura simple oculta y bolsillos de vivo.'},
+    p9: {id:'p9',cat:'accesorios',name:'Pañuelo Olivar',price:310000,sub:'Pañuelo de seda estampado a mano',img:'./uploads/explorar/panuelo.png',img2:'./uploads/explorar/panuelo2.png',sizes:['Único'],colors:['#7D8A5A','#C46A4A'],desc:'Pañuelo cuadrado de seda estampado a mano en Asunción. Bordes hechos a mano.'},
+    p10: {id:'p10',cat:'accesorios',name:'Sandalia Rea',price:740000,sub:'Sandalia de cuero con tira fina',img:'./uploads/explorar/sandalia.png',img2:'./uploads/explorar/sandalia2.png',sizes:['36','37','38','39','40'],colors:['#B0764A','#1E1B16'],desc:'Sandalia de cuero con tira fina cruzada y suela artesanal. Numeración europea.'},
+    h1: {id:'h1',cat:'camisas',name:'Camisa Sauce',price:590000,sub:'Camisa de lino en azul profundo',img:'./uploads/destacado/camisa-azul.png',img2:'./uploads/destacado/camisa-azul2.png',sizes:['S','M','L','XL'],colors:['#1F4E6B','#E4DCC6','#1E1B16'],desc:'Camisa de lino lavado en azul profundo, cuello suave y caída relajada. Tejido europeo, confección en el atelier.'},
+    h2: {id:'h2',cat:'abrigos',name:'Blazer Roble',price:1490000,sub:'Blazer de lana en verde oscuro',img:'./uploads/destacado/blazer-verde.png',img2:'./uploads/destacado/blazer-verde2.png',sizes:['S','M','L','XL'],colors:['#2C3B2E','#4A443A'],desc:'Blazer de lana en verde oscuro, dos botones y bolsillos de parche. Estructura ligera, sin hombrera.'},
+    h3: {id:'h3',cat:'pantalones',name:'Pantalón Arenal',price:720000,sub:'Pantalón de franela con pinzas',img:'./uploads/destacado/pantalon-gris.png',img2:'./uploads/destacado/pantalon-gris2.png',sizes:['S','M','L','XL'],colors:['#4A4A4E','#E4DCC6','#1E1B16'],desc:'Pantalón de franela de lana con doble pinza y caída recta. Cintura media, dobladillo sin vuelta.'},
+    h4: {id:'h4',cat:'conjuntos',name:'Traje Sendero',price:2450000,sub:'Traje de lana en gris claro',img:'./uploads/destacado/traje-gris.png',img2:'./uploads/destacado/traje-gris2.png',sizes:['S','M','L','XL'],colors:['#B9B4AC','#1F4E6B'],desc:'Traje de lana en gris claro: blazer de dos botones y pantalón con pinzas. Se vende como conjunto.'},
+    h5: {id:'h5',cat:'abrigos',name:'Abrigo Norte',price:1890000,sub:'Abrigo largo de lana en burdeos',img:'./uploads/destacado/abrigo-burdeos.png',img2:'./uploads/destacado/abrigo-burdeos2.png',sizes:['S','M','L','XL'],colors:['#5C2A2E','#4A4A4E'],desc:'Abrigo largo de lana en burdeos, solapa de muesca y botonadura simple. Forro de viscosa.'},
+    h6: {id:'h6',cat:'accesorios',name:'Cinturón Cedro',price:340000,sub:'Cinturón de cuero con hebilla dorada',img:'./uploads/accesorios.png',sizes:['85','90','95','100'],colors:['#4A3428','#1E1B16'],desc:'Cinturón de cuero de curtido vegetal con hebilla de latón macizo. Costura a mano en los extremos.'},
+    h7: {id:'h7',cat:'abrigos',name:'Blazer Oliva',price:1390000,sub:'Blazer de lino en verde oliva',img:'./uploads/destacado/blazer-oliva.png',sizes:['S','M','L','XL'],colors:['#5A6248','#E4DCC6'],desc:'Blazer de lino en verde oliva, corte suave y sin forro. Pensado para los meses cálidos.'},
+    h8: {id:'h8',cat:'camisas',name:'Polo Duna',price:480000,sub:'Polo de punto de algodón peinado',img:'./uploads/destacado/polo-marfil.png',sizes:['S','M','L','XL'],colors:['#F0E9D8','#5A6248'],desc:'Polo de punto en algodón peinado, cuello abierto y remate acanalado. Tejido en Paraguay.'},
+    h9: {id:'h9',cat:'abrigos',name:'Abrigo Camel',price:1980000,sub:'Abrigo largo de lana en camel',img:'./uploads/destacado/abrigo-camel.png',sizes:['S','M','L','XL'],colors:['#C2A47C','#E4DCC6'],desc:'Abrigo largo de lana en camel, solapa ancha y caída limpia. Pieza central de la temporada.'},
+    h10: {id:'h10',cat:'conjuntos',name:'Traje Olivar',price:2290000,sub:'Traje de lino en marfil',img:'./uploads/destacado/traje-lino.png',sizes:['S','M','L','XL'],colors:['#EFE6D2','#C2A47C'],desc:'Traje de lino en marfil: blazer sin forro y pantalón con pinzas. Se vende como conjunto.'},
+    t1: {id:'t1',cat:'vestidos',name:'Vestido Amaranta',price:1390000,sub:'Vestido cruzado en crepé burdeos',img:'./uploads/temporada/vestido-burdeos.png',img2:'./uploads/temporada/vestido-burdeos2.png',sizes:['XS','S','M','L'],colors:['#6B1F2E','#1E1B16','#E4DCC6'],desc:'Vestido midi cruzado en crepé de viscosa, manga tres cuartos y lazada al talle. Vuelo asimétrico en el bajo.'},
+    t2: {id:'t2',cat:'camisas',name:'Blusa Glicina',price:640000,sub:'Blusa de seda en lila con lazada',img:'./uploads/temporada/blusa-lila.png',img2:'./uploads/temporada/blusa-lila2.png',sizes:['S','M','L','XL'],colors:['#B49AC9','#F7F3E6','#8A7F6A'],desc:'Blusa de seda lavada en lila, cuello con lazada y manga abullonada. Caída fluida sobre el cuerpo.'},
+    t3: {id:'t3',cat:'conjuntos',name:'Conjunto Esmeralda',price:1290000,sub:'Chaleco y pantalón en verde esmeralda',img:'./uploads/temporada/conjunto-verde.png',img2:'./uploads/temporada/conjunto-verde2.png',sizes:['S','M','L','XL'],colors:['#0F5C46','#1E1B16'],desc:'Chaleco entallado y pantalón de pierna ancha en crepé verde esmeralda. Se venden como conjunto.'},
+    t4: {id:'t4',cat:'faldas',name:'Falda Sol',price:750000,sub:'Falda plisada midi en mostaza',img:'./uploads/temporada/falda-mostaza.png',img2:'./uploads/temporada/falda-mostaza2.png',sizes:['XS','S','M','L'],colors:['#C8901A','#E4DCC6','#1E1B16'],desc:'Falda plisada midi en gasa de poliéster reciclado, cintura alta y forro interior. Plisado permanente.'},
+    t5: {id:'t5',cat:'conjuntos',name:'Traje Marino',price:1980000,sub:'Traje de crepé en azul marino',img:'./uploads/temporada/traje-azul.png',img2:'./uploads/temporada/traje-azul2.png',sizes:['S','M','L','XL'],colors:['#1B2A4A','#1E1B16'],desc:'Blazer de un botón y pantalón recto en crepé azul marino. Hombro natural, forro de viscosa.'},
+    t6: {id:'t6',cat:'abrigos',name:'Abrigo Cacao',price:2190000,sub:'Abrigo largo de lana en cacao',img:'./uploads/temporada/abrigo-marron.png',img2:'./uploads/temporada/abrigo-marron2.png',sizes:['S','M','L','XL'],colors:['#4A3428','#8A7F6A'],desc:'Abrigo largo de lana en cacao, solapa de muesca y cinturón suelto. Corte recto hasta el tobillo.'}
+  };
+
+  function initProducto(){
+    var params = new URLSearchParams(location.search);
+    var id = params.get('id') || 'p1';
+    var p = MM_PRODUCTS[id];
+    if(!p){ document.querySelector('[data-name]').textContent = 'Producto no encontrado'; return; }
+
+    var $ = function(sel){ return document.querySelector(sel); };
+    if(!$('[data-name]')){ return setTimeout(initProducto, 80); }
+
+    function fmtGs(n){ return 'Gs. ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+
+    document.title = p.name + ' — Marilia Magazine';
+    $('[data-crumb]').textContent = p.name;
+    $('[data-cat-lbl]').textContent = p.cat;
+    $('[data-name]').textContent = p.name;
+    $('[data-sub]').textContent = p.sub;
+    $('[data-price]').textContent = fmtGs(p.price);
+    $('[data-desc]').textContent = p.desc;
+    // ── Gallery: one hero + clickable thumbnails ──────────────────────────
+    // Only real photographs make a thumbnail. A piece with a single shot gets
+    // no thumbnail row at all rather than the same image repeated.
+    var shots = [p.img, p.img2, p.img3].filter(Boolean);
+    var hero = $('[data-hero]');
+    var heroBox = $('[data-hero-box]');
+    var thumbs = $('[data-thumbs]');
+
+    // The photographs are not all the same shape (they run from 0.64 to 0.80),
+    // so a fixed frame ratio crops heads off the tallest ones. Take the ratio
+    // from the image itself: the whole garment is always in frame.
+    function fitBox(img){
+      if(img.naturalWidth && img.naturalHeight){
+        heroBox.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+      }
+    }
+
+    // Single source of truth for which shot is on screen, so the arrows pick up
+    // wherever a thumbnail click left off instead of counting from zero.
+    var shown = 0;
+
+    function showShot(i){
+      if(!shots[i] || hero.getAttribute('src') === shots[i]) return;
+      shown = i;
+      // Fade through, so swapping does not flash the previous frame.
+      heroBox.setAttribute('data-swapping', '');
+      var img = new Image();
+      var commit = function(){
+        hero.src = shots[i];
+        hero.alt = p.name + (i ? ' — toma ' + (i + 1) : '');
+        fitBox(img);
+        heroBox.removeAttribute('data-swapping');
+        thumbs.querySelectorAll('[data-shot]').forEach(function(b){
+          b.toggleAttribute('data-on', +b.dataset.shot === i);
+          b.setAttribute('aria-pressed', +b.dataset.shot === i ? 'true' : 'false');
+        });
+      };
+      img.onload = commit; img.onerror = commit;
+      img.src = shots[i];
+    }
+
+    hero.src = shots[0]; hero.alt = p.name;
+    if(hero.complete) fitBox(hero); else hero.addEventListener('load', function(){ fitBox(hero); }, {once:true});
+    thumbs.innerHTML = shots.length > 1 ? shots.map(function(src,i){
+      return '<button class="mm-pd-thumb" data-shot="' + i + '"' + (i === 0 ? ' data-on' : '') +
+             ' aria-pressed="' + (i === 0) + '" aria-label="Ver foto ' + (i + 1) + '">' +
+             '<img src="' + src + '" alt="" loading="lazy"/></button>';
+    }).join('') : '';
+    thumbs.addEventListener('click', function(ev){
+      var b = ev.target.closest('[data-shot]');
+      if(b) showShot(+b.dataset.shot);
+    });
+
+    // Arrows cycle the product's own photographs. With a single shot there is
+    // nothing to cycle, so they are removed rather than left as dead controls.
+    var prevBtn = $('[data-prod-prev]'), nextBtn = $('[data-prod-next]');
+    var navRow = document.querySelector('.mm-pd-navrow');
+    var cycle = function(delta){
+      shown = (shown + delta + shots.length) % shots.length;
+      showShot(shown);
+    };
+    if(shots.length > 1){
+      if(navRow) navRow.style.display = '';
+      if(prevBtn){ prevBtn.title = 'Foto anterior'; prevBtn.setAttribute('aria-label','Foto anterior');
+        prevBtn.addEventListener('click', function(){ cycle(-1); }); }
+      if(nextBtn){ nextBtn.title = 'Foto siguiente'; nextBtn.setAttribute('aria-label','Foto siguiente');
+        nextBtn.addEventListener('click', function(){ cycle(1); }); }
+    } else if(navRow){
+      navRow.style.display = 'none';
+    }
+
+    var currentColor = p.colors[0], currentSize = p.sizes[0], currentQty = 1;
+
+    var colorsWrap = $('[data-colors]');
+    colorsWrap.innerHTML = p.colors.map(function(c,i){
+      return '<button class="mm-pd-color" data-color="'+c+'" style="background:'+c+'" aria-label="Color '+c+'"'+(i===0?' data-on':'')+'></button>';
+    }).join('');
+    colorsWrap.addEventListener('click', function(ev){
+      var b = ev.target.closest('.mm-pd-color'); if(!b) return;
+      colorsWrap.querySelectorAll('.mm-pd-color').forEach(function(x){ x.removeAttribute('data-on'); });
+      b.setAttribute('data-on',''); currentColor = b.dataset.color;
+    });
+
+    var sizesWrap = $('[data-sizes]');
+    sizesWrap.innerHTML = p.sizes.map(function(s,i){
+      return '<button class="mm-pd-size" data-size="'+s+'"'+(i===0?' data-on':'')+'>'+s+'</button>';
+    }).join('');
+    sizesWrap.addEventListener('click', function(ev){
+      var b = ev.target.closest('.mm-pd-size'); if(!b) return;
+      sizesWrap.querySelectorAll('.mm-pd-size').forEach(function(x){ x.removeAttribute('data-on'); });
+      b.setAttribute('data-on',''); currentSize = b.dataset.size;
+    });
+
+    var qtyEl = $('[data-qty]');
+    $('[data-qty-inc]').addEventListener('click', function(){ currentQty++; qtyEl.textContent = currentQty; });
+    $('[data-qty-dec]').addEventListener('click', function(){ if(currentQty>1){ currentQty--; qtyEl.textContent = currentQty; } });
+
+    // Size guide (simple alert)
+    $('[data-size-guide]').addEventListener('click', function(){
+      alert('Guía de talles Marilia\\n\\nXS: 34-36 · S: 38-40 · M: 42-44 · L: 46-48 · XL: 50-52\\n\\nSi tenés dudas, escribinos por WhatsApp.');
+    });
+
+    // Cart persistence (shared with Catalogo)
+    var LS_CART = 'mm_cart_v1';
+    var LS_FAV = 'mm_fav_v1';
+    function load(k){ try { return JSON.parse(localStorage.getItem(k)||'[]'); } catch(e){ return []; } }
+    function save(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+    var cart = load(LS_CART), favs = load(LS_FAV);
+
+    function refreshBadges(){
+      var units = cart.reduce(function(a,i){return a+i.qty;},0);
+      document.querySelectorAll('[data-cart-count]').forEach(function(el){ el.textContent = '('+units+')'; });
+      document.querySelectorAll('[data-fav-count]').forEach(function(el){ el.textContent = '('+favs.length+')'; });
+      var favBtn = $('[data-add-fav]');
+      if(favs.indexOf(id) > -1){ favBtn.setAttribute('data-on',''); favBtn.textContent = '♥'; }
+    }
+    refreshBadges();
+
+    var toast = $('[data-toast]'), toastT;
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.setAttribute('data-show','');
+      clearTimeout(toastT);
+      toastT = setTimeout(function(){ toast.removeAttribute('data-show'); }, 1800);
+    }
+
+    $('[data-add-cart]').addEventListener('click', function(){
+      var key = id + '::' + (currentSize || '');
+      var found = cart.find(function(i){ return i.key === key; });
+      if(found) found.qty += currentQty;
+      else cart.push({key:key,id:id,name:p.name,price:p.price,img:p.img,size:currentSize||'',qty:currentQty});
+      save(LS_CART, cart);
+      refreshBadges();
+      showToast('Añadido — ' + currentQty + ' × ' + p.name);
+    });
+
+    $('[data-add-fav]').addEventListener('click', function(){
+      var idx = favs.indexOf(id);
+      if(idx > -1){ favs.splice(idx,1); this.removeAttribute('data-on'); this.textContent='♡'; }
+      else { favs.push(id); this.setAttribute('data-on',''); this.textContent='♥'; }
+      save(LS_FAV, favs);
+      refreshBadges();
+    });
+
+    var waMsg = 'Hola Marilia, quiero consultar por ' + p.name + ' (' + fmtGs(p.price) + ')';
+    $('[data-wa]').href = 'https://wa.me/595981000000?text=' + encodeURIComponent(waMsg);
+
+    // Related products
+    var related = Object.values(MM_PRODUCTS).filter(function(r){ return r.id !== id && r.cat === p.cat; });
+    if(related.length < 4){
+      var others = Object.values(MM_PRODUCTS).filter(function(r){ return r.id !== id && r.cat !== p.cat; });
+      related = related.concat(others).slice(0, 4);
+    } else {
+      related = related.slice(0, 4);
+    }
+    var grid = $('[data-related-grid]');
+    grid.innerHTML = related.map(function(r){
+      return '<a class="mm-rel-card" href="./Producto.dc.html?id='+r.id+'">'+
+        '<div class="mm-rel-frame"><img src="'+r.img+'" alt="'+r.name+'" loading="lazy"/></div>'+
+        '<div class="mm-rel-meta"><div class="mm-rel-cat">'+r.cat+'</div>'+
+        '<h3 class="mm-rel-name">'+r.name+'</h3>'+
+        '<div class="mm-rel-price">'+fmtGs(r.price)+'</div></div></a>';
+    }).join('');
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(initProducto, 50); });
+  } else {
+    setTimeout(initProducto, 50);
+  }
+</script>
+
+</body>
+</html>
