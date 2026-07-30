@@ -75,10 +75,6 @@ la tarjeta y como segunda miniatura en la ficha.
 - `Privacidad.dc.html` es un modelo de referencia y debería revisarlo un
   profesional antes de publicarse.
 
----
-
-Desarrollado por [Neura](https://neura.com.py)
-
 ## Peso de imágenes
 
 Las fotos se sirven en **WebP** (`q82`, lado largo a 1000px): 109 MB de PNG
@@ -96,3 +92,7 @@ Además: `<image-slot>` marca sus imágenes como `loading="lazy"`, y la segunda
 toma de cada tarjeta (la del hover) guarda su URL en `data-src2` y no se
 descarga hasta el primer hover — si no, al estar dentro del viewport con
 `opacity:0` se bajaría igual y duplicaría el peso que paga el visitante.
+
+---
+
+Desarrollado por [Neura](https://neura.com.py)
