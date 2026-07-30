@@ -526,9 +526,16 @@
 
     cats.forEach(function (c) {
       var btn = template.cloneNode(true);
-      btn.textContent = c.nombre;
+      var display = c.nombre;
+      if (LANG === "pt") {
+        // Traducir "Mujer Vestidos" → "Mulher Vestidos", "Hombre Camisas" → "Homem Camisas", etc.
+        display = display.split(/\s+/).map(function (w) {
+          return DICT_ES_PT[w] || w;
+        }).join(" ");
+      }
+      btn.textContent = display;
       btn.setAttribute("data-cat", c.nombre.toLowerCase());
-      btn.classList.remove("active", "is-active"); // reset selection
+      btn.classList.remove("active", "is-active");
       container.appendChild(btn);
     });
   }
