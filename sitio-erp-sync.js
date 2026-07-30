@@ -83,7 +83,7 @@
     if (!productos || productos.length === 0) return; // deja el contenido estático
 
     // Categorías para mapear id → nombre
-    var cats = (await api("/categorias?select=id,nombre")) || [];
+    var cats = (await api("/categorias_productos?select=id,nombre")) || [];
     var catById = {};
     cats.forEach(function (c) { catById[c.id] = c.nombre; });
 
@@ -127,7 +127,7 @@
     var container = document.querySelector('[data-mm-sync="filtros"]');
     if (!container) return;
 
-    var cats = await api("/categorias?select=id,nombre&order=nombre.asc");
+    var cats = await api("/categorias_productos?select=id,nombre&order=nombre.asc");
     if (!cats || cats.length === 0) return;
 
     var template = container.querySelector("button, a");
