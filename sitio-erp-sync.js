@@ -316,9 +316,16 @@
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
+  // El sitio usa custom elements (<x-dc>, <image-slot>) procesados por support.js
+  // que reescriben el DOM DESPUÉS de DOMContentLoaded. Esperamos a window.load
+  // (todo cargado) + un tick extra para que los reemplazos terminen antes de
+  // manipular los contenedores con data-mm-sync.
+  function bootDeferred() {
+    setTimeout(boot, 200);
+  }
+  if (document.readyState === "complete") {
+    bootDeferred();
   } else {
-    boot();
+    window.addEventListener("load", bootDeferred);
   }
 })();
