@@ -87,11 +87,38 @@
     var catById = {};
     cats.forEach(function (c) { catById[c.id] = c.nombre; });
 
+    // AGRUPAR por modelo base: el SKU tiene formato "XXXXX.YYY-TALLA".
+    // El "modelo" es solo XXXXX (todo antes del punto). Cada modelo puede tener N
+    // variantes color+talla; mostramos UNA card por modelo.
+    var grupos = {};
+    productos.forEach(function (p) {
+      var sku = String(p.sku || "");
+      var baseModelo = sku.split(".")[0] || sku; // "03794" para SKUs codificados, si no, todo el sku
+      if (!grupos[baseModelo]) {
+        grupos[baseModelo] = {
+          representante: p,
+          colores: new Set(),
+          talles: new Set(),
+          variantes: [],
+        };
+      }
+      var g = grupos[baseModelo];
+      g.variantes.push(p);
+      if (p.color_nombre) g.colores.add(p.color_nombre);
+      if (p.talla_nombre) g.talles.add(p.talla_nombre);
+      // Preferir como representante el que tenga imagen y no sea talla UN/UNICA
+      if (!g.representante.imagen_url && p.imagen_url) g.representante = p;
+    });
+    var modelos = Object.values(grupos);
+
     // Ocultamos template y agregamos las tarjetas nuevas
     var siblings = Array.prototype.slice.call(container.querySelectorAll("article"));
     siblings.forEach(function (a) { a.style.display = "none"; });
 
-    productos.forEach(function (p, idx) {
+    modelos.forEach(function (grupo, idx) {
+      var p = grupo.representante;
+      var coloresArr = Array.from(grupo.colores);
+      var tallesArr = Array.from(grupo.talles);
       var card = template.cloneNode(true);
       card.style.display = "";
       card.setAttribute("data-id", p.id);
@@ -110,12 +137,25 @@
       var precioEl = card.querySelector(".mm-cg-price, [data-mm-price]");
       if (precioEl) precioEl.textContent = (Number(p.precio_venta) > 0) ? fmtGs(p.precio_venta) : "Consultar";
 
-      // Sub: descripción del ERP, o color · talla como fallback para diferenciar variantes
+      // Sub: descripción del ERP, o resumen de variantes disponibles
       var subEl = card.querySelector(".mm-cg-sub, [data-mm-sub]");
       if (subEl) {
-        var variant = [p.color_nombre, p.talla_nombre].filter(Boolean).join(" · ");
-        subEl.textContent = (p.descripcion && p.descripcion.trim()) || variant || "";
+        var variantesTxt = "";
+        if (coloresArr.length > 0 || tallesArr.length > 0) {
+          var pieces = [];
+          if (coloresArr.length === 1) pieces.push(coloresArr[0]);
+          else if (coloresArr.length > 1) pieces.push(coloresArr.length + " colores");
+          if (tallesArr.length === 1) pieces.push("talle " + tallesArr[0]);
+          else if (tallesArr.length > 1) pieces.push(tallesArr.length + " talles");
+          variantesTxt = pieces.join(" · ");
+        }
+        subEl.textContent = (p.descripcion && p.descripcion.trim()) || variantesTxt || "";
       }
+
+      // Data attributes con listado de variantes para popover/detalle
+      card.setAttribute("data-colores", coloresArr.join(","));
+      card.setAttribute("data-talles", tallesArr.join(","));
+      card.setAttribute("data-variantes", grupo.variantes.length);
 
       // Categoría (chip superior)
       var catEl = card.querySelector(".mm-cg-cat, [data-mm-cat]");
@@ -137,8 +177,8 @@
       container.appendChild(card);
     });
 
-    container.setAttribute("data-mm-count", String(productos.length));
-    document.dispatchEvent(new CustomEvent("mm:catalogo-loaded", { detail: { total: productos.length } }));
+    container.setAttribute("data-mm-count", String(modelos.length));
+    document.dispatchEvent(new CustomEvent("mm:catalogo-loaded", { detail: { total: modelos.length, variantes: productos.length } }));
   }
 
   // ------------------------------------------------------------------
