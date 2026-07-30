@@ -678,11 +678,171 @@
   // Boot
   // ------------------------------------------------------------------
 
-  // ------------------------------------------------------------------
-  // Botón flotante PT / ES — usa Google Translate para traducir toda la
-  // página (headings, footer, botones, todo). Los productos dinámicos
-  // igual pasan por nuestro tr() antes.
-  // ------------------------------------------------------------------
+  // Frases específicas de Marilia (copywriting). Ampliar cuando se sume nueva copy.
+  var COPY_ES_PT = {
+    "Explora prendas y accesorios seleccionados para mujer y hombre, pensados para acompañar cada estilo y ocasión.":
+      "Explore peças e acessórios selecionados para mulher e homem, pensados para acompanhar cada estilo e ocasião.",
+    "Tu estilo, tu mejor versión.": "Seu estilo, sua melhor versão.",
+    "Tu estilo,": "Seu estilo,",
+    "tu mejor versión.": "sua melhor versão.",
+    "Tu estilo, tu mejor versión": "Seu estilo, sua melhor versão",
+    "Descubre prendas seleccionadas para acompañarte con elegancia, personalidad y confianza en cada ocasión.":
+      "Descubra peças selecionadas para acompanhá-lo(a) com elegância, personalidade e confiança em cada ocasião.",
+    "DESCUBRIR LA COLECCIÓN": "DESCOBRIR A COLEÇÃO",
+    "VISITAR LA TIENDA": "VISITAR A LOJA",
+    "SELECCIÓN MARILIA": "SELEÇÃO MARILIA",
+    "Piezas que definen": "Peças que definem",
+    "tu estilo": "seu estilo",
+    "Piezas que definen tu estilo": "Peças que definem seu estilo",
+    "Encuentra tu estilo.": "Encontre seu estilo.",
+    "Encuentra tu estilo": "Encontre seu estilo",
+    "Explorar la colección": "Explorar a coleção",
+    "El look completo": "O look completo",
+    "Tres piezas, un mismo gesto. Elegí cualquiera de la lista y sumala a tu bolsa sin salir de la historia.":
+      "Três peças, um mesmo gesto. Escolha qualquer uma da lista e adicione à sua sacola sem sair da história.",
+    "Añadir el look": "Adicionar o look",
+    "Añadir a la bolsa": "Adicionar à sacola",
+    "Añadido a la bolsa": "Adicionado à sacola",
+    "Añadido": "Adicionado",
+    "Añadir": "Adicionar",
+    "Añadir +": "Adicionar +",
+    "Vista rápida": "Vista rápida",
+    "Ver completa": "Ver completo",
+    "Consultar": "Consultar",
+    "Consultar precio": "Consultar preço",
+    "Cerrar bolsa": "Fechar sacola",
+    "Cerrar búsqueda": "Fechar busca",
+    "Cerrar ✕": "Fechar ✕",
+    "Cerrar": "Fechar",
+    "Ayuda": "Ajuda",
+    "Bolsa": "Sacola",
+    "Buscar": "Buscar",
+    "Buscar en la tienda": "Buscar na loja",
+    "Búsquedas frecuentes": "Buscas frequentes",
+    "Categorías": "Categorias",
+    "Casa": "Início",
+    "Catálogo": "Catálogo",
+    "Catálogo completo": "Catálogo completo",
+    "Colecciones": "Coleções",
+    "Nueva colección": "Nova coleção",
+    "Ver todo": "Ver tudo",
+    "Todos": "Todos",
+    "Todo": "Tudo",
+    "Mujer": "Mulher",
+    "Hombre": "Homem",
+    "Vestidos": "Vestidos",
+    "Conjuntos": "Conjuntos",
+    "Blusas": "Blusas",
+    "Camisas": "Camisas",
+    "Pantalones": "Calças",
+    "Faldas": "Saias",
+    "Abrigos": "Casacos",
+    "Accesorios": "Acessórios",
+    "Calzado": "Calçados",
+    "Envíos y entregas": "Envios e entregas",
+    "Cambios y devoluciones": "Trocas e devoluções",
+    "Contacto": "Contato",
+    "Preguntas frecuentes": "Perguntas frequentes",
+    "Cuidado de las prendas": "Cuidado das peças",
+    "Guía de talles": "Guia de tamanhos",
+    "Sobre nosotros": "Sobre nós",
+    "Términos y condiciones": "Termos e condições",
+    "Política de privacidad": "Política de privacidade",
+    "Seguinos en Instagram": "Siga-nos no Instagram",
+    "Tienda": "Loja",
+    "Camisa · Hombre": "Camisa · Homem",
+    "Blazer · Hombre": "Blazer · Homem",
+    "Pantalón · Hombre": "Calça · Homem",
+    "Traje · Hombre": "Terno · Homem",
+    "Abrigo · Hombre": "Casaco · Homem",
+    "Camisas · Hombre": "Camisas · Homem",
+    "Abrigos · Hombre": "Casacos · Homem",
+    "Accesorios · Hombre": "Acessórios · Homem",
+    "Vestidos · Mujer": "Vestidos · Mulher",
+    "Blusas · Mujer": "Blusas · Mulher",
+    "Abrigos · Mujer": "Casacos · Mulher",
+    "Faldas · Mujer": "Saias · Mulher",
+    "piezas": "peças",
+    "pieza": "peça",
+    "talles": "tamanhos",
+    "talle": "tamanho",
+    "colores": "cores",
+    "color": "cor",
+    "Nos escriben": "Nos escrevem",
+    "Atelier Marilia": "Atelier Marilia",
+    "Artesanas": "Artesãs",
+    "Aviso": "Aviso",
+    "Volver": "Voltar",
+    "Anterior": "Anterior",
+    "Siguiente": "Próximo",
+    "Guardar": "Salvar",
+    "Continuar": "Continuar",
+    "Editar": "Editar",
+    "Eliminar": "Excluir",
+    "Quitar": "Remover",
+    "Vaciar": "Esvaziar",
+    "Confirmar": "Confirmar",
+    "Cancelar": "Cancelar",
+  };
+  // Reverse map PT→ES para toggle bidireccional
+  var COPY_PT_ES = {};
+  Object.keys(COPY_ES_PT).forEach(function (k) { COPY_PT_ES[COPY_ES_PT[k]] = k; });
+
+  // Walker que traduce text nodes ATRAVESANDO SHADOW DOM
+  function translatePageDeep() {
+    var dict = LANG === "pt" ? COPY_ES_PT : COPY_PT_ES;
+    var keys = Object.keys(dict).sort(function (a, b) { return b.length - a.length; });
+    function processRoot(root) {
+      if (!root) return;
+      var walker = (root.createTreeWalker || document.createTreeWalker).call(root, root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (n) {
+          var p = n.parentElement;
+          if (!p) return NodeFilter.FILTER_REJECT;
+          var tag = p.tagName;
+          if (tag === "SCRIPT" || tag === "STYLE" || tag === "NOSCRIPT") return NodeFilter.FILTER_REJECT;
+          if (p.id === "mm-lang-toggle") return NodeFilter.FILTER_REJECT;
+          var v = n.nodeValue;
+          if (!v || !v.trim()) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var nodes = [];
+      var n;
+      while ((n = walker.nextNode())) nodes.push(n);
+      nodes.forEach(function (node) {
+        var t = node.nodeValue;
+        var trimmed = t.trim();
+        if (dict[trimmed]) { node.nodeValue = t.replace(trimmed, dict[trimmed]); return; }
+        // Reemplazo por frase larga contenida
+        for (var i = 0; i < keys.length; i++) {
+          var k = keys[i];
+          if (k.length < 3) continue;
+          if (t.indexOf(k) !== -1) { t = t.split(k).join(dict[k]); }
+        }
+        if (t !== node.nodeValue) node.nodeValue = t;
+      });
+      // Recursar en shadow roots
+      var all = root.querySelectorAll ? root.querySelectorAll("*") : [];
+      Array.prototype.forEach.call(all, function (el) {
+        if (el.shadowRoot) processRoot(el.shadowRoot);
+      });
+    }
+    processRoot(document.body);
+    // Placeholders y alt/title
+    document.querySelectorAll("input[placeholder]").forEach(function (i) {
+      var v = i.getAttribute("placeholder");
+      if (dict[v]) i.setAttribute("placeholder", dict[v]);
+    });
+    document.querySelectorAll("[alt],[title],[aria-label]").forEach(function (el) {
+      ["alt", "title", "aria-label"].forEach(function (a) {
+        var v = el.getAttribute(a);
+        if (v && dict[v]) el.setAttribute(a, dict[v]);
+      });
+    });
+    document.documentElement.setAttribute("lang", LANG);
+  }
+
+  // Deshabilitar Google Translate viejo (mantengo la función pero no la llamamos)
   function injectGoogleTranslate() {
     if (document.getElementById("google_translate_element")) return;
     // Contenedor invisible (Google inyecta su widget acá pero lo ocultamos)
@@ -763,9 +923,14 @@
 
   function boot() {
     injectLangToggle();
-    injectGoogleTranslate();
+    if (LANG !== "es") translatePageDeep();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
     Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
+      // Re-traducir por si el loader inyectó texto nuevo
+      if (LANG !== "es") translatePageDeep();
+      // Watcher: los custom elements (<image-slot>) pueden hidratar tarde
+      setTimeout(function () { if (LANG !== "es") translatePageDeep(); }, 800);
+      setTimeout(function () { if (LANG !== "es") translatePageDeep(); }, 2000);
       document.dispatchEvent(new CustomEvent("mm:sync-done"));
     });
   }
