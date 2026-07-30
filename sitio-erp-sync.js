@@ -78,7 +78,7 @@
     if (!template) return;
 
     var productos = await api(
-      "/productos?select=id,nombre,precio_venta,descripcion,imagen_url,imagen_path,destacado,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
+      "/productos?select=id,sku,nombre,precio_venta,descripcion,imagen_url,imagen_path,destacado,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
     );
     if (!productos || productos.length === 0) return; // deja el contenido estático
 
