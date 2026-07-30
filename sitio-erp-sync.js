@@ -690,16 +690,30 @@
     host.id = "google_translate_element";
     host.style.cssText = "position:absolute;top:-9999px;left:-9999px;visibility:hidden";
     document.body.appendChild(host);
-    // CSS para ocultar la barra de Google que aparece arriba
+    // CSS ULTRA agresivo para matar completamente la barra de Google
     var style = document.createElement("style");
     style.textContent = [
-      ".goog-te-banner-frame.skiptranslate{display:none!important}",
-      "body{top:0!important}",
-      ".goog-te-gadget{font-size:0!important}",
-      ".goog-te-gadget>span{display:none!important}",
-      ".goog-logo-link{display:none!important}",
+      // Barra superior (todos los variantes conocidos de la clase)
+      ".goog-te-banner-frame,.goog-te-banner-frame.skiptranslate,.VIpgJd-ZVi9od-ORHb-OEVmcd,.VIpgJd-ZVi9od-ORHb{display:none!important;visibility:hidden!important;height:0!important;position:absolute!important;top:-9999px!important}",
+      // Forzar body sin offset (Google le pone top:40px cuando muestra su barra)
+      "html,body{top:0!important;position:static!important;margin-top:0!important}",
+      // Widget original (dropdown de Google)
+      ".goog-te-gadget,.goog-te-gadget-simple{display:none!important}",
+      ".goog-te-menu-value,.goog-te-menu-frame{display:none!important}",
+      // Tooltips que aparecen al hover sobre texto traducido
+      ".goog-tooltip,.goog-tooltip:hover,.goog-text-highlight{background:none!important;box-shadow:none!important;border:none!important}",
+      // Iframe superior fijo
+      "iframe.goog-te-banner-frame,iframe.goog-te-menu-frame{display:none!important}",
     ].join("");
     document.head.appendChild(style);
+    // Watcher: si Google reinyecta la barra, la matamos
+    var killBanner = function () {
+      document.body.style.top = "0px";
+      document.documentElement.style.top = "0px";
+      var bars = document.querySelectorAll(".goog-te-banner-frame, .skiptranslate");
+      bars.forEach(function (b) { if (b.tagName === "IFRAME" || b.classList.contains("goog-te-banner-frame")) b.style.display = "none"; });
+    };
+    setInterval(killBanner, 500);
     // Init callback
     window.googleTranslateElementInit = function () {
       new window.google.translate.TranslateElement({
