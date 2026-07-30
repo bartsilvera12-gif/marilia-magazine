@@ -1029,11 +1029,20 @@
         var t = node.nodeValue;
         var trimmed = t.trim();
         if (dict[trimmed]) { node.nodeValue = t.replace(trimmed, dict[trimmed]); return; }
-        // Reemplazo por frase larga contenida
+        // Reemplazo por frase/palabra CON word boundary — evita romper "Casacos" al buscar "Casa"
         for (var i = 0; i < keys.length; i++) {
           var k = keys[i];
           if (k.length < 3) continue;
-          if (t.indexOf(k) !== -1) { t = t.split(k).join(dict[k]); }
+          if (t.indexOf(k) === -1) continue;
+          var esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          // Solo aplicar word-boundary si es una palabra "limpia" (sin espacios ni puntuación)
+          // Para frases largas con espacios, hacer replace directo.
+          if (/^[A-Za-zÁÉÍÓÚÑáéíóúñÀ-ÿ]+$/.test(k)) {
+            var re = new RegExp("\\b" + esc + "\\b", "g");
+            t = t.replace(re, dict[k]);
+          } else {
+            t = t.split(k).join(dict[k]);
+          }
         }
         if (t !== node.nodeValue) node.nodeValue = t;
       });
