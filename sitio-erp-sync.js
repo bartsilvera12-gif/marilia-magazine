@@ -43,6 +43,61 @@
     return "Gs. " + v.toLocaleString("es-PY");
   }
 
+  // ------------------------------------------------------------------
+  // Traducción PT → ES para textos del ERP (nombres, colores, tallas)
+  // ------------------------------------------------------------------
+  var LANG = localStorage.getItem("mm_lang") || "es"; // "es" | "pt"
+
+  var DICT_PT_ES = {
+    // Prendas
+    "CAMISETA":"CAMISETA", "CAMISA":"CAMISA", "POLO":"POLO", "BLUSA":"BLUSA",
+    "BERMUDA":"BERMUDA", "SHORT":"SHORT", "CALCA":"PANTALÓN", "CALÇA":"PANTALÓN",
+    "JAQUETA":"CAMPERA", "CINTO":"CINTURÓN", "MEIA":"MEDIA", "SACOLA":"BOLSA",
+    "CAIXA":"CAJA", "TENIS":"ZAPATILLA", "TÊNIS":"ZAPATILLA", "NECESSAIRE":"NECESER",
+    "CHAVEIRO":"LLAVERO", "PRESENTE":"REGALO", "CUECA":"BOXER",
+    "GOLA":"CUELLO", "ML":"ML", "MC":"MC", "PADRE":"PADRE",
+    "PIQUET":"PIQUÉ", "TRICOT":"TEJIDO", "TRICOT ML":"TEJIDO ML",
+    "FLANELADA":"FRANELA", "ALF":"CLÁSICO",
+    "ELAST":"ELÁSTICO", "PRIME":"PRIME", "PIMA":"PIMA", "REVIVE":"REVIVE",
+    "CLASS":"CLASSIC", "MOTION":"MOTION", "PREMIUM":"PREMIUM",
+    "PU":"PU", "SJ":"SJ", "REP":"REP", "CONF":"CONF", "CAPUAÇU":"CAPUAZÚ",
+    "BATH":"BATH", "COTELE":"COTELÊ", "SARJA":"GABARDINA",
+    "IMPULSE":"IMPULSE", "INTENSE":"INTENSE", "INVICTUS":"INVICTUS",
+    "AURUM":"AURUM", "PRIME":"PRIME", "WAFFLE":"WAFFLE", "ZIPER":"CIERRE",
+    "ZÍPER":"CIERRE", "AGUARDANDO FICHA":"", "PIQUET VELLUTO":"PIQUÉ VELLUTO",
+    // Colores
+    "PRETO":"NEGRO", "BRANCO":"BLANCO", "OFF WHITE":"BLANCO CRUDO",
+    "AZUL MARINHO":"AZUL MARINO", "AZUL MEDIO":"AZUL MEDIO",
+    "AZUL INDIGO":"AZUL ÍNDIGO", "AZUL INFINITY":"AZUL INFINITY",
+    "CAFE":"CAFÉ", "MARROM":"MARRÓN", "MARROM WOOD":"MARRÓN MADERA",
+    "MARROM COGNAC":"MARRÓN COÑAC", "CAMEL":"CAMEL", "WHISKY":"WHISKY",
+    "CINZA":"GRIS", "CINZA CLARO":"GRIS CLARO", "CINZA BOSS":"GRIS BOSS",
+    "CHUMBO":"PLOMO", "GRAFITE":"GRAFITO",
+    "VERMELHO":"ROJO", "CABERNET":"BORDÓ", "BORDO":"BORDÓ", "TELHA":"TERRACOTA",
+    "VERDE":"VERDE", "VERDE MILITAR":"VERDE MILITAR", "VERDE MUSGO":"VERDE MUSGO",
+    "VERDE PISTACHE":"VERDE PISTACHO", "VERDE OLIVA":"VERDE OLIVA",
+    "VERDE GALAPAGOS":"VERDE GALÁPAGOS", "VERDE EDEN":"VERDE EDÉN",
+    "LARANJA":"NARANJA", "AMETISTA":"AMATISTA", "CROMO":"CROMO",
+    "KAKI":"CAQUI", "CAQUI":"CAQUI", "AREIA":"ARENA", "AVEIA":"AVENA",
+    "BEGE":"BEIGE", "MARFIL":"MARFIL", "INCOLOR":"INCOLORO", "UNICA":"ÚNICO",
+    "BRANCA TFLW":"BLANCA TFLW",
+    // Talles
+    "P":"S", "M":"M", "G":"L", "GG":"XL", "XG":"XXL", "UN":"UN",
+  };
+
+  function tr(text) {
+    if (LANG === "pt" || !text) return text;
+    var up = String(text).toUpperCase().trim();
+    // Match completo
+    if (DICT_PT_ES[up] !== undefined) return DICT_PT_ES[up] || up;
+    // Reemplazar palabra por palabra
+    return up.split(/(\s+|·|\-|,)/).map(function (w) {
+      var wu = w.toUpperCase().trim();
+      if (DICT_PT_ES[wu] !== undefined) return DICT_PT_ES[wu];
+      return w;
+    }).join("");
+  }
+
   function pickSlot(slot, key) {
     return (slot && slot.dataset && slot.dataset[key]) || "";
   }
@@ -161,9 +216,9 @@
       var img = p.imagen_url || p.imagen_path || "";
       if (img) card.setAttribute("data-img", img);
 
-      // Nombre
+      // Nombre (traducido si LANG=es)
       var nombreEl = card.querySelector("h3, .mm-cg-name, [data-mm-name]");
-      if (nombreEl) nombreEl.textContent = p.nombre;
+      if (nombreEl) nombreEl.textContent = tr(p.nombre);
 
       // Precio (0 → "Consultar")
       var precioEl = card.querySelector(".mm-cg-price, [data-mm-price]");
@@ -175,13 +230,13 @@
         var variantesTxt = "";
         if (coloresArr.length > 0 || tallesArr.length > 0) {
           var pieces = [];
-          if (coloresArr.length === 1) pieces.push(coloresArr[0]);
-          else if (coloresArr.length > 1) pieces.push(coloresArr.length + " colores");
-          if (tallesArr.length === 1) pieces.push("talle " + tallesArr[0]);
-          else if (tallesArr.length > 1) pieces.push(tallesArr.length + " talles");
+          if (coloresArr.length === 1) pieces.push(tr(coloresArr[0]));
+          else if (coloresArr.length > 1) pieces.push(coloresArr.length + (LANG === "pt" ? " cores" : " colores"));
+          if (tallesArr.length === 1) pieces.push((LANG === "pt" ? "tamanho " : "talle ") + tr(tallesArr[0]));
+          else if (tallesArr.length > 1) pieces.push(tallesArr.length + (LANG === "pt" ? " tamanhos" : " talles"));
           variantesTxt = pieces.join(" · ");
         }
-        subEl.textContent = (p.descripcion && p.descripcion.trim()) || variantesTxt || "";
+        subEl.textContent = (p.descripcion && p.descripcion.trim()) ? tr(p.descripcion) : (variantesTxt || "");
       }
 
       // Data attributes con listado de variantes para popover/detalle
@@ -193,7 +248,7 @@
       var catEl = card.querySelector(".mm-cg-cat, [data-mm-cat]");
       if (catEl) {
         var catName = catById[p.categoria_principal_id] || "";
-        catEl.textContent = catName;
+        catEl.textContent = tr(catName);
       }
 
       // Imagen principal
@@ -435,7 +490,33 @@
   // Boot
   // ------------------------------------------------------------------
 
+  // ------------------------------------------------------------------
+  // Botón flotante PT / ES (esquina superior derecha)
+  // ------------------------------------------------------------------
+  function injectLangToggle() {
+    if (document.getElementById("mm-lang-toggle")) return;
+    var btn = document.createElement("button");
+    btn.id = "mm-lang-toggle";
+    btn.type = "button";
+    btn.textContent = LANG === "pt" ? "ES" : "PT";
+    btn.title = LANG === "pt" ? "Ver en español" : "Ver em português";
+    btn.style.cssText = [
+      "position:fixed", "top:16px", "right:16px", "z-index:9999",
+      "background:#1E1B16", "color:#F7F3E6", "border:1px solid #C8962A",
+      "padding:9px 14px", "font:600 11px/1 'Montserrat',sans-serif",
+      "letter-spacing:.24em", "text-transform:uppercase", "cursor:pointer",
+      "border-radius:2px", "box-shadow:0 4px 12px rgba(0,0,0,.18)",
+    ].join(";");
+    btn.addEventListener("click", function () {
+      LANG = (LANG === "pt") ? "es" : "pt";
+      localStorage.setItem("mm_lang", LANG);
+      location.reload();
+    });
+    document.body.appendChild(btn);
+  }
+
   function boot() {
+    injectLangToggle();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
     Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
       document.dispatchEvent(new CustomEvent("mm:sync-done"));
