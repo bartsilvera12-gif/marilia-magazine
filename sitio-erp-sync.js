@@ -87,26 +87,58 @@
     var catById = {};
     cats.forEach(function (c) { catById[c.id] = c.nombre; });
 
-    // AGRUPAR por modelo base: el SKU tiene formato "XXXXX.YYY-TALLA".
-    // El "modelo" es solo XXXXX (todo antes del punto). Cada modelo puede tener N
-    // variantes color+talla; mostramos UNA card por modelo.
+    // Mapa nombre-color → hex (comunes en el catálogo Marilia/pedido Paraguay)
+    var COLOR_HEX = {
+      "PRETO":"#0E0E0E", "BLACK":"#0E0E0E", "NEGRO":"#0E0E0E",
+      "BRANCO":"#F5F1E8", "OFF WHITE":"#F0EADB", "BEGE":"#D8C4A0",
+      "AREIA":"#D8C6A5", "AVEIA":"#E5D8B9", "MARFIL":"#EFE6D2",
+      "AZUL MARINHO":"#14243E", "AZUL MEDIO":"#3D6BA6", "AZUL INDIGO":"#2F4A73",
+      "AZUL INFINITY":"#1E2E5A",
+      "CAFE":"#4A2E1F", "MARROM":"#3E2519", "MARROM WOOD":"#4A3428",
+      "MARROM COGNAC":"#7A3E1F", "CAMEL":"#B4855A", "WHISKY":"#8A5A2E",
+      "CINZA":"#6C6C6C", "CINZA CLARO":"#B4B4B4", "CINZA BOSS":"#5A5A5A",
+      "CHUMBO":"#3D3D42", "GRAFITE":"#40403E",
+      "VERMELHO":"#B92E2E", "CABERNET":"#5C1A26", "BORDO":"#5C1A26",
+      "TELHA":"#B8593A",
+      "VERDE":"#3E6B3A", "VERDE MILITAR":"#3E4B2B", "VERDE MUSGO":"#4A5A2E",
+      "VERDE PISTACHE":"#B7C88A", "VERDE OLIVA":"#6B6B34", "VERDE GALAPAGOS":"#2E5E3E",
+      "VERDE EDEN":"#3E7E4E",
+      "LARANJA":"#D46A2E", "AMETISTA":"#8E5CA6",
+      "CROMO":"#B9B9B4", "KAKI":"#8A7A4A", "CAQUI":"#8A7A4A",
+      "INCOLOR":"#EFEFEF", "UNICA":"#B0B0B0", "BRANCA TFLW":"#F5F1E8",
+    };
+    function hexForColor(name) {
+      if (!name) return "#B0B0B0";
+      var up = String(name).toUpperCase().trim();
+      return COLOR_HEX[up] || "#B0B0B0";
+    }
+
+    // AGRUPAR por modelo base: SKU "XXXXX.YYY-TALLA" → modelo = "XXXXX".
+    // Cada modelo puede tener N variantes color+talla; UNA card por modelo,
+    // pero con swatches de todos los colores. Click en swatch cambia la imagen.
     var grupos = {};
     productos.forEach(function (p) {
       var sku = String(p.sku || "");
-      var baseModelo = sku.split(".")[0] || sku; // "03794" para SKUs codificados, si no, todo el sku
+      var baseModelo = sku.split(".")[0] || sku;
       if (!grupos[baseModelo]) {
         grupos[baseModelo] = {
           representante: p,
-          colores: new Set(),
+          coloresMap: {},   // color_nombre → { hex, imagen_url }
           talles: new Set(),
           variantes: [],
         };
       }
       var g = grupos[baseModelo];
       g.variantes.push(p);
-      if (p.color_nombre) g.colores.add(p.color_nombre);
+      if (p.color_nombre) {
+        var c = String(p.color_nombre).trim();
+        if (!g.coloresMap[c]) {
+          g.coloresMap[c] = { hex: hexForColor(c), imagen_url: p.imagen_url || null };
+        } else if (!g.coloresMap[c].imagen_url && p.imagen_url) {
+          g.coloresMap[c].imagen_url = p.imagen_url;
+        }
+      }
       if (p.talla_nombre) g.talles.add(p.talla_nombre);
-      // Preferir como representante el que tenga imagen y no sea talla UN/UNICA
       if (!g.representante.imagen_url && p.imagen_url) g.representante = p;
     });
     var modelos = Object.values(grupos);
@@ -117,7 +149,7 @@
 
     modelos.forEach(function (grupo, idx) {
       var p = grupo.representante;
-      var coloresArr = Array.from(grupo.colores);
+      var coloresArr = Object.keys(grupo.coloresMap);
       var tallesArr = Array.from(grupo.talles);
       var card = template.cloneNode(true);
       card.style.display = "";
@@ -173,6 +205,38 @@
       // Quitar los <div data-alt> con segunda imagen hardcoded (no aplican al producto real)
       var altLayer = card.querySelector("[data-alt]");
       if (altLayer && altLayer.parentElement) altLayer.parentElement.removeChild(altLayer);
+
+      // Swatches: uno por color, click cambia la imagen principal
+      var swatchesEl = card.querySelector(".mm-cg-swatches, [data-mm-swatches]");
+      if (swatchesEl) {
+        swatchesEl.innerHTML = "";
+        coloresArr.forEach(function (colorName, i) {
+          var info = grupo.coloresMap[colorName];
+          var sw = document.createElement("span");
+          sw.className = "mm-cg-sw";
+          sw.style.background = info.hex;
+          sw.style.cursor = "pointer";
+          sw.setAttribute("title", colorName);
+          sw.setAttribute("data-color", colorName);
+          if (info.imagen_url) sw.setAttribute("data-img", info.imagen_url);
+          if (i === 0) sw.style.outline = "1.5px solid #C8962A";
+          sw.addEventListener("click", function (ev) {
+            ev.preventDefault(); ev.stopPropagation();
+            var newImg = sw.getAttribute("data-img");
+            if (!newImg) return;
+            var mainImg = card.querySelector("img");
+            if (mainImg) mainImg.setAttribute("src", newImg);
+            var mainSlot = card.querySelector("image-slot");
+            if (mainSlot) mainSlot.setAttribute("src", newImg);
+            // Reset outlines
+            Array.prototype.forEach.call(swatchesEl.children, function (c) { c.style.outline = ""; });
+            sw.style.outline = "1.5px solid #C8962A";
+            // Actualizar sub con color actual
+            if (subEl) subEl.textContent = colorName + (tallesArr.length > 1 ? " · " + tallesArr.length + " talles" : (tallesArr[0] ? " · talle " + tallesArr[0] : ""));
+          });
+          swatchesEl.appendChild(sw);
+        });
+      }
 
       container.appendChild(card);
     });
