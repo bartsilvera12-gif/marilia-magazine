@@ -104,13 +104,55 @@
     // Navegación / cabecera
     "Casa": "Início",
     "Catálogo": "Catálogo",
+    "Catálogo completo": "Catálogo completo",
     "Buscar": "Buscar",
-    "Buscar en la tienda": "Pesquisar na loja",
+    "Buscar en la tienda": "Buscar na loja",
     "Búsquedas frecuentes": "Buscas frequentes",
     "Bolsa": "Sacola",
     "Ayuda": "Ajuda",
     "Cerrar ✕": "Fechar ✕",
     "Cerrar": "Fechar",
+    "Categorías": "Categorias",
+    "Cerrar bolsa": "Fechar sacola",
+    "Cerrar búsqueda": "Fechar busca",
+    "Nueva colección": "Nova coleção",
+    "Ver todo": "Ver tudo",
+    // Home sections
+    "Explorar la colección": "Explorar a coleção",
+    "Encuentra tu": "Encontre seu",
+    "Explorar": "Explorar",
+    "El look": "O look",
+    "completo": "completo",
+    "Nos escriben": "Nos escrevem",
+    "Atelier Marilia": "Atelier Marilia",
+    "Casa de moda": "Casa de moda",
+    "Artesanas": "Artesãs",
+    "Piezas seleccionadas": "Peças selecionadas",
+    "Descubrí": "Descubra",
+    "Elegí": "Escolha",
+    "Elegí tu": "Escolha seu",
+    "Sumate": "Junte-se",
+    "Reservá tu": "Reserve seu",
+    "Reserva": "Reserva",
+    "Ver más": "Ver mais",
+    "Ver menos": "Ver menos",
+    "Ver la ficha": "Ver a ficha",
+    "Ficha del producto": "Ficha do produto",
+    "Volver": "Voltar",
+    "Anterior": "Anterior",
+    "Siguiente": "Próximo",
+    "Guardar": "Salvar",
+    "Continuar": "Continuar",
+    "Editar": "Editar",
+    "Eliminar": "Excluir",
+    "Quitar": "Remover",
+    "Vaciar": "Esvaziar",
+    "Confirmar": "Confirmar",
+    "Cancelar": "Cancelar",
+    "Aviso": "Aviso",
+    "Acceso:": "Acesso:",
+    "Autoridades competentes": "Autoridades competentes",
+    "Cambios en esta política": "Alterações nesta política",
     // Filtros / categorías
     "Todos": "Todos",
     "Todo": "Tudo",
@@ -637,8 +679,50 @@
   // ------------------------------------------------------------------
 
   // ------------------------------------------------------------------
-  // Botón flotante PT / ES (esquina superior derecha)
+  // Botón flotante PT / ES — usa Google Translate para traducir toda la
+  // página (headings, footer, botones, todo). Los productos dinámicos
+  // igual pasan por nuestro tr() antes.
   // ------------------------------------------------------------------
+  function injectGoogleTranslate() {
+    if (document.getElementById("google_translate_element")) return;
+    // Contenedor invisible (Google inyecta su widget acá pero lo ocultamos)
+    var host = document.createElement("div");
+    host.id = "google_translate_element";
+    host.style.cssText = "position:absolute;top:-9999px;left:-9999px;visibility:hidden";
+    document.body.appendChild(host);
+    // CSS para ocultar la barra de Google que aparece arriba
+    var style = document.createElement("style");
+    style.textContent = [
+      ".goog-te-banner-frame.skiptranslate{display:none!important}",
+      "body{top:0!important}",
+      ".goog-te-gadget{font-size:0!important}",
+      ".goog-te-gadget>span{display:none!important}",
+      ".goog-logo-link{display:none!important}",
+    ].join("");
+    document.head.appendChild(style);
+    // Init callback
+    window.googleTranslateElementInit = function () {
+      new window.google.translate.TranslateElement({
+        pageLanguage: "es",
+        includedLanguages: "es,pt",
+        autoDisplay: false,
+        layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+      }, "google_translate_element");
+    };
+    var s = document.createElement("script");
+    s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    document.head.appendChild(s);
+  }
+
+  function setGoogleLang(lang) {
+    // Google Translate usa cookie `googtrans` con formato /es/pt o /es/es
+    var host = "." + location.hostname.split(".").slice(-2).join(".");
+    var val = "/es/" + lang;
+    document.cookie = "googtrans=" + val + ";path=/";
+    document.cookie = "googtrans=" + val + ";path=/;domain=" + host;
+    document.cookie = "googtrans=" + val + ";path=/;domain=" + location.hostname;
+  }
+
   function injectLangToggle() {
     if (document.getElementById("mm-lang-toggle")) return;
     var btn = document.createElement("button");
@@ -647,15 +731,17 @@
     btn.textContent = LANG === "pt" ? "ES" : "PT";
     btn.title = LANG === "pt" ? "Ver en español" : "Ver em português";
     btn.style.cssText = [
-      "position:fixed", "top:16px", "right:16px", "z-index:9999",
+      "position:fixed", "top:16px", "right:16px", "z-index:99999",
       "background:#1E1B16", "color:#F7F3E6", "border:1px solid #C8962A",
       "padding:9px 14px", "font:600 11px/1 'Montserrat',sans-serif",
       "letter-spacing:.24em", "text-transform:uppercase", "cursor:pointer",
       "border-radius:2px", "box-shadow:0 4px 12px rgba(0,0,0,.18)",
     ].join(";");
     btn.addEventListener("click", function () {
-      LANG = (LANG === "pt") ? "es" : "pt";
-      localStorage.setItem("mm_lang", LANG);
+      var next = (LANG === "pt") ? "es" : "pt";
+      LANG = next;
+      localStorage.setItem("mm_lang", next);
+      setGoogleLang(next);
       location.reload();
     });
     document.body.appendChild(btn);
@@ -663,11 +749,9 @@
 
   function boot() {
     injectLangToggle();
-    translateStaticText();
+    injectGoogleTranslate();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
     Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
-      // Re-traducir por si el loader inyectó texto en español (ej "Consultar")
-      translateStaticText();
       document.dispatchEvent(new CustomEvent("mm:sync-done"));
     });
   }
