@@ -39,6 +39,50 @@
   .pv-note { margin:clamp(30px,4vw,44px) 0 0; padding:clamp(20px,2.4vw,28px);
     background:#EFE9D8; border-left:2px solid #D4AF37; }
   .pv-note p:last-child { margin-bottom:0; }
+
+  /* ── Móvil ──────────────────────────────────────────────────────────────
+     El header de escritorio es una sola fila de 96px (nav + logo + acciones).
+     Por debajo de ~700px no entra, y como las columnas laterales tienen
+     overflow:hidden, "Favoritos" y "Bolsa" quedaban recortadas fuera de
+     pantalla en vez de solo apretadas. Acá se apila en dos filas. */
+  @media (max-width: 700px) {
+    header > div {
+      height: auto !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+      padding-top: 14px !important;
+      padding-bottom: 14px !important;
+    }
+    header > div > a {
+      order: -1;
+      align-self: center !important;
+    }
+    header > div > nav,
+    header > div > div {
+      flex: 0 0 auto !important;
+      justify-content: center !important;
+      overflow: visible !important;
+      flex-wrap: wrap !important;
+      row-gap: 8px !important;
+    }
+    header > div > nav { font-size: 9.5px !important; }
+  }
+
+  @media (max-width: 520px) {
+    /* Un toque cómodo: 44px de alto mínimo en los enlaces del header. */
+    header > div > nav a,
+    header > div > div a { padding: 6px 2px; }
+  }
+
+  /* El botón flotante no debe tapar el texto del pie ni comerse la pantalla. */
+  @media (max-width: 520px) {
+    a[href^="https://wa.me"] {
+      padding: 13px 18px !important;
+      font-size: 9px !important;
+      letter-spacing: .2em !important;
+    }
+  }
 </style>
 </head>
 <body>
