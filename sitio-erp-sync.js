@@ -120,6 +120,73 @@
   }
 
   // ------------------------------------------------------------------
+  // 1b) Tiles de categorías del home (sección "Encuentra tu estilo")
+  // Solo aparecen las categorías que tienen imagen cargada en el ERP.
+  // ------------------------------------------------------------------
+  async function syncCategoriasTiles() {
+    var container = document.querySelector('[data-mm-sync="categorias-tiles"]');
+    if (!container) return;
+
+    var cats = await api("/categorias_productos?select=id,nombre,imagen_url&order=nombre.asc");
+    if (!cats) return;
+    cats = cats.filter(function (c) { return c.imagen_url; });
+    if (cats.length === 0) return;
+
+    var template = container.querySelector("a.mm-cat-card");
+    if (!template) return;
+
+    // Contar piezas por categoría (una request extra por eficiencia)
+    var counts = await api("/productos?select=categoria_principal_id&activo=eq.true&visible_web=eq.true");
+    var countByCat = {};
+    (counts || []).forEach(function (p) {
+      var k = p.categoria_principal_id;
+      if (!k) return;
+      countByCat[k] = (countByCat[k] || 0) + 1;
+    });
+
+    // Limpiar tiles hardcoded
+    Array.prototype.slice.call(container.querySelectorAll("a.mm-cat-card")).forEach(function (c) { c.remove(); });
+
+    // Clase de layout rotando entre 4 opciones para variar tamaños
+    var layoutClasses = ["mm-cat-mujer", "mm-cat-hombre", "mm-cat-acc", "mm-cat-nueva"];
+
+    cats.forEach(function (c, idx) {
+      var card = template.cloneNode(true);
+      // Reset clases de layout
+      layoutClasses.forEach(function (cls) { card.classList.remove(cls); });
+      card.classList.add(layoutClasses[idx % layoutClasses.length]);
+
+      var slug = c.nombre.toLowerCase();
+      card.setAttribute("href", "./Catalogo.dc.html?cat=" + encodeURIComponent(slug));
+      card.setAttribute("aria-label", "Explorar " + c.nombre + " en el catálogo");
+
+      var imgWrap = card.querySelector(".mm-cat-img");
+      if (imgWrap) {
+        imgWrap.innerHTML = "";
+        var img = document.createElement("img");
+        img.src = c.imagen_url;
+        img.alt = c.nombre;
+        img.loading = "lazy";
+        imgWrap.appendChild(img);
+      }
+
+      var nameEl = card.querySelector(".mm-cat-name");
+      if (nameEl) {
+        nameEl.textContent = c.nombre;
+        nameEl.style.fontStyle = "";
+      }
+
+      var metaEl = card.querySelector(".mm-cat-meta > span:first-child");
+      if (metaEl) {
+        var n = countByCat[c.id] || 0;
+        metaEl.textContent = n === 1 ? "1 pieza" : n + " piezas";
+      }
+
+      container.appendChild(card);
+    });
+  }
+
+  // ------------------------------------------------------------------
   // 2) Filtros de categoría dinámicos
   // ------------------------------------------------------------------
 
@@ -244,7 +311,7 @@
 
   function boot() {
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
-    Promise.allSettled([syncCatalogo(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
+    Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
       document.dispatchEvent(new CustomEvent("mm:sync-done"));
     });
   }
