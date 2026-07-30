@@ -842,6 +842,88 @@
     "detalles": "detalhes",
     "cada": "cada",
     "salinas": "salinas",
+    // Copy adicional detectada en screenshots
+    "CAMPAÑA HOMBRE": "CAMPANHA HOMEM",
+    "CAMPAÑA MUJER": "CAMPANHA MULHER",
+    "Campaña": "Campanha",
+    "campaña": "campanha",
+    "VER LA CAMPAÑA": "VER A CAMPANHA",
+    "Ver la campaña": "Ver a campanha",
+    "Lino, cuero y oficio": "Linho, couro e ofício",
+    "Lino": "Linho",
+    "cuero": "couro",
+    "oficio": "ofício",
+    "NUESTRA ESENCIA": "NOSSA ESSÊNCIA",
+    "Nuestra esencia": "Nossa essência",
+    "esencia": "essência",
+    "Desde 2014, vestimos con calma": "Desde 2014, vestimos com calma",
+    "vestimos con calma": "vestimos com calma",
+    "con calma": "com calma",
+    "Marilia nació en un taller de dos máquinas sobre la calle Mariscal López.":
+      "A Marilia nasceu num ateliê de duas máquinas na rua Mariscal López.",
+    "Marilia nació": "A Marilia nasceu",
+    "nació en un taller": "nasceu num ateliê",
+    "un taller": "um ateliê",
+    "taller": "ateliê",
+    "Nada se produce dos veces igual.": "Nada se produz duas vezes igual.",
+    "Nada se produce": "Nada se produz",
+    "dos veces": "duas vezes",
+    "FIBRAS NATURALES": "FIBRAS NATURAIS",
+    "Fibras naturales": "Fibras naturais",
+    "ARTESANAS": "ARTESÃS",
+    "artesanas": "artesãs",
+    "Bolso": "Bolsa",
+    "SHOP THE LOOK": "SHOP THE LOOK",
+    "shop the look": "shop the look",
+    "CAMPAÑA": "CAMPANHA",
+    "PIEZAS": "PEÇAS",
+    "sobre la calle": "na rua",
+    "Hoy somos": "Hoje somos",
+    "hoy somos": "hoje somos",
+    "once mujeres": "onze mulheres",
+    "cada pieza": "cada peça",
+    "pensando en cómo se vive un día entero dentro de ella": "pensando em como se vive um dia inteiro dentro dela",
+    "un día entero": "um dia inteiro",
+    "un día": "um dia",
+    "dentro de ella": "dentro dela",
+    "tiradas cortas": "tiragens curtas",
+    "proveedores locales": "fornecedores locais",
+    "telas naturales": "tecidos naturais",
+    "tintes naturales": "tinturas naturais",
+    "acabados a mano": "acabamentos à mão",
+    "a mano": "à mão",
+    "en serie limitada": "em série limitada",
+    "serie limitada": "série limitada",
+    "unidades": "unidades",
+    "de 40 unidades": "de 40 unidades",
+    "sacos": "paletós",
+    "saco": "paletó",
+    "pantalones": "calças",
+    "pantalón": "calça",
+    "camisas": "camisas",
+    "fotografiada": "fotografada",
+    "masculina": "masculina",
+    "femenina": "feminina",
+    "las salinas del sur": "as salinas do sul",
+    "del sur": "do sul",
+    "Encuentra": "Encontre",
+    "encuentra": "encontre",
+    "tu estilo": "seu estilo",
+    "Tu estilo": "Seu estilo",
+    "TU ESTILO": "SEU ESTILO",
+    "El look": "O look",
+    "el look": "o look",
+    "ADICIONAR O LOOK": "ADICIONAR O LOOK",
+    "Añadir el look": "Adicionar o look",
+    "AÑADIR EL LOOK": "ADICIONAR O LOOK",
+    "GS.": "GS.",
+    "Añadido a la bolsa": "Adicionado à sacola",
+    "Ver la ficha": "Ver a ficha",
+    "TALLA": "TAMANHO",
+    "Talla": "Tamanho",
+    "talla": "tamanho",
+    "COLOR": "COR",
+    "Color": "Cor",
   };
   // Reverse map PT→ES para toggle bidireccional
   var COPY_PT_ES = {};
@@ -980,16 +1062,38 @@
     document.body.appendChild(btn);
   }
 
+  // MutationObserver: re-traduce cada vez que el DOM cambia (útil cuando
+  // el runtime DC hidrata headlines tarde). Debounced para no ir a 60fps.
+  var mmMutationTimer = null;
+  function installMutationObserver() {
+    if (LANG === "es") return;
+    var mo = new MutationObserver(function () {
+      clearTimeout(mmMutationTimer);
+      mmMutationTimer = setTimeout(function () {
+        translatePageDeep();
+      }, 200);
+    });
+    mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+    // También observar shadow roots existentes
+    document.querySelectorAll("*").forEach(function (el) {
+      if (el.shadowRoot) {
+        try { mo.observe(el.shadowRoot, { childList: true, subtree: true, characterData: true }); } catch (e) {}
+      }
+    });
+  }
+
   function boot() {
     injectLangToggle();
     if (LANG !== "es") translatePageDeep();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
     Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
-      // Re-traducir por si el loader inyectó texto nuevo
       if (LANG !== "es") translatePageDeep();
-      // Watcher: los custom elements (<image-slot>) pueden hidratar tarde
-      setTimeout(function () { if (LANG !== "es") translatePageDeep(); }, 800);
-      setTimeout(function () { if (LANG !== "es") translatePageDeep(); }, 2000);
+      // Ticks progresivos para capturar hidratación tardía del DC runtime
+      [400, 1000, 2500, 5000].forEach(function (ms) {
+        setTimeout(function () { if (LANG !== "es") translatePageDeep(); }, ms);
+      });
+      // MutationObserver permanente (mientras el usuario esté en PT)
+      installMutationObserver();
       document.dispatchEvent(new CustomEvent("mm:sync-done"));
     });
   }
