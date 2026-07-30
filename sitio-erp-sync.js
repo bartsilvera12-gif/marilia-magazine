@@ -783,6 +783,65 @@
     "Vaciar": "Esvaziar",
     "Confirmar": "Confirmar",
     "Cancelar": "Cancelar",
+    // Copy adicional detectada en el sitio
+    "Curadas para quienes eligen calidad, diseño y autenticidad en cada detalle.":
+      "Selecionadas para quem escolhe qualidade, design e autenticidade em cada detalhe.",
+    "VER COLECCIÓN COMPLETA": "VER COLEÇÃO COMPLETA",
+    "Ver colección completa": "Ver coleção completa",
+    "Piezas seleccionadas por su diseño, calidad y atemporalidad.":
+      "Peças selecionadas pelo seu design, qualidade e atemporalidade.",
+    "Estilo que trasciende.": "Estilo que transcende.",
+    "Estilo que trasciende": "Estilo que transcende",
+    "Tres piezas, un mismo gesto.": "Três peças, um mesmo gesto.",
+    "Tres piezas, un mismo gesto": "Três peças, um mesmo gesto",
+    "AÑADIR EL LOOK": "ADICIONAR O LOOK",
+    "Sastrería masculina fotografiada en las salinas del sur.":
+      "Alfaiataria masculina fotografada nas salinas do sul.",
+    "Camisas, pantalones y sacos en serie limitada de 40 unidades, con tintes naturales y acabados a mano.":
+      "Camisas, calças e paletós em série limitada de 40 unidades, com tinturas naturais e acabamentos à mão.",
+    "Hoy somos once mujeres que diseñan, cortan y cosen cada pieza pensando en cómo se vive un día entero dentro de ella.":
+      "Hoje somos onze mulheres que desenham, cortam e costuram cada peça pensando em como se vive um dia inteiro dentro dela.",
+    "Trabajamos con telas naturales, tiradas cortas y proveedores locales.":
+      "Trabalhamos com tecidos naturais, tiragens curtas e fornecedores locais.",
+    "PIEZAS POR SERIE": "PEÇAS POR SÉRIE",
+    "Compré el vestido Aurelia para la boda de mi hermana y terminé usándolo todo el verano.":
+      "Comprei o vestido Aurelia para o casamento da minha irmã e acabei usando o verão inteiro.",
+    "La caída del lino es otra cosa.": "O caimento do linho é outra coisa.",
+    "Es la única marca donde compramos los dos sin probarnos.":
+      "É a única marca onde compramos os dois sem provar.",
+    "Los talles son consistentes y las telas duran años.":
+      "Os tamanhos são consistentes e os tecidos duram anos.",
+    "— CIUDAD DEL ESTE": "— CIUDAD DEL ESTE",
+    "Sastrería": "Alfaiataria",
+    "sastrería": "alfaiataria",
+    "vestido": "vestido",
+    "prendas": "peças",
+    "prenda": "peça",
+    "boda": "casamento",
+    "hermana": "irmã",
+    "mujeres": "mulheres",
+    "mujer": "mulher",
+    "hombre": "homem",
+    "hombres": "homens",
+    "verano": "verão",
+    "invierno": "inverno",
+    "tela": "tecido",
+    "telas": "tecidos",
+    "seda": "seda",
+    "lino": "linho",
+    "algodón": "algodão",
+    "diseño": "design",
+    "años": "anos",
+    "diseñan": "desenham",
+    "cortan": "cortam",
+    "cosen": "costuram",
+    "compramos": "compramos",
+    "compré": "comprei",
+    "sur": "sul",
+    "detalle": "detalhe",
+    "detalles": "detalhes",
+    "cada": "cada",
+    "salinas": "salinas",
   };
   // Reverse map PT→ES para toggle bidireccional
   var COPY_PT_ES = {};
@@ -794,7 +853,7 @@
     var keys = Object.keys(dict).sort(function (a, b) { return b.length - a.length; });
     function processRoot(root) {
       if (!root) return;
-      var walker = (root.createTreeWalker || document.createTreeWalker).call(root, root, NodeFilter.SHOW_TEXT, {
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
         acceptNode: function (n) {
           var p = n.parentElement;
           if (!p) return NodeFilter.FILTER_REJECT;
