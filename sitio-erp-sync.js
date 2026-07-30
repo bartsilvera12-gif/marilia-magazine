@@ -102,15 +102,37 @@
       var img = p.imagen_url || p.imagen_path || "";
       if (img) card.setAttribute("data-img", img);
 
-      // Actualizamos strings visibles dentro de la card si existen
+      // Nombre
       var nombreEl = card.querySelector("h3, .mm-cg-name, [data-mm-name]");
       if (nombreEl) nombreEl.textContent = p.nombre;
+
+      // Precio (0 → "Consultar")
       var precioEl = card.querySelector(".mm-cg-price, [data-mm-price]");
-      if (precioEl) precioEl.textContent = fmtGs(p.precio_venta);
+      if (precioEl) precioEl.textContent = (Number(p.precio_venta) > 0) ? fmtGs(p.precio_venta) : "Consultar";
+
+      // Sub: descripción del ERP, o color · talla como fallback para diferenciar variantes
       var subEl = card.querySelector(".mm-cg-sub, [data-mm-sub]");
-      if (subEl && p.descripcion) subEl.textContent = p.descripcion;
-      var imgEl = card.querySelector("img, image-slot");
-      if (imgEl && img) imgEl.setAttribute("src", img);
+      if (subEl) {
+        var variant = [p.color_nombre, p.talla_nombre].filter(Boolean).join(" · ");
+        subEl.textContent = (p.descripcion && p.descripcion.trim()) || variant || "";
+      }
+
+      // Categoría (chip superior)
+      var catEl = card.querySelector(".mm-cg-cat, [data-mm-cat]");
+      if (catEl) {
+        var catName = catById[p.categoria_principal_id] || "";
+        catEl.textContent = catName;
+      }
+
+      // Imagen principal
+      var imgEl = card.querySelector("img");
+      if (imgEl && img) { imgEl.setAttribute("src", img); imgEl.setAttribute("alt", p.nombre); }
+      var slotEl = card.querySelector("image-slot");
+      if (slotEl && img) slotEl.setAttribute("src", img);
+
+      // Quitar los <div data-alt> con segunda imagen hardcoded (no aplican al producto real)
+      var altLayer = card.querySelector("[data-alt]");
+      if (altLayer && altLayer.parentElement) altLayer.parentElement.removeChild(altLayer);
 
       container.appendChild(card);
     });
