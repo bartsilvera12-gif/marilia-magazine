@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script>
+  window.MM_SUPABASE = {
+    url: "REEMPLAZAR_CON_URL_SUPABASE",   // ej: https://xxxx.supabase.co
+    anonKey: "REEMPLAZAR_CON_ANON_KEY",
+  };
+</script>
+<script defer src="./sitio-erp-sync.js"></script>
 </head>
 <body>
 <x-dc>
@@ -117,7 +124,7 @@
             <button class="mm-cf-g" data-gender="mujer">Mujer</button>
             <button class="mm-cf-g" data-gender="hombre">Hombre</button>
           </div>
-          <div class="mm-cf-filters" style="display:flex;flex-wrap:wrap;gap:clamp(14px,2.4vw,32px)">
+          <div class="mm-cf-filters" data-mm-sync="filtros" style="display:flex;flex-wrap:wrap;gap:clamp(14px,2.4vw,32px)">
             <button class="mm-cf-btn" data-filter="todo" data-on>Todo</button>
             <button class="mm-cf-btn" data-filter="vestidos">Vestidos</button>
             <button class="mm-cf-btn" data-filter="conjuntos">Conjuntos</button>
@@ -228,7 +235,7 @@
         }
       </style>
 
-      <div class="mm-cg" data-cg>
+      <div class="mm-cg" data-cg data-mm-sync="catalogo">
         <article class="mm-cg-card" data-cg-card data-id="p1" data-cat="mujer vestidos" data-name="Vestido Aurelia" data-price="1290000" data-sub="Vestido midi en lino lavado" data-img="./uploads/mujer.webp" data-sizes="XS,S,M,L" data-colors="#C46A4A,#E4DCC6,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/mujer.webp" alt="Vestido Aurelia" loading="lazy" />
