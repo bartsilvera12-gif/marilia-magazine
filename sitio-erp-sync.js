@@ -88,14 +88,153 @@
   function tr(text) {
     if (LANG === "pt" || !text) return text;
     var up = String(text).toUpperCase().trim();
-    // Match completo
     if (DICT_PT_ES[up] !== undefined) return DICT_PT_ES[up] || up;
-    // Reemplazar palabra por palabra
     return up.split(/(\s+|·|\-|,)/).map(function (w) {
       var wu = w.toUpperCase().trim();
       if (DICT_PT_ES[wu] !== undefined) return DICT_PT_ES[wu];
       return w;
     }).join("");
+  }
+
+  // ------------------------------------------------------------------
+  // Traducción de textos hardcodeados del HTML (secciones, botones, footer).
+  // Sitio está en español; si LANG=pt, reemplazamos ES → PT.
+  // ------------------------------------------------------------------
+  var DICT_ES_PT = {
+    // Navegación / cabecera
+    "Casa": "Início",
+    "Catálogo": "Catálogo",
+    "Buscar": "Buscar",
+    "Buscar en la tienda": "Pesquisar na loja",
+    "Búsquedas frecuentes": "Buscas frequentes",
+    "Bolsa": "Sacola",
+    "Ayuda": "Ajuda",
+    "Cerrar ✕": "Fechar ✕",
+    "Cerrar": "Fechar",
+    // Filtros / categorías
+    "Todos": "Todos",
+    "Todo": "Tudo",
+    "Mujer": "Mulher",
+    "Hombre": "Homem",
+    "Vestidos": "Vestidos",
+    "Conjuntos": "Conjuntos",
+    "Blusas": "Blusas",
+    "Camisas": "Camisas",
+    "Pantalones": "Calças",
+    "Faldas": "Saias",
+    "Abrigos": "Casacos",
+    "Accesorios": "Acessórios",
+    "Calzado": "Calçados",
+    "Blusa": "Blusa",
+    "Camisa": "Camisa",
+    "Abrigo": "Casaco",
+    "Blazer": "Blazer",
+    "Falda": "Saia",
+    "Pantalón": "Calça",
+    "Bolso": "Bolsa",
+    "Bolso Nieve": "Bolsa Nieve",
+    "Bolsa ": "Sacola ",
+    // Secciones
+    "Colecciones": "Coleções",
+    "Nueva colección": "Nova coleção",
+    "Explorar la colección": "Explorar a coleção",
+    "Encuentra tu": "Encontre seu",
+    "estilo": "estilo",
+    "Explorar": "Explorar",
+    "El look": "O look",
+    "completo": "completo",
+    "Shop the look": "Shop the look",
+    "Ver completa": "Ver completo",
+    "Vista rápida": "Vista rápida",
+    // Acciones
+    "Añadir a la bolsa": "Adicionar à sacola",
+    "Añadir el look": "Adicionar o look",
+    "Añadir": "Adicionar",
+    "Añadir +": "Adicionar +",
+    // Footer / info
+    "Envíos y entregas": "Envios e entregas",
+    "Cambios y devoluciones": "Trocas e devoluções",
+    "Contacto": "Contato",
+    "Preguntas frecuentes": "Perguntas frequentes",
+    "Cuidado de las prendas": "Cuidado das peças",
+    "Guía de talles": "Guia de tamanhos",
+    "Sobre nosotros": "Sobre nós",
+    "Términos y condiciones": "Termos e condições",
+    "Política de privacidad": "Política de privacidade",
+    "Seguinos en Instagram": "Siga-nos no Instagram",
+    "Tienda": "Loja",
+    "Consultar": "Consultar",
+    // Chips de categorías
+    "Camisa · Hombre": "Camisa · Homem",
+    "Blazer · Hombre": "Blazer · Homem",
+    "Pantalón · Hombre": "Calça · Homem",
+    "Traje · Hombre": "Terno · Homem",
+    "Abrigo · Hombre": "Casaco · Homem",
+    "Camisas · Hombre": "Camisas · Homem",
+    "Abrigos · Hombre": "Casacos · Homem",
+    "Accesorios · Hombre": "Acessórios · Homem",
+    // Botones flotantes / CTAs
+    "WHATSAPP": "WHATSAPP",
+    "Consultar precio": "Consultar preço",
+    "Añadir al carrito": "Adicionar ao carrinho",
+    // Contadores
+    "piezas": "peças",
+    "pieza": "peça",
+    "talles": "tamanhos",
+    "talle": "tamanho",
+    "colores": "cores",
+    "color": "cor",
+  };
+
+  function translateStaticText() {
+    if (LANG !== "pt") return; // sitio ya está en ES por default
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        var tag = p.tagName;
+        if (tag === "SCRIPT" || tag === "STYLE" || tag === "NOSCRIPT") return NodeFilter.FILTER_REJECT;
+        if (p.closest("[data-mm-sync]")) return NodeFilter.FILTER_REJECT; // esos ya los traduce el loader
+        if (p.id === "mm-lang-toggle") return NodeFilter.FILTER_REJECT;
+        var t = node.nodeValue;
+        if (!t || !t.trim() || t.length > 200) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    var nodes = [];
+    var n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach(function (node) {
+      var t = node.nodeValue;
+      var trimmed = t.trim();
+      if (DICT_ES_PT[trimmed]) {
+        node.nodeValue = t.replace(trimmed, DICT_ES_PT[trimmed]);
+        return;
+      }
+      // Reemplazo por palabra completa (case-sensitive con primera mayúscula)
+      var newT = t;
+      Object.keys(DICT_ES_PT).forEach(function (es) {
+        if (es.length < 3) return;
+        var re = new RegExp("\\b" + es.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "g");
+        newT = newT.replace(re, DICT_ES_PT[es]);
+      });
+      if (newT !== t) node.nodeValue = newT;
+    });
+
+    // Placeholders de inputs (no son text nodes)
+    document.querySelectorAll("input[placeholder]").forEach(function (i) {
+      var v = i.getAttribute("placeholder");
+      if (DICT_ES_PT[v]) i.setAttribute("placeholder", DICT_ES_PT[v]);
+    });
+    // Alt de imágenes visibles
+    document.querySelectorAll("img[alt], [aria-label]").forEach(function (el) {
+      ["alt", "aria-label"].forEach(function (a) {
+        var v = el.getAttribute(a);
+        if (v && DICT_ES_PT[v]) el.setAttribute(a, DICT_ES_PT[v]);
+      });
+    });
+    // <html lang> para SEO / lector de pantalla
+    document.documentElement.setAttribute("lang", "pt");
   }
 
   function pickSlot(slot, key) {
@@ -517,8 +656,11 @@
 
   function boot() {
     injectLangToggle();
+    translateStaticText();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
     Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
+      // Re-traducir por si el loader inyectó texto en español (ej "Consultar")
+      translateStaticText();
       document.dispatchEvent(new CustomEvent("mm:sync-done"));
     });
   }
