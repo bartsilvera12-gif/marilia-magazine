@@ -34,7 +34,7 @@ support.js      runtime x-dc (componentes, estado, plantillas)
 image-slot.js   <image-slot>, marco de imagen rellenable
 ```
 
-Las fotos siguen la convención `prenda.png` (en modelo) y `prenda2.png` (en
+Las fotos siguen la convención `prenda.webp` (en modelo) y `prenda2.webp` (en
 percha). La primera es la principal; la segunda aparece al pasar el cursor sobre
 la tarjeta y como segunda miniatura en la ficha.
 
@@ -78,3 +78,21 @@ la tarjeta y como segunda miniatura en la ficha.
 ---
 
 Desarrollado por [Neura](https://neura.com.py)
+
+## Peso de imágenes
+
+Las fotos se sirven en **WebP** (`q82`, lado largo a 1000px): 109 MB de PNG
+originales pasaron a 5,9 MB, sin cambio perceptible a los tamaños en que se
+muestran. Los PNG quedan en disco como fuente pero no se versionan — están en
+`.gitignore`.
+
+Para regenerarlos después de agregar fotos nuevas:
+
+```bash
+npx --yes sharp-cli -i uploads/<carpeta>/*.png -o uploads/<carpeta> -f webp -q 82 resize 1000 --withoutEnlargement
+```
+
+Además: `<image-slot>` marca sus imágenes como `loading="lazy"`, y la segunda
+toma de cada tarjeta (la del hover) guarda su URL en `data-src2` y no se
+descarga hasta el primer hover — si no, al estar dentro del viewport con
+`opacity:0` se bajaría igual y duplicaría el peso que paga el visitante.

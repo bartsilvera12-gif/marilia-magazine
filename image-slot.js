@@ -501,7 +501,10 @@
       root.innerHTML =
         '<style>' + stylesheet + '</style>' +
         '<div class="frame" part="frame">' +
-        '  <img part="image" alt="" draggable="false" style="display:none">' +
+        // lazy + async decode: a page can hold dozens of slots, and fetching
+        // every photograph up front is the difference between a slow first
+        // paint and an instant one. The geometry work still runs on `load`.
+        '  <img part="image" alt="" draggable="false" loading="lazy" decoding="async" style="display:none">' +
         '  <div class="empty" part="empty">' + icon +
         '    <div class="cap"></div>' +
         '    <div class="sub">or <u>browse files</u></div></div>' +

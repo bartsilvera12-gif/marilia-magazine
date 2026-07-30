@@ -18,3 +18,10 @@ node_modules/
 
 # Original con espacios/comas en el nombre; se usa la copia perchero.png
 ChatGPT Image*.png
+
+# Originales PNG/JPEG. El sitio sirve los .webp (109 MB -> 5,9 MB).
+# Se conservan en disco como fuente, no se versionan.
+uploads/**/*.png
+uploads/**/*.jpeg
+uploads/*.png
+uploads/*.jpeg
