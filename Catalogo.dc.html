@@ -971,6 +971,7 @@
     // grilla, asi que no hay que rebindear nada).
     document.addEventListener('mm:catalogo-loaded', function(){
       buildProducts();
+      setDetailLinks();
       renderFavs();
     });
 
@@ -1204,10 +1205,13 @@
     });
 
     // Set detail links
-    cards.forEach(function(c){
-      var link = c.querySelector('[data-detail]');
-      if(link){ link.setAttribute('href', './Producto.dc.html?id=' + c.dataset.id); }
-    });
+    function setDetailLinks(){
+      cards.forEach(function(c){
+        var link = c.querySelector('[data-detail]');
+        if(link){ link.setAttribute('href', './Producto.dc.html?id=' + c.dataset.id); }
+      });
+    }
+    setDetailLinks();
 
     // Card interactions
     grid.addEventListener('click', function(ev){

@@ -315,7 +315,19 @@
     var params = new URLSearchParams(location.search);
     var id = params.get('id') || 'p1';
     var p = MM_PRODUCTS[id];
-    if(!p){ document.querySelector('[data-name]').textContent = 'Producto no encontrado'; return; }
+    if(!p){
+      // Los ids del ERP son UUID y los resuelve sitio-erp-sync.js, que corre
+      // despues de este init. Cantar "no encontrado" de entrada mostraba el
+      // error incluso para productos que existian y estaban por llegar.
+      var nm = document.querySelector('[data-name]');
+      if(nm){
+        nm.textContent = 'Cargando…';
+        document.addEventListener('mm:sync-done', function(){
+          if(nm.textContent === 'Cargando…') nm.textContent = 'Producto no encontrado';
+        });
+      }
+      return;
+    }
 
     var $ = function(sel){ return document.querySelector(sel); };
     if(!$('[data-name]')){ return setTimeout(initProducto, 80); }

@@ -283,6 +283,34 @@
     return (slot && slot.dataset && slot.dataset[key]) || "";
   }
 
+  // Mapa nombre-color → hex (comunes en el catálogo Marilia/pedido Paraguay).
+  // A nivel de módulo porque lo usan tanto las tarjetas del catálogo como la
+  // ficha de producto.
+  var COLOR_HEX = {
+    "PRETO":"#0E0E0E", "BLACK":"#0E0E0E", "NEGRO":"#0E0E0E",
+    "BRANCO":"#F5F1E8", "OFF WHITE":"#F0EADB", "BEGE":"#D8C4A0",
+    "AREIA":"#D8C6A5", "AVEIA":"#E5D8B9", "MARFIL":"#EFE6D2",
+    "AZUL MARINHO":"#14243E", "AZUL MEDIO":"#3D6BA6", "AZUL INDIGO":"#2F4A73",
+    "AZUL INFINITY":"#1E2E5A",
+    "CAFE":"#4A2E1F", "MARROM":"#3E2519", "MARROM WOOD":"#4A3428",
+    "MARROM COGNAC":"#7A3E1F", "CAMEL":"#B4855A", "WHISKY":"#8A5A2E",
+    "CINZA":"#6C6C6C", "CINZA CLARO":"#B4B4B4", "CINZA BOSS":"#5A5A5A",
+    "CHUMBO":"#3D3D42", "GRAFITE":"#40403E",
+    "VERMELHO":"#B92E2E", "CABERNET":"#5C1A26", "BORDO":"#5C1A26",
+    "TELHA":"#B8593A",
+    "VERDE":"#3E6B3A", "VERDE MILITAR":"#3E4B2B", "VERDE MUSGO":"#4A5A2E",
+    "VERDE PISTACHE":"#B7C88A", "VERDE OLIVA":"#6B6B34", "VERDE GALAPAGOS":"#2E5E3E",
+    "VERDE EDEN":"#3E7E4E",
+    "LARANJA":"#D46A2E", "AMETISTA":"#8E5CA6",
+    "CROMO":"#B9B9B4", "KAKI":"#8A7A4A", "CAQUI":"#8A7A4A",
+    "INCOLOR":"#EFEFEF", "UNICA":"#B0B0B0", "BRANCA TFLW":"#F5F1E8",
+  };
+  function hexForColor(name) {
+    if (!name) return "#B0B0B0";
+    var up = String(name).toUpperCase().trim();
+    return COLOR_HEX[up] || "#B0B0B0";
+  }
+
   async function api(path) {
     try {
       var r = await fetch(REST + path, { headers: HEADERS, credentials: "omit" });
@@ -361,32 +389,6 @@
     // Categorías para mapear id → nombre
     var catById = {};
     (cats || []).forEach(function (c) { catById[c.id] = c.nombre; });
-
-    // Mapa nombre-color → hex (comunes en el catálogo Marilia/pedido Paraguay)
-    var COLOR_HEX = {
-      "PRETO":"#0E0E0E", "BLACK":"#0E0E0E", "NEGRO":"#0E0E0E",
-      "BRANCO":"#F5F1E8", "OFF WHITE":"#F0EADB", "BEGE":"#D8C4A0",
-      "AREIA":"#D8C6A5", "AVEIA":"#E5D8B9", "MARFIL":"#EFE6D2",
-      "AZUL MARINHO":"#14243E", "AZUL MEDIO":"#3D6BA6", "AZUL INDIGO":"#2F4A73",
-      "AZUL INFINITY":"#1E2E5A",
-      "CAFE":"#4A2E1F", "MARROM":"#3E2519", "MARROM WOOD":"#4A3428",
-      "MARROM COGNAC":"#7A3E1F", "CAMEL":"#B4855A", "WHISKY":"#8A5A2E",
-      "CINZA":"#6C6C6C", "CINZA CLARO":"#B4B4B4", "CINZA BOSS":"#5A5A5A",
-      "CHUMBO":"#3D3D42", "GRAFITE":"#40403E",
-      "VERMELHO":"#B92E2E", "CABERNET":"#5C1A26", "BORDO":"#5C1A26",
-      "TELHA":"#B8593A",
-      "VERDE":"#3E6B3A", "VERDE MILITAR":"#3E4B2B", "VERDE MUSGO":"#4A5A2E",
-      "VERDE PISTACHE":"#B7C88A", "VERDE OLIVA":"#6B6B34", "VERDE GALAPAGOS":"#2E5E3E",
-      "VERDE EDEN":"#3E7E4E",
-      "LARANJA":"#D46A2E", "AMETISTA":"#8E5CA6",
-      "CROMO":"#B9B9B4", "KAKI":"#8A7A4A", "CAQUI":"#8A7A4A",
-      "INCOLOR":"#EFEFEF", "UNICA":"#B0B0B0", "BRANCA TFLW":"#F5F1E8",
-    };
-    function hexForColor(name) {
-      if (!name) return "#B0B0B0";
-      var up = String(name).toUpperCase().trim();
-      return COLOR_HEX[up] || "#B0B0B0";
-    }
 
     // AGRUPAR por modelo base: SKU "XXXXX.YYY-TALLA" → modelo = "XXXXX".
     // Cada modelo puede tener N variantes color+talla; UNA card por modelo,
@@ -1373,7 +1375,7 @@
         var b = document.createElement("button");
         b.type = "button";
         b.className = "mm-pd-size";
-        b.textContent = t;
+        b.textContent = tr(t);
         if (i === 0) b.setAttribute("data-on", "");
         sizesEl.appendChild(b);
       });
@@ -1381,14 +1383,22 @@
     var colorsEl = $("[data-colors]");
     if (colorsEl) {
       colorsEl.innerHTML = "";
-      Array.from(colores).forEach(function (c, i) {
+      // La foto grande es la de la variante que se abrio, asi que el swatch
+      // marcado tiene que ser el de ESE color, no el primero de la lista.
+      var coloresLista = Array.from(colores);
+      var seleccionado = coloresLista.indexOf(p.color_nombre);
+      if (seleccionado < 0) seleccionado = 0;
+      coloresLista.forEach(function (c, i) {
         var b = document.createElement("button");
         b.type = "button";
         b.className = "mm-pd-color";
-        b.title = c;
-        b.setAttribute("aria-label", c);
+        // Sin background el boton queda transparente: la fila "Color" se veia
+        // vacia aunque el producto tuviera variantes cargadas.
+        b.style.background = hexForColor(c);
+        b.title = tr(c);
+        b.setAttribute("aria-label", tr(c));
         b.setAttribute("data-color", c);
-        if (i === 0) b.setAttribute("data-on", "");
+        if (i === seleccionado) b.setAttribute("data-on", "");
         colorsEl.appendChild(b);
         b.addEventListener("click", function () {
           Array.prototype.forEach.call(colorsEl.children, function (x) { x.removeAttribute("data-on"); });
