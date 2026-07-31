@@ -341,11 +341,10 @@
     var template = container.querySelector("article");
     if (!template) return;
 
-    // Reservar altura y ocultar contenido viejo INMEDIATAMENTE — evita flash del fallback
+    // Los 26 articles fallback del HTML ya arrancan con data-hidden (CSS: display:none)
+    // asi que no hay flash del catalogo viejo al navegar sin cache. Solo reservamos
+    // altura para que no salte el layout mientras llega la respuesta del ERP.
     container.style.minHeight = Math.max(container.offsetHeight, 800) + "px";
-    Array.prototype.slice.call(container.querySelectorAll("article")).forEach(function (a) {
-      a.style.visibility = "hidden";
-    });
 
     // Cache localStorage: render instantáneo si tenemos snapshot < 5min
     var CACHE_KEY = "mm_prod_cache_v3";
@@ -368,8 +367,8 @@
         "/productos?select=id,sku,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
       );
       if (!productos || productos.length === 0) {
-        // DB vacía: restaurar fallback estático
-        Array.prototype.slice.call(container.querySelectorAll("article")).forEach(function (a) { a.style.visibility = ""; });
+        // DB vacía: restaurar fallback estático quitando data-hidden.
+        Array.prototype.slice.call(container.querySelectorAll("article")).forEach(function (a) { a.removeAttribute("data-hidden"); });
         return;
       }
       cats = (await api("/categorias_productos?select=id,nombre")) || [];
