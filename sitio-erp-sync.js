@@ -1330,7 +1330,12 @@
   // desde Supabase cuando el ID no está en el hardcoded MM_PRODUCTS.
   // ------------------------------------------------------------------
   async function syncProductoPage() {
-    if (!/Producto\.dc\.html/i.test(location.pathname)) return;
+    // Ojo con el .html: en Vercel esta activo cleanUrls, asi que en produccion
+    // el pathname llega como "/Producto.dc" (y "/producto" por el rewrite),
+    // nunca "/Producto.dc.html". Exigir la extension hacia que este sync no
+    // corriera NUNCA en produccion — solo en local. De ahi el "Producto no
+    // encontrado" que se veia online y no se reproducia sirviendo los archivos.
+    if (!/producto/i.test(location.pathname)) return;
     var params = new URLSearchParams(location.search);
     var id = params.get("id");
     if (!id) return;
