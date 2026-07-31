@@ -348,7 +348,7 @@
     });
 
     // Cache localStorage: render instantáneo si tenemos snapshot < 5min
-    var CACHE_KEY = "mm_prod_cache_v2";
+    var CACHE_KEY = "mm_prod_cache_v3";
     var CACHE_TTL = 5 * 60 * 1000;
     var productos = null;
     var cats = null;
