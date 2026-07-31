@@ -313,15 +313,54 @@
     var template = container.querySelector("article");
     if (!template) return;
 
-    var productos = await api(
-      "/productos?select=id,sku,nombre,precio_venta,descripcion,imagen_url,imagen_path,destacado,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
-    );
-    if (!productos || productos.length === 0) return; // deja el contenido estático
+    // Reservar altura y ocultar contenido viejo INMEDIATAMENTE — evita flash del fallback
+    container.style.minHeight = Math.max(container.offsetHeight, 800) + "px";
+    Array.prototype.slice.call(container.querySelectorAll("article")).forEach(function (a) {
+      a.style.visibility = "hidden";
+    });
+
+    // Cache localStorage: render instantáneo si tenemos snapshot < 5min
+    var CACHE_KEY = "mm_prod_cache_v1";
+    var CACHE_TTL = 5 * 60 * 1000;
+    var productos = null;
+    var cats = null;
+    try {
+      var raw = localStorage.getItem(CACHE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.ts && (Date.now() - parsed.ts < CACHE_TTL) && Array.isArray(parsed.productos)) {
+          productos = parsed.productos;
+          cats = parsed.cats || [];
+        }
+      }
+    } catch (e) {}
+
+    if (!productos) {
+      productos = await api(
+        "/productos?select=id,sku,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
+      );
+      if (!productos || productos.length === 0) {
+        // DB vacía: restaurar fallback estático
+        Array.prototype.slice.call(container.querySelectorAll("article")).forEach(function (a) { a.style.visibility = ""; });
+        return;
+      }
+      cats = (await api("/categorias_productos?select=id,nombre")) || [];
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), productos: productos, cats: cats })); } catch (e) {}
+    } else {
+      // Refrescar en background para próximas visitas (no re-renderiza esta vista)
+      setTimeout(function () {
+        (async function () {
+          var fresh = await api("/productos?select=id,sku,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc");
+          if (!fresh || fresh.length === 0) return;
+          var freshCats = (await api("/categorias_productos?select=id,nombre")) || [];
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), productos: fresh, cats: freshCats })); } catch (e) {}
+        })();
+      }, 500);
+    }
 
     // Categorías para mapear id → nombre
-    var cats = (await api("/categorias_productos?select=id,nombre")) || [];
     var catById = {};
-    cats.forEach(function (c) { catById[c.id] = c.nombre; });
+    (cats || []).forEach(function (c) { catById[c.id] = c.nombre; });
 
     // Mapa nombre-color → hex (comunes en el catálogo Marilia/pedido Paraguay)
     var COLOR_HEX = {
