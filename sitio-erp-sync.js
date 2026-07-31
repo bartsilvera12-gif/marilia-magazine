@@ -773,10 +773,17 @@
     if (tituloEl && look.titulo) tituloEl.textContent = look.titulo;
     var subEl = container.querySelector("[data-mm-look-sub]");
     if (subEl && look.subtitulo) subEl.textContent = look.subtitulo;
-    var imgEl = container.querySelector("[data-mm-look-img]");
+    // La foto del look: preferimos el marcador explicito, pero caemos a la
+    // primera <img> de la seccion para no depender de que el HTML lo tenga.
+    var imgEl = container.querySelector("[data-mm-look-img]") || container.querySelector("img");
     if (imgEl && look.imagen_url) {
-      if (imgEl.tagName === "IMG") imgEl.setAttribute("src", look.imagen_url);
-      else imgEl.style.backgroundImage = "url(" + look.imagen_url + ")";
+      if (imgEl.tagName === "IMG") {
+        imgEl.setAttribute("src", look.imagen_url);
+        imgEl.removeAttribute("srcset");
+        if (look.titulo) imgEl.setAttribute("alt", look.titulo);
+      } else {
+        imgEl.style.backgroundImage = "url(" + look.imagen_url + ")";
+      }
     }
 
     // Reemplazar rows con productos del look
@@ -785,22 +792,33 @@
       var rowTemplate = rowsContainer.querySelector(".mm-look-row, [data-mm-look-row]");
       if (rowTemplate) {
         rowsContainer.innerHTML = "";
+        var totalLook = 0;
         items.forEach(function (it, idx) {
           var prod = it.productos;
           if (!prod) return;
           var row = rowTemplate.cloneNode(true);
           row.setAttribute("data-name", prod.nombre);
           row.setAttribute("data-price", prod.precio_venta);
+          totalLook += Number(prod.precio_venta) || 0;
           var nameEl = row.querySelector(".mm-look-name, [data-mm-look-name]");
           if (nameEl) nameEl.textContent = prod.nombre;
           var priceEl = row.querySelector(".mm-look-price, [data-mm-look-price]");
           if (priceEl) priceEl.textContent = fmtGs(prod.precio_venta);
+          // Sin etiqueta cargada en el ERP se vacia: dejar la del template
+          // mostraba una categoria equivocada (todas decian "Vestidos").
           var etiquetaEl = row.querySelector(".mm-look-cat, [data-mm-look-etiqueta]");
-          if (etiquetaEl && it.etiqueta) etiquetaEl.textContent = it.etiqueta;
-          var indexEl = row.querySelector(".mm-look-index, [data-mm-look-index]");
+          if (etiquetaEl) etiquetaEl.textContent = it.etiqueta || "";
+          // El numerito de la fila: la clase en el HTML es `mm-look-num`.
+          var indexEl = row.querySelector(".mm-look-num, .mm-look-index, [data-mm-look-index]");
           if (indexEl) indexEl.textContent = String(idx + 1).padStart(2, "0");
           rowsContainer.appendChild(row);
         });
+
+        // Boton "Añadir el look — Gs. X": el total tambien sale del ERP.
+        var btnLook = container.querySelector("[data-add-look]");
+        if (btnLook) {
+          btnLook.textContent = (LANG === "pt" ? "Adicionar o look — " : "Añadir el look — ") + fmtGs(totalLook);
+        }
       }
     }
   }
