@@ -611,13 +611,17 @@
       var btn = template.cloneNode(true);
       var display = c.nombre;
       if (LANG === "pt") {
-        // Traducir "Mujer Vestidos" → "Mulher Vestidos", "Hombre Camisas" → "Homem Camisas", etc.
         display = display.split(/\s+/).map(function (w) {
           return DICT_ES_PT[w] || w;
         }).join(" ");
       }
       btn.textContent = display;
       btn.setAttribute("data-cat", c.nombre.toLowerCase());
+      // data-filter = última palabra (ej "Hombre Camisas" → "camisas") — la JS
+      // del sitio filtra por hasTag(card, dataset.filter) contra data-cat splitted.
+      var lastWord = c.nombre.trim().split(/\s+/).pop().toLowerCase();
+      btn.setAttribute("data-filter", lastWord);
+      btn.removeAttribute("data-on");
       btn.classList.remove("active", "is-active");
       container.appendChild(btn);
     });
