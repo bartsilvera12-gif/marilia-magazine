@@ -617,14 +617,101 @@
       }
       btn.textContent = display;
       btn.setAttribute("data-cat", c.nombre.toLowerCase());
-      // data-filter = última palabra (ej "Hombre Camisas" → "camisas") — la JS
-      // del sitio filtra por hasTag(card, dataset.filter) contra data-cat splitted.
       var lastWord = c.nombre.trim().split(/\s+/).pop().toLowerCase();
       btn.setAttribute("data-filter", lastWord);
       btn.removeAttribute("data-on");
       btn.classList.remove("active", "is-active");
       container.appendChild(btn);
     });
+
+    // Delegación de eventos: los handlers originales del catálogo (registrados
+    // sobre los botones template) se pierden al reemplazarlos. Adjunto el
+    // handler acá al container así funciona con cualquier botón futuro.
+    if (!container.__mmFilterAttached) {
+      container.__mmFilterAttached = true;
+      var grid = document.querySelector('[data-mm-sync="catalogo"]');
+      // Función pura que aplica el filtro actual + gender activo
+      function mmApplyFilter() {
+        if (!grid) return;
+        var activeFilterBtn = container.querySelector("[data-filter][data-on]");
+        var filter = activeFilterBtn ? activeFilterBtn.getAttribute("data-filter") : "todo";
+        var genderBtn = document.querySelector("#coleccion-grid .mm-cf-g[data-on]");
+        var gender = genderBtn ? genderBtn.getAttribute("data-gender") : "todo";
+        var cards = grid.querySelectorAll("article");
+        var visible = 0;
+        cards.forEach(function (c) {
+          var tags = (c.getAttribute("data-cat") || "").toLowerCase().split(/\s+/);
+          var okCat = filter === "todo" || tags.indexOf(filter) > -1;
+          var okGender = gender === "todo" || tags.indexOf(gender) > -1;
+          // Excluir cards template hidden por el loader inicial
+          var isLoaderHidden = c.style.visibility === "hidden";
+          if (okCat && okGender && !isLoaderHidden) {
+            c.removeAttribute("data-hidden"); visible++;
+          } else {
+            c.setAttribute("data-hidden", "");
+          }
+        });
+        var cnt = document.querySelector("#coleccion-grid [data-count]");
+        if (cnt) {
+          if (visible === 0) cnt.textContent = LANG === "pt" ? "Sem peças" : "Sin piezas";
+          else if (visible === 1) cnt.textContent = LANG === "pt" ? "1 peça" : "1 pieza";
+          else cnt.textContent = visible + (LANG === "pt" ? " peças" : " piezas");
+        }
+        // Mostrar/ocultar mensaje vacío
+        var emptyEl = document.querySelector("#coleccion-grid [data-empty]");
+        if (emptyEl) {
+          emptyEl.hidden = visible > 0;
+          if (visible === 0 && !emptyEl.textContent.trim()) {
+            emptyEl.textContent = LANG === "pt"
+              ? "Nenhuma peça disponível nesta categoria."
+              : "No hay piezas disponibles en esta categoría.";
+          }
+        } else if (visible === 0) {
+          // Si no existe [data-empty] en el HTML, lo creamos on-the-fly
+          var eDiv = document.getElementById("mm-empty-msg");
+          if (!eDiv) {
+            eDiv = document.createElement("div");
+            eDiv.id = "mm-empty-msg";
+            eDiv.style.cssText = "grid-column:1/-1;padding:60px 20px;text-align:center;color:#8A7F6A;font:400 14px/1.6 'Montserrat',sans-serif;letter-spacing:.04em";
+            grid.appendChild(eDiv);
+          }
+          eDiv.textContent = LANG === "pt"
+            ? "Nenhuma peça disponível nesta categoria por enquanto."
+            : "No hay piezas disponibles en esta categoría por ahora.";
+          eDiv.style.display = "";
+        } else {
+          var eDiv2 = document.getElementById("mm-empty-msg");
+          if (eDiv2) eDiv2.style.display = "none";
+        }
+      }
+
+      container.addEventListener("click", function (ev) {
+        var btn = ev.target.closest("[data-filter]");
+        if (!btn || !container.contains(btn)) return;
+        container.querySelectorAll("[data-filter]").forEach(function (b) { b.removeAttribute("data-on"); });
+        btn.setAttribute("data-on", "");
+        mmApplyFilter();
+      });
+
+      // Aplicar filtro inicial (respeta el 'Todo' o el que tenga data-on)
+      setTimeout(mmApplyFilter, 200);
+      // Exponer para que otras funciones (gender) puedan llamarlo
+      window.__mmApplyFilter = mmApplyFilter;
+    }
+
+    // Delegación en gender también
+    var genderBar = document.querySelector("#coleccion-grid .mm-cf-gender");
+    if (genderBar && !genderBar.__mmGenderAttached) {
+      genderBar.__mmGenderAttached = true;
+      genderBar.addEventListener("click", function (ev) {
+        var btn = ev.target.closest("[data-gender]");
+        if (!btn) return;
+        genderBar.querySelectorAll("[data-gender]").forEach(function (b) { b.removeAttribute("data-on"); });
+        btn.setAttribute("data-on", "");
+        // Re-apply filter con nuevo gender
+        if (window.__mmApplyFilter) window.__mmApplyFilter();
+      });
+    }
   }
 
   // ------------------------------------------------------------------
