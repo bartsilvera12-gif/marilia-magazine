@@ -25,3 +25,6 @@ uploads/**/*.png
 uploads/**/*.jpeg
 uploads/*.png
 uploads/*.jpeg
+
+# Build para Hostinger (se regenera con scripts/build-hostinger.mjs)
+dist/
