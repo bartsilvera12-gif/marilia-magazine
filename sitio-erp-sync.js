@@ -1456,8 +1456,13 @@
     btn.type = "button";
     btn.textContent = LANG === "pt" ? "ES" : "PT";
     btn.title = LANG === "pt" ? "Ver en español" : "Ver em português";
+    // En movil el chip arriba a la derecha se pisa con "BOLSA (0)" del header.
+    // Lo mando abajo a la derecha, que no toca nada.
+    var esMovil = window.matchMedia && window.matchMedia("(max-width: 780px)").matches;
     btn.style.cssText = [
-      "position:fixed", "top:16px", "right:16px", "z-index:99999",
+      "position:fixed",
+      esMovil ? "bottom:16px" : "top:16px",
+      "right:16px", "z-index:99999",
       "background:#1E1B16", "color:#F7F3E6", "border:1px solid #C8962A",
       "padding:9px 14px", "font:600 11px/1 'Montserrat',sans-serif",
       "letter-spacing:.24em", "text-transform:uppercase", "cursor:pointer",

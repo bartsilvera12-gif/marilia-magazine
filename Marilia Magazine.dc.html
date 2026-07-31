@@ -47,6 +47,12 @@
   @keyframes mMask { from { clip-path: inset(100% 0 0 0) } to { clip-path: inset(0 0 0 0) } }
   @keyframes mFade { from { opacity: 0 } to { opacity: 1 } }
   @keyframes mMarquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+  /* En movil el header queda apretadisimo: MENU + logo + BUSCAR + BOLSA no
+     entra, se recortaba "BUSCAR". Se esconde en el header — el buscador
+     igual esta accesible desde el menu global. */
+  @media (max-width: 780px) {
+    header [data-search-open] { display: none !important; }
+  }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
@@ -80,7 +86,6 @@
       <div style="flex:1 1 0;display:flex;align-items:center;justify-content:flex-end;gap:clamp(12px,1.6vw,26px);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;min-width:0;white-space:nowrap;overflow:hidden">
         <button data-search-open style="background:none;border:none;padding:0;cursor:pointer;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#1E1B16;transition:color .35s ease" style-hover="color:#C8962A">Buscar</button>
         <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
-          <a href="#cuenta">Cuenta</a>
           <a href="#favoritos">Favoritos <span style="color:#C8962A">(3)</span></a>
         </sc-if>
         <button data-cart-open style="background:none;border:none;padding:0;cursor:pointer;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#1E1B16">Bolsa <span style="color:#C8962A">({{ cartCount }})</span></button>
@@ -132,7 +137,7 @@
         </p>
 
         <div style="display:flex;align-items:center;gap:clamp(24px,3vw,44px);flex-wrap:wrap;margin-top:clamp(32px,3.6vw,52px);animation:mFade 1.4s ease .85s both">
-          <a href="#explorar" data-magnetic style="display:inline-flex;align-items:center;gap:16px;background:transparent;color:#1E1B16;border:1px solid #D4AF37;padding:13px 22px;font:500 9px/1 'Montserrat',sans-serif;letter-spacing:.26em;text-transform:uppercase;transition:background .45s cubic-bezier(.16,1,.3,1),color .45s ease,border-color .45s ease" style-hover="background:#1E1B16;color:#F7F3E6;border-color:#1E1B16">
+          <a href="./Catalogo.dc.html" data-magnetic style="display:inline-flex;align-items:center;gap:16px;background:transparent;color:#1E1B16;border:1px solid #D4AF37;padding:13px 22px;font:500 9px/1 'Montserrat',sans-serif;letter-spacing:.26em;text-transform:uppercase;transition:background .45s cubic-bezier(.16,1,.3,1),color .45s ease,border-color .45s ease" style-hover="background:#1E1B16;color:#F7F3E6;border-color:#1E1B16">
             Descubrir la colección
           </a>
           <a href="#tienda" style="display:inline-flex;align-items:center;gap:9px;font:500 9px/1 'Montserrat',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#1E1B16;padding:5px 0;border-bottom:1px solid #1E1B16;transition:color .4s ease,border-color .4s ease" style-hover="color:#C46A4A;border-color:#C46A4A">
@@ -301,7 +306,7 @@
           </p>
         </div>
 
-        <a href="#explorar" data-reveal="1" data-magnetic style="opacity:0;transform:translateY(18px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;gap:18px;border:1px solid #D4AF37;color:#1E1B16;padding:15px 26px;font:500 9.5px/1 'Montserrat',sans-serif;letter-spacing:.28em;text-transform:uppercase;white-space:nowrap" style-hover="background:#1E1B16;color:#F7F3E6;border-color:#1E1B16">
+        <a href="./Catalogo.dc.html" data-reveal="1" data-magnetic style="opacity:0;transform:translateY(18px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;gap:18px;border:1px solid #D4AF37;color:#1E1B16;padding:15px 26px;font:500 9.5px/1 'Montserrat',sans-serif;letter-spacing:.28em;text-transform:uppercase;white-space:nowrap" style-hover="background:#1E1B16;color:#F7F3E6;border-color:#1E1B16">
           Ver colección completa <span style="font-size:13px;line-height:1">→</span>
         </a>
       </div>
@@ -1204,7 +1209,7 @@
         <div style="font-size:10px;letter-spacing:.34em;text-transform:uppercase;opacity:.7;margin-bottom:22px">Campaña hombre</div>
         <h2 style="margin:0 0 26px;font:400 clamp(40px,6.2vw,94px)/.98 'Cormorant Garamond',serif">Lino, cuero<br /><span style="font-weight:500">y oficio</span></h2>
         <p style="margin:0 0 32px;max-width:420px;font-size:13.5px;line-height:2.05;font-weight:300;opacity:.88;text-wrap:pretty">Sastrería masculina fotografiada en las salinas del sur. Camisas, pantalones y sacos en serie limitada de 40 unidades, con tintes naturales y acabados a mano.</p>
-        <a href="#explorar" data-magnetic style="display:inline-flex;align-items:center;gap:14px;border:1px solid rgba(247,243,230,.6);padding:17px 30px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#F7F3E6;transition:background .5s ease,color .5s ease" style-hover="background:#F7F3E6;color:#C46A4A">Ver la campaña <span style="font-size:13px">→</span></a>
+        <a href="./Catalogo.dc.html?genero=hombre" data-magnetic style="display:inline-flex;align-items:center;gap:14px;border:1px solid rgba(247,243,230,.6);padding:17px 30px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#F7F3E6;transition:background .5s ease,color .5s ease" style-hover="background:#F7F3E6;color:#C46A4A">Ver la campaña <span style="font-size:13px">→</span></a>
       </div>
       <div data-parallax="0.08" style="flex:1 1 380px;min-width:280px;aspect-ratio:16/11;position:relative"><image-slot id="mm-camp" src="./uploads/2.webp" fit="cover" shape="rect" placeholder="Campaña hombre — plano ambiental"></image-slot></div>
     </div>
@@ -1288,7 +1293,7 @@
         <div style="flex:1 1 160px;min-width:150px">
           <div style="font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#D4AF37;margin-bottom:22px">Tienda</div>
           <div style="display:flex;flex-direction:column;gap:13px;font-size:12.5px;font-weight:300">
-            <a href="#explorar" style="color:rgba(247,243,230,.78)">Nueva colección</a>
+            <a href="./Catalogo.dc.html" style="color:rgba(247,243,230,.78)">Nueva colección</a>
             <a href="#catalogo" style="color:rgba(247,243,230,.78)">Vestidos</a>
             <a href="#catalogo" style="color:rgba(247,243,230,.78)">Conjuntos</a>
             <a href="#catalogo" style="color:rgba(247,243,230,.78)">Blusas</a>
@@ -1351,13 +1356,12 @@
       </div>
       <nav style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px">
         <a href="#inicio" data-close-menu style="font:300 40px/1 'Cormorant Garamond',serif">Inicio</a>
-        <a href="#explorar" data-close-menu style="font:300 40px/1 'Cormorant Garamond',serif">Nueva colección</a>
-        <a href="#catalogo" data-close-menu style="font:300 40px/1 'Cormorant Garamond',serif">Ropa</a>
-        <a href="#categorias" data-close-menu style="font:300 40px/1 'Cormorant Garamond',serif">Accesorios</a>
+        <a href="./Catalogo.dc.html" style="font:300 40px/1 'Cormorant Garamond',serif">Catálogo</a>
+        <a href="./Catalogo.dc.html" style="font:300 40px/1 'Cormorant Garamond',serif">Nueva colección</a>
+        <a href="./Catalogo.dc.html?cat=accesorios" style="font:300 40px/1 'Cormorant Garamond',serif">Accesorios</a>
         <a href="#esencia" data-close-menu style="font:300 40px/1 'Cormorant Garamond',serif">Nosotros</a>
       </nav>
       <div style="display:flex;gap:22px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8A7F6A">
-        <a href="#cuenta">Cuenta</a>
         <a href="#favoritos">Favoritos</a>
       </div>
     </div>
