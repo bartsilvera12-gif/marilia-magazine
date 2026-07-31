@@ -320,7 +320,7 @@
     });
 
     // Cache localStorage: render instantáneo si tenemos snapshot < 5min
-    var CACHE_KEY = "mm_prod_cache_v1";
+    var CACHE_KEY = "mm_prod_cache_v2";
     var CACHE_TTL = 5 * 60 * 1000;
     var productos = null;
     var cats = null;
@@ -428,6 +428,8 @@
       var tallesArr = Array.from(grupo.talles);
       var card = template.cloneNode(true);
       card.style.display = "";
+      card.style.visibility = "visible";  // resetear el hide inicial que se propaga del template
+      card.removeAttribute("data-hidden");
       card.setAttribute("data-id", p.id);
       card.setAttribute("data-name", p.nombre);
       card.setAttribute("data-price", p.precio_venta);
