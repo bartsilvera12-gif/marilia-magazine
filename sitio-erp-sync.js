@@ -583,11 +583,13 @@
     });
     var modelos = Object.keys(grupos).map(function (k) { return grupos[k]; });
 
-    // Las cards de la maqueta se descartan; la primera es el molde.
+    // Las cards de la maqueta son los MOLDES, no una sola: cada una trae su
+    // propio ancho, alto y desfase vertical en el style inline (y una es la
+    // grande con data-featured). Clonar siempre la primera aplanaba todo a un
+    // mismo rectangulo y se perdia el ritmo del diseño, asi que rotamos.
     var viejas = Array.prototype.slice.call(container.querySelectorAll("article.mm-ex-card"));
-    var template = viejas[0];
-    if (!template) return;
-    template = template.cloneNode(true);
+    if (viejas.length === 0) return;
+    var moldes = viejas.map(function (a) { return a.cloneNode(true); });
     viejas.forEach(function (a) { a.parentNode.removeChild(a); });
 
     modelos.forEach(function (g, idx) {
@@ -595,12 +597,7 @@
       var coloresArr = Object.keys(g.colores);
       var tallesArr = Object.keys(g.talles);
       var img = p.imagen_url || "";
-      var card = template.cloneNode(true);
-
-      // La card grande del medio: se la damos a la segunda para conservar el
-      // ritmo visual del diseño original sin repetirlo en todas.
-      if (idx === 1) card.setAttribute("data-featured", "");
-      else card.removeAttribute("data-featured");
+      var card = moldes[idx % moldes.length].cloneNode(true);
 
       card.setAttribute("data-id", p.id);
       card.setAttribute("data-pid", p.id);
