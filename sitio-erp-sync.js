@@ -1323,11 +1323,88 @@
     });
   }
 
+  // ------------------------------------------------------------------
+  // Página de producto individual (Producto.dc.html): fetch por ID (UUID)
+  // desde Supabase cuando el ID no está en el hardcoded MM_PRODUCTS.
+  // ------------------------------------------------------------------
+  async function syncProductoPage() {
+    if (!/Producto\.dc\.html/i.test(location.pathname)) return;
+    var params = new URLSearchParams(location.search);
+    var id = params.get("id");
+    if (!id) return;
+    // Si el ID es corto (p1, h1, t1...) es hardcoded — dejar que la página lo maneje
+    if (id.length < 30) return;
+    // Fetch el producto por UUID
+    var rows = await api("/productos?id=eq." + encodeURIComponent(id) + "&select=id,sku,nombre,precio_venta,descripcion,imagen_url,categoria_principal_id,color_nombre,talla_nombre");
+    if (!rows || rows.length === 0) return;
+    var p = rows[0];
+    // Buscar variantes del mismo modelo base
+    var baseSku = String(p.sku || "").split(".")[0];
+    var variantes = [];
+    if (baseSku) {
+      variantes = (await api("/productos?sku=like." + encodeURIComponent(baseSku + ".*") + "&select=id,sku,nombre,precio_venta,imagen_url,color_nombre,talla_nombre")) || [];
+    }
+    var colores = new Set(), talles = new Set(), imgPorColor = {};
+    variantes.forEach(function (v) {
+      if (v.color_nombre) { colores.add(v.color_nombre); if (v.imagen_url && !imgPorColor[v.color_nombre]) imgPorColor[v.color_nombre] = v.imagen_url; }
+      if (v.talla_nombre) talles.add(v.talla_nombre);
+    });
+
+    // Poblar los data-* de la página
+    var $ = function (s) { return document.querySelector(s); };
+    var precioTexto = Number(p.precio_venta) > 0 ? "Gs. " + Number(p.precio_venta).toLocaleString("es-PY") : "Consultar";
+    if ($("[data-name]")) $("[data-name]").textContent = tr(p.nombre);
+    if ($("[data-crumb]")) $("[data-crumb]").textContent = tr(p.nombre);
+    if ($("[data-sub]")) $("[data-sub]").textContent = tr(p.descripcion || "");
+    if ($("[data-price]")) $("[data-price]").textContent = precioTexto;
+    if ($("[data-desc]")) $("[data-desc]").textContent = tr(p.descripcion || "");
+    if ($("[data-cat-lbl]")) $("[data-cat-lbl]").textContent = "";
+    document.title = tr(p.nombre) + " — Marilia Magazine";
+    // Imagen principal
+    var hero = $("[data-hero]");
+    if (hero && p.imagen_url) { hero.src = p.imagen_url; hero.alt = p.nombre; }
+    var heroBox = $("[data-hero-box]");
+    if (heroBox) heroBox.removeAttribute("data-swapping");
+    // Talles y colores dinámicos
+    var sizesEl = $("[data-sizes]");
+    if (sizesEl) {
+      sizesEl.innerHTML = "";
+      Array.from(talles).forEach(function (t, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "mm-pd-size";
+        b.textContent = t;
+        if (i === 0) b.setAttribute("data-on", "");
+        sizesEl.appendChild(b);
+      });
+    }
+    var colorsEl = $("[data-colors]");
+    if (colorsEl) {
+      colorsEl.innerHTML = "";
+      Array.from(colores).forEach(function (c, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "mm-pd-color";
+        b.title = c;
+        b.setAttribute("aria-label", c);
+        b.setAttribute("data-color", c);
+        if (i === 0) b.setAttribute("data-on", "");
+        colorsEl.appendChild(b);
+        b.addEventListener("click", function () {
+          Array.prototype.forEach.call(colorsEl.children, function (x) { x.removeAttribute("data-on"); });
+          b.setAttribute("data-on", "");
+          var img = imgPorColor[c];
+          if (img && hero) hero.src = img;
+        });
+      });
+    }
+  }
+
   function boot() {
     injectLangToggle();
     if (LANG !== "es") translatePageDeep();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
-    Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram()]).then(function () {
+    Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram(), syncProductoPage()]).then(function () {
       if (LANG !== "es") translatePageDeep();
       // Ticks progresivos para capturar hidratación tardía del DC runtime
       [400, 1000, 2500, 5000].forEach(function (ms) {
