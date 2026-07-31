@@ -466,6 +466,27 @@
       card.setAttribute("data-talles", tallesArr.join(","));
       card.setAttribute("data-variantes", grupo.variantes.length);
 
+      // La tarjeta sale de clonar el template estatico, que trae data-colors y
+      // data-sizes hardcodeados (los de "Camisa Sauce"). Si no los pisamos, la
+      // vista rapida muestra azul/crema/negro para cualquier producto real.
+      // Con variantes: hex y talles del ERP. Sin variantes: se quitan.
+      if (coloresArr.length) {
+        card.setAttribute("data-colors", coloresArr.map(function (c) { return grupo.coloresMap[c].hex; }).join(","));
+        card.setAttribute("data-colornames", coloresArr.join(","));
+        // name → imagen propia del color, para que el swatch cambie la foto
+        var imgsByColor = {};
+        coloresArr.forEach(function (c) {
+          if (grupo.coloresMap[c].imagen_url) imgsByColor[c] = grupo.coloresMap[c].imagen_url;
+        });
+        card.setAttribute("data-colorimgs", JSON.stringify(imgsByColor));
+      } else {
+        card.removeAttribute("data-colors");
+        card.removeAttribute("data-colornames");
+        card.removeAttribute("data-colorimgs");
+      }
+      if (tallesArr.length) card.setAttribute("data-sizes", tallesArr.join(","));
+      else card.removeAttribute("data-sizes");
+
       // Categoría (chip superior)
       var catEl = card.querySelector(".mm-cg-cat, [data-mm-cat]");
       if (catEl) {
@@ -657,6 +678,10 @@
           else if (visible === 1) cnt.textContent = LANG === "pt" ? "1 peça" : "1 pieza";
           else cnt.textContent = visible + (LANG === "pt" ? " peças" : " piezas");
         }
+        // Liberar min-height que se reservó al arranque — evita espacio en blanco largo
+        if (grid) grid.style.minHeight = "";
+        var mmCatCont = document.querySelector('[data-mm-sync="catalogo"]');
+        if (mmCatCont) mmCatCont.style.minHeight = "";
         // Mostrar/ocultar mensaje vacío
         var emptyEl = document.querySelector("#coleccion-grid [data-empty]");
         if (emptyEl) {

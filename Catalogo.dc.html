@@ -948,13 +948,30 @@
     var qvCurrent = null;
 
     var products = {};
-    cards.forEach(function(c){
+    function buildProducts(){
+      cards = Array.from(grid.querySelectorAll('.mm-cg-card'));
+      cards.forEach(function(c){
       products[c.dataset.id] = {
         id: c.dataset.id, name: c.dataset.name, price: +c.dataset.price,
         sub: c.dataset.sub, img: c.dataset.img, cat: c.dataset.cat,
         sizes: (c.dataset.sizes || '').split(',').filter(Boolean),
-        colors: (c.dataset.colors || '').split(',').filter(Boolean)
+        colors: (c.dataset.colors || '').split(',').filter(Boolean),
+        // Nombres reales del color (los pone el sync del ERP). Si no vienen,
+        // el hex hace de etiqueta y el swatch sigue funcionando igual.
+        colorNames: (c.dataset.colornames || '').split(',').filter(Boolean),
+        colorImgs: (function(){ try { return JSON.parse(c.dataset.colorimgs || '{}'); } catch(e){ return {}; } })()
       };
+      });
+    }
+    buildProducts();
+
+    // El sync del ERP agrega tarjetas despues de este init, y sus ids no estaban
+    // en el mapa: la vista rapida no abria para nada que viniera del ERP.
+    // Al terminar el sync rehacemos el mapa (los listeners son delegados en la
+    // grilla, asi que no hay que rebindear nada).
+    document.addEventListener('mm:catalogo-loaded', function(){
+      buildProducts();
+      renderFavs();
     });
 
     function load(k){ try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch(e){ return []; } }
@@ -1156,7 +1173,9 @@
       qvSub.textContent = p.sub;
       qvPrice.textContent = fmtGs(p.price);
       qvColors.innerHTML = p.colors.map(function(c,i){
-        return '<button class="mm-qv-color" data-color="'+ c +'" style="background:'+ c +'"'+ (i===0?' data-on':'') +' aria-label="Color '+ c +'"></button>';
+        var nom = p.colorNames[i] || c;
+        var im = p.colorImgs[nom] || '';
+        return '<button class="mm-qv-color" data-color="'+ nom +'" data-img="'+ im +'" title="'+ nom +'" style="background:'+ c +'"'+ (i===0?' data-on':'') +' aria-label="Color '+ nom +'"></button>';
       }).join('');
       qvSizes.innerHTML = p.sizes.map(function(s,i){
         return '<button class="mm-qv-size" data-size="'+ s +'"'+ (i===0?' data-on':'') +'>'+ s +'</button>';
@@ -1175,6 +1194,8 @@
       var b = ev.target.closest('.mm-qv-color'); if(!b || !qvCurrent) return;
       qvColors.querySelectorAll('.mm-qv-color').forEach(function(x){ x.removeAttribute('data-on'); });
       b.setAttribute('data-on',''); qvCurrent.color = b.dataset.color;
+      // Si ese color tiene foto propia en el ERP, cambia la imagen grande.
+      if(b.dataset.img) qvImg.src = b.dataset.img;
     });
     qvAdd.addEventListener('click', function(){
       if(!qvCurrent) return;
