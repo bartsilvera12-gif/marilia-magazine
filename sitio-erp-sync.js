@@ -545,6 +545,148 @@
   }
 
   // ------------------------------------------------------------------
+  // 1c) Carrusel "Explorar la colección" del home
+  //
+  // Muestra los productos marcados como DESTACADOS en el ERP (Inventario →
+  // check "Destacado en la web"). Se agrupan por modelo igual que el catalogo
+  // para no repetir una card por cada color/talle.
+  //
+  // Sin destacados cargados quedan las cards de la maqueta: nunca se ve vacio.
+  // ------------------------------------------------------------------
+  async function syncExplorar() {
+    var container = document.querySelector('[data-mm-sync="explorar"]');
+    if (!container) return;
+
+    var productos = await api(
+      "/productos?select=id,sku,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre" +
+      "&destacado=eq.true&activo=eq.true&visible_web=eq.true&order=nombre.asc"
+    );
+    if (!productos || productos.length === 0) return;
+
+    var cats = (await api("/categorias_productos?select=id,nombre")) || [];
+    var catById = {};
+    cats.forEach(function (c) { catById[c.id] = c.nombre; });
+
+    // Una card por modelo base (SKU "XXXXX.YYY-TALLA" → "XXXXX").
+    var grupos = {};
+    productos.forEach(function (p) {
+      var base = String(p.sku || p.id).split(".")[0];
+      if (!grupos[base]) grupos[base] = { rep: p, colores: {}, talles: {} };
+      var g = grupos[base];
+      if (p.color_nombre) {
+        var c = String(p.color_nombre).trim();
+        if (!g.colores[c]) g.colores[c] = { hex: hexForColor(c), imagen_url: p.imagen_url || null };
+        else if (!g.colores[c].imagen_url && p.imagen_url) g.colores[c].imagen_url = p.imagen_url;
+      }
+      if (p.talla_nombre) g.talles[p.talla_nombre] = true;
+      if (!g.rep.imagen_url && p.imagen_url) g.rep = p;
+    });
+    var modelos = Object.keys(grupos).map(function (k) { return grupos[k]; });
+
+    // Las cards de la maqueta se descartan; la primera es el molde.
+    var viejas = Array.prototype.slice.call(container.querySelectorAll("article.mm-ex-card"));
+    var template = viejas[0];
+    if (!template) return;
+    template = template.cloneNode(true);
+    viejas.forEach(function (a) { a.parentNode.removeChild(a); });
+
+    modelos.forEach(function (g, idx) {
+      var p = g.rep;
+      var coloresArr = Object.keys(g.colores);
+      var tallesArr = Object.keys(g.talles);
+      var img = p.imagen_url || "";
+      var card = template.cloneNode(true);
+
+      // La card grande del medio: se la damos a la segunda para conservar el
+      // ritmo visual del diseño original sin repetirlo en todas.
+      if (idx === 1) card.setAttribute("data-featured", "");
+      else card.removeAttribute("data-featured");
+
+      card.setAttribute("data-id", p.id);
+      card.setAttribute("data-pid", p.id);
+      card.setAttribute("data-name", p.nombre);
+      card.setAttribute("data-price", p.precio_venta);
+      card.setAttribute("data-cat", (catById[p.categoria_principal_id] || "").toLowerCase());
+      if (img) card.setAttribute("data-img", img);
+
+      var nombreEl = card.querySelector("h3");
+      if (nombreEl) nombreEl.textContent = tr(p.nombre);
+
+      var precioEl = card.querySelector(".mm-ex-price");
+      if (precioEl) precioEl.textContent = Number(p.precio_venta) > 0 ? fmtGs(p.precio_venta) : tr("Consultar");
+
+      // El renglon de categoria es el div que va entre el h3 y el precio.
+      var meta = card.querySelector(".mm-ex-meta");
+      if (meta) {
+        var catEl = meta.querySelector("div:not(.mm-ex-price)");
+        if (catEl && catEl.querySelector(".mm-sw") === null) {
+          catEl.textContent = tr(catById[p.categoria_principal_id] || "");
+        }
+      }
+
+      // Imagen: el molde usa <image-slot id="...">; el id tiene que ser unico
+      // por card o el runtime del sitio pisa la misma imagen en todas.
+      var slots = card.querySelectorAll("image-slot");
+      Array.prototype.forEach.call(slots, function (s, i) {
+        s.setAttribute("id", "mm-ex-erp-" + idx + "-" + i);
+        if (img) s.setAttribute("src", img);
+        s.removeAttribute("data-src2");
+        s.setAttribute("placeholder", p.nombre);
+      });
+      var imgTag = card.querySelector("img");
+      if (imgTag && img) { imgTag.setAttribute("src", img); imgTag.setAttribute("alt", p.nombre); }
+
+      // La segunda toma del diseño no aplica a un producto real.
+      var altLayer = card.querySelector("[data-alt]");
+      if (altLayer && altLayer.parentElement) altLayer.parentElement.removeChild(altLayer);
+
+      // Swatches reales del ERP (o ninguno si el producto no tiene colores).
+      var swWrap = card.querySelector(".mm-sw") ? card.querySelector(".mm-sw").parentElement : null;
+      if (swWrap) {
+        swWrap.innerHTML = "";
+        coloresArr.forEach(function (nombreColor) {
+          var info = g.colores[nombreColor];
+          var sw = document.createElement("span");
+          sw.className = "mm-sw";
+          sw.style.background = info.hex;
+          sw.setAttribute("title", nombreColor);
+          swWrap.appendChild(sw);
+        });
+      }
+
+      card.setAttribute("data-colores", coloresArr.join(","));
+      card.setAttribute("data-talles", tallesArr.join(","));
+      if (coloresArr.length) {
+        card.setAttribute("data-colors", coloresArr.map(function (c) { return g.colores[c].hex; }).join(","));
+        card.setAttribute("data-colornames", coloresArr.join(","));
+      } else {
+        card.removeAttribute("data-colors");
+        card.removeAttribute("data-colornames");
+      }
+      if (tallesArr.length) card.setAttribute("data-sizes", tallesArr.join(","));
+      else card.removeAttribute("data-sizes");
+
+      container.appendChild(card);
+    });
+
+    // Los filtros de la seccion son fijos en el HTML: apagamos los que no
+    // tienen ninguna card, en vez de dejar que muestren un carrusel vacio.
+    var presentes = {};
+    Array.prototype.forEach.call(container.querySelectorAll("article.mm-ex-card"), function (c) {
+      (c.getAttribute("data-cat") || "").split(/\s+/).forEach(function (t) { if (t) presentes[t] = true; });
+    });
+    var filtros = document.querySelectorAll("#explorar .mm-filter");
+    Array.prototype.forEach.call(filtros, function (b) {
+      var f = (b.getAttribute("data-filter") || "").toLowerCase();
+      if (f === "todo") return;
+      if (presentes[f]) b.removeAttribute("data-empty-cat");
+      else b.setAttribute("data-empty-cat", "");
+    });
+
+    container.setAttribute("data-mm-count", String(modelos.length));
+  }
+
+  // ------------------------------------------------------------------
   // 1b) Tiles de categorías del home (sección "Encuentra tu estilo")
   //
   // Se arman con las categorías marcadas "Mostrar en el home" en el ERP
@@ -1448,7 +1590,7 @@
     injectLangToggle();
     if (LANG !== "es") translatePageDeep();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
-    Promise.allSettled([syncCatalogo(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram(), syncProductoPage()]).then(function () {
+    Promise.allSettled([syncCatalogo(), syncExplorar(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram(), syncProductoPage()]).then(function () {
       if (LANG !== "es") translatePageDeep();
       // Ticks progresivos para capturar hidratación tardía del DC runtime
       [400, 1000, 2500, 5000].forEach(function (ms) {
