@@ -1182,16 +1182,15 @@
     });
   }
 
-  // El sitio usa custom elements (<x-dc>, <image-slot>) procesados por support.js
-  // que reescriben el DOM DESPUÉS de DOMContentLoaded. Esperamos a window.load
-  // (todo cargado) + un tick extra para que los reemplazos terminen antes de
-  // manipular los contenedores con data-mm-sync.
+  // Arrancar apenas el DOM esté listo (no esperar imágenes) — el shadow-hack
+  // ya inyectó lo necesario para que los custom elements se puedan traducir
+  // después vía MutationObserver.
   function bootDeferred() {
-    setTimeout(boot, 200);
+    setTimeout(boot, 100);
   }
-  if (document.readyState === "complete") {
-    bootDeferred();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootDeferred);
   } else {
-    window.addEventListener("load", bootDeferred);
+    bootDeferred();
   }
 })();
