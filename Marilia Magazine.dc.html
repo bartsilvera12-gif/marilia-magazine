@@ -144,87 +144,217 @@
       .mm-hero { position:relative; background:var(--mm-bg); }
       .mm-hero__grid {
         max-width: var(--mm-container); margin: 0 auto;
-        padding: clamp(24px,3vw,48px) var(--mm-gutter) clamp(32px,4vw,60px);
+        padding: clamp(24px,3vw,48px) var(--mm-gutter) clamp(20px,2.4vw,36px);
         display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(24px,3vw,48px);
         align-items: stretch;
       }
       @media (max-width: 900px) {
         .mm-hero__grid { grid-template-columns: 1fr; gap: 24px; padding-top: 20px; }
       }
+
+      /* Columna de texto */
       .mm-hero__text {
         display: flex; flex-direction: column; justify-content: center;
-        padding: clamp(20px,3vw,40px) 0;
+        padding: clamp(12px,2vw,28px) 0;
       }
       .mm-hero__eyebrow {
         display: inline-flex; align-items: center; gap: 12px;
         font: 500 var(--mm-fs-eyebrow)/1 var(--mm-font-sans);
         letter-spacing: var(--mm-track-widest); text-transform: uppercase;
         color: var(--mm-gold-dark);
-        margin-bottom: 22px;
+        margin-bottom: 20px;
       }
       .mm-hero__eyebrow::before { content:''; width:32px; height:1px; background:var(--mm-gold); }
       .mm-hero__title {
         margin: 0 0 20px;
-        font: 500 clamp(38px, 5.4vw, 76px)/1.02 var(--mm-font-sans);
+        font: 500 clamp(34px, 4.6vw, 62px)/1.05 var(--mm-font-sans);
         letter-spacing: -.02em;
         color: var(--mm-ink);
         text-wrap: balance;
       }
-      .mm-hero__title strong { color: var(--mm-accent); font-weight: 600; }
+      .mm-hero__title strong {
+        color: var(--mm-accent);
+        font-weight: 500;
+        position: relative;
+        white-space: nowrap;
+      }
+      .mm-hero__title strong::after {
+        content: ''; position: absolute; left: 0; right: 0; bottom: -.06em;
+        height: .12em; background: var(--mm-gold); opacity: .55;
+        border-radius: 2px;
+      }
       .mm-hero__lead {
-        margin: 0 0 32px;
-        max-width: 42ch;
-        font-size: clamp(14px, 1.05vw, 16px);
-        line-height: 1.7;
+        margin: 0 0 26px;
+        max-width: 46ch;
+        font-size: clamp(14px, 1vw, 15.5px);
+        line-height: 1.65;
         color: var(--mm-fg-muted);
       }
-      .mm-hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
+      .mm-hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
+
+      /* Departamentos como pastilla — reflejan el rango real */
+      .mm-hero__depts {
+        display: flex; gap: 22px; flex-wrap: wrap;
+        padding-top: 22px; border-top: 1px solid var(--mm-border);
+      }
+      .mm-hero__dept {
+        display: inline-flex; align-items: baseline; gap: 6px;
+        font: 500 11px/1 var(--mm-font-sans);
+        letter-spacing: .14em; text-transform: uppercase;
+        color: var(--mm-fg-muted);
+        transition: color var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-hero__dept:hover { color: var(--mm-ink); }
+      .mm-hero__dept-dot {
+        width: 5px; height: 5px; border-radius: 50%;
+        background: var(--mm-gold-dark);
+        display: inline-block;
+      }
+
+      /* Columna visual */
       .mm-hero__visual {
         position: relative;
-        display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr;
-        gap: 12px;
+        display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1.6fr .55fr .85fr;
+        gap: 10px;
         min-height: clamp(320px, 42vw, 560px);
       }
-      .mm-hero__visual img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
-      .mm-hero__pic-a { grid-row: 1/3; overflow:hidden; background:var(--mm-cream-2); }
-      .mm-hero__pic-b { overflow:hidden; background:var(--mm-cream-2); }
-      .mm-hero__pic-c {
-        overflow:hidden; background:var(--mm-ink); color:var(--mm-cream);
-        display:flex; align-items:flex-end; padding:16px;
-        font: 500 12px/1.35 var(--mm-font-sans); letter-spacing:.06em;
+      .mm-hero__visual img { width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; }
+      .mm-hero__pic-a {
+        grid-row: 1/4; overflow:hidden; background:var(--mm-cream-2);
+        border-radius: var(--mm-radius-sm);
       }
+      .mm-hero__pic-b {
+        overflow:hidden; background:var(--mm-cream-2);
+        border-radius: var(--mm-radius-sm);
+      }
+      .mm-hero__pic-b img { object-position: center; }
+      /* Stat card — cifra grande + label */
+      .mm-hero__stat {
+        overflow:hidden; background:var(--mm-cream); border:1px solid var(--mm-border);
+        border-radius: var(--mm-radius-sm);
+        padding: 14px 16px;
+        display: flex; flex-direction: column; justify-content: center; gap: 4px;
+      }
+      .mm-hero__stat-num {
+        font: 500 clamp(22px,2.4vw,32px)/1 var(--mm-font-sans);
+        color: var(--mm-ink);
+        letter-spacing: -.01em;
+      }
+      .mm-hero__stat-label {
+        font: 500 9.5px/1.3 var(--mm-font-sans);
+        letter-spacing: .22em; text-transform: uppercase;
+        color: var(--mm-fg-muted);
+      }
+      /* Envio (bloque ink) */
+      .mm-hero__ship {
+        overflow:hidden; background:var(--mm-ink); color:var(--mm-cream);
+        border-radius: var(--mm-radius-sm);
+        display:flex; align-items:center; gap:12px; padding:14px 16px;
+      }
+      .mm-hero__ship svg { flex: 0 0 auto; color: var(--mm-gold); }
+      .mm-hero__ship-eyebrow {
+        font:600 9.5px/1.2 var(--mm-font-sans);
+        letter-spacing:.28em; text-transform:uppercase;
+        color:var(--mm-gold);
+      }
+      .mm-hero__ship-txt {
+        font: 500 12.5px/1.3 var(--mm-font-sans);
+        margin-top: 4px;
+      }
+
       .mm-hero__badge {
         position: absolute; top: 14px; left: 14px; z-index: 2;
         background: var(--mm-accent); color: var(--mm-white);
         padding: 6px 12px;
         font: 600 10px/1 var(--mm-font-sans);
         letter-spacing: .16em; text-transform: uppercase;
+        border-radius: var(--mm-radius-sm);
       }
       @media (max-width: 900px) {
-        .mm-hero__visual { min-height: 340px; }
+        .mm-hero__visual {
+          min-height: 380px;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 240px auto auto;
+        }
+        .mm-hero__pic-a { grid-column: 1/3; grid-row: 1; }
+        .mm-hero__pic-b { grid-column: 1; grid-row: 2; }
+        .mm-hero__stat { grid-column: 2; grid-row: 2; }
+        .mm-hero__ship { grid-column: 1/3; grid-row: 3; }
       }
     </style>
+
     <div class="mm-hero__grid">
       <div class="mm-hero__text">
         <span class="mm-hero__eyebrow">Marilia Magazine · Tienda departamental</span>
-        <h1 class="mm-hero__title">Todo lo que buscás,<br /><strong>en un solo lugar.</strong></h1>
-        <p class="mm-hero__lead">Moda, hogar, belleza, tecnología y mucho más. Un catálogo pensado para cada estilo, cada espacio y cada momento de tu día.</p>
+        <h1 class="mm-hero__title">Todo lo que buscás, <strong>en un solo lugar</strong>.</h1>
+        <p class="mm-hero__lead">Moda, hogar, belleza, tecnología y mucho más. Un catálogo pensado para cada estilo, cada espacio y cada momento.</p>
         <div class="mm-hero__cta">
           <a href="./Catalogo.dc.html" class="mm-btn mm-btn--primary">Explorar productos</a>
           <a href="./Catalogo.dc.html?nuevo=1" class="mm-btn mm-btn--ghost">Ver novedades</a>
         </div>
+        <div class="mm-hero__depts" role="list" aria-label="Departamentos principales">
+          <a class="mm-hero__dept" href="./Catalogo.dc.html?genero=mujer"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Mujer</a>
+          <a class="mm-hero__dept" href="./Catalogo.dc.html?genero=hombre"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Hombre</a>
+          <a class="mm-hero__dept" href="./Catalogo.dc.html?cat=accesorios"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Accesorios</a>
+          <a class="mm-hero__dept" href="./Catalogo.dc.html?dept=hogar"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Hogar</a>
+          <a class="mm-hero__dept" href="./Catalogo.dc.html?dept=belleza"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Belleza</a>
+        </div>
       </div>
 
-      <div class="mm-hero__visual">
+      <div class="mm-hero__visual" aria-hidden="false">
         <span class="mm-hero__badge">Nueva temporada</span>
         <div class="mm-hero__pic-a"><img src="./uploads/hombre.webp" alt="Selección de temporada Marilia Magazine" loading="eager" fetchpriority="high"/></div>
         <div class="mm-hero__pic-b"><img src="./uploads/accesorios.webp" alt="Accesorios seleccionados" loading="eager"/></div>
-        <div class="mm-hero__pic-c">
+        <div class="mm-hero__stat" aria-label="9 departamentos disponibles">
+          <span class="mm-hero__stat-num">9</span>
+          <span class="mm-hero__stat-label">Departamentos</span>
+        </div>
+        <div class="mm-hero__ship" aria-label="Envío a todo Paraguay en 24 a 48 horas">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 7h13v10H3zM16 10h3l2 3v4h-5z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
           <div>
-            <div style="font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--mm-gold);margin-bottom:6px">Envío</div>
-            A todo Paraguay<br/>en 24–48&nbsp;h
+            <div class="mm-hero__ship-eyebrow">Envío</div>
+            <div class="mm-hero__ship-txt">A todo Paraguay en 24–48&nbsp;h</div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Banda de confianza: 4 senales rapidas debajo del hero. -->
+    <div class="mm-trust">
+      <style>
+        .mm-trust {
+          max-width: var(--mm-container); margin: 0 auto;
+          padding: 18px var(--mm-gutter) clamp(30px,4vw,60px);
+          display: grid; grid-template-columns: repeat(4, 1fr);
+          gap: 14px;
+        }
+        @media (max-width: 780px) { .mm-trust { grid-template-columns: repeat(2, 1fr); } }
+        .mm-trust__item {
+          display: flex; align-items: center; gap: 12px;
+          padding: 12px 14px;
+          background: var(--mm-bg-alt);
+          border: 1px solid var(--mm-border);
+          border-radius: var(--mm-radius-sm);
+        }
+        .mm-trust__icon { flex: 0 0 auto; color: var(--mm-accent); }
+        .mm-trust__label { font: 600 10.5px/1 var(--mm-font-sans); letter-spacing: .22em; text-transform: uppercase; color: var(--mm-ink); }
+        .mm-trust__sub   { font: 400 11.5px/1.3 var(--mm-font-sans); color: var(--mm-fg-muted); margin-top: 4px; }
+      </style>
+      <div class="mm-trust__item">
+        <svg class="mm-trust__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h13v10H3zM16 10h3l2 3v4h-5z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+        <div><div class="mm-trust__label">Envío</div><div class="mm-trust__sub">24–48&nbsp;h en Paraguay</div></div>
+      </div>
+      <div class="mm-trust__item">
+        <svg class="mm-trust__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7l3-3h10l3 3v3H4zM4 10v10h16V10"/><path d="M9 14h6"/></svg>
+        <div><div class="mm-trust__label">Cambios</div><div class="mm-trust__sub">30 días para cambiar</div></div>
+      </div>
+      <div class="mm-trust__item">
+        <svg class="mm-trust__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+        <div><div class="mm-trust__label">Pagos</div><div class="mm-trust__sub">Transferencia y efectivo</div></div>
+      </div>
+      <div class="mm-trust__item">
+        <svg class="mm-trust__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 12a8 8 0 1 1-14.7 4.4L4 20l3.7-1.2A8 8 0 0 1 20 12z"/></svg>
+        <div><div class="mm-trust__label">Asesoría</div><div class="mm-trust__sub">Consultá por WhatsApp</div></div>
       </div>
     </div>
   </section>
