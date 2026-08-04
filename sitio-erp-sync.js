@@ -1456,17 +1456,17 @@
     btn.type = "button";
     btn.textContent = LANG === "pt" ? "ES" : "PT";
     btn.title = LANG === "pt" ? "Ver en español" : "Ver em português";
-    // En movil el chip arriba a la derecha se pisa con "BOLSA (0)" del header.
-    // Lo mando abajo a la derecha, que no toca nada.
-    var esMovil = window.matchMedia && window.matchMedia("(max-width: 780px)").matches;
+    // El chip vive abajo a la izquierda: fuera del header y sin pisar el
+    // WhatsApp flotante (que ocupa bottom-right). Mismo lugar en desktop y
+    // movil para que el usuario lo aprenda una sola vez.
     btn.style.cssText = [
       "position:fixed",
-      esMovil ? "bottom:16px" : "top:16px",
-      "right:16px", "z-index:99999",
+      "bottom:20px", "left:20px", "z-index:99999",
       "background:#1E1B16", "color:#F7F3E6", "border:1px solid #C8962A",
-      "padding:9px 14px", "font:600 11px/1 'Montserrat',sans-serif",
+      "padding:8px 12px", "font:600 10.5px/1 'Montserrat',sans-serif",
       "letter-spacing:.24em", "text-transform:uppercase", "cursor:pointer",
       "border-radius:2px", "box-shadow:0 4px 12px rgba(0,0,0,.18)",
+      "opacity:.9",
     ].join(";");
     btn.addEventListener("click", function () {
       var next = (LANG === "pt") ? "es" : "pt";
