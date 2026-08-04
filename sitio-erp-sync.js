@@ -274,6 +274,9 @@
       var newT = t;
       Object.keys(DICT_ES_PT).forEach(function (es) {
         if (es.length < 3) return;
+        // Misma protección que en translatePageDeep: si la traducción ya
+        // está presente, no reaplicar (evita acumular letras al final).
+        if (DICT_ES_PT[es] !== es && newT.indexOf(DICT_ES_PT[es]) > -1) return;
         var re = new RegExp("\\b" + es.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "g");
         newT = newT.replace(re, DICT_ES_PT[es]);
       });
@@ -1542,6 +1545,12 @@
           var k = keys[i];
           if (k.length < 3) continue;
           if (t.indexOf(k) === -1) continue;
+          // Si la traducción ya está en el texto, no volver a aplicarla.
+          // Sin esto, "Política de privacidad" vuelve a matchear dentro de
+          // "Política de privacidade" y le agrega una "e" en cada pasada
+          // ("privacidadeeeee…"). Hace la traducción idempotente sin
+          // depender de que el WeakMap acierte con el nodo.
+          if (dict[k] !== k && t.indexOf(dict[k]) > -1) continue;
           var esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
           // Solo aplicar word-boundary si es una palabra "limpia" (sin espacios ni puntuación)
           // Para frases largas con espacios, hacer replace directo.
