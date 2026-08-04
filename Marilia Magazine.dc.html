@@ -729,137 +729,160 @@
       .mm-promo-grid {
         max-width: var(--mm-container); margin: 0 auto;
         display: grid; grid-template-columns: 1.55fr 1fr; gap: 18px;
+        align-items: stretch;
       }
       @media (max-width: 900px) { .mm-promo-grid { grid-template-columns: 1fr; } }
 
-      .mm-promo-side { display: grid; grid-template-rows: 1fr 1fr; gap: 18px; }
+      /* El side se estira a la altura del main (fila del grid). Las cards
+         se reparten esa altura por igual, asi todo el bloque queda
+         alineado sin espacios vacios. */
+      .mm-promo-side { display: grid; grid-template-rows: 1fr 1fr; gap: 18px; height: 100%; }
       @media (max-width: 900px) { .mm-promo-side { grid-template-columns: 1fr 1fr; grid-template-rows: auto; } }
       @media (max-width: 520px) { .mm-promo-side { grid-template-columns: 1fr; } }
 
-      /* Bloque principal — terracota grande con marca de agua tipografica */
+      /* ── Bloque principal terracota ──────────────────────────────────
+         Todos los descendientes fuerzan color crema porque mm-base.css
+         asigna color:var(--mm-fg) a h1-h6 y esa regla ganaba por
+         especificidad — el titulo salia casi negro sobre el terracota. */
       .mm-promo-main {
         position: relative; overflow: hidden;
-        background: var(--mm-terracota); color: var(--mm-cream);
+        background: var(--mm-terracota);
+        color: var(--mm-cream);
         border-radius: var(--mm-radius-sm);
-        padding: clamp(28px,4vw,56px);
-        display: flex; flex-direction: column; justify-content: space-between;
-        min-height: clamp(360px, 44vw, 540px);
+        padding: clamp(24px,2.6vw,36px);
+        display: flex; flex-direction: column;
+        gap: clamp(16px, 1.8vw, 22px);
+        /* Sin este min-height el grid le fijaba la altura al hermano de la
+           derecha y el contenido interior se recortaba visualmente. */
+        min-height: max-content;
         transition: transform var(--mm-t-base) var(--mm-ease);
+        text-decoration: none;
       }
+      .mm-promo-main:hover { color: var(--mm-cream); }
+      /* Marca de agua "MM" mas discreta, en la esquina inferior derecha. */
       .mm-promo-main::before {
-        content: 'MM'; position: absolute; right: -.05em; bottom: -.35em;
-        font: 900 clamp(240px, 34vw, 460px)/.75 var(--mm-font-serif);
-        color: rgba(247,243,230,.09);
+        content: 'MM'; position: absolute; right: -.02em; bottom: -.22em;
+        font: 900 clamp(160px, 18vw, 240px)/.8 var(--mm-font-serif);
+        color: rgba(247,243,230,.08);
         letter-spacing: -.05em; pointer-events: none;
         z-index: 0;
       }
       .mm-promo-main > * { position: relative; z-index: 1; }
+      .mm-promo-main__head { display: flex; flex-direction: column; gap: 12px; }
       .mm-promo-main__eyebrow {
         display: inline-flex; align-items: center; gap: 12px;
         font: 600 10.5px/1 var(--mm-font-sans);
         letter-spacing: .28em; text-transform: uppercase;
         color: var(--mm-gold);
       }
-      .mm-promo-main__eyebrow::before { content:''; width:32px; height:1px; background: var(--mm-gold); }
+      .mm-promo-main__eyebrow::before { content:''; width:24px; height:1px; background: var(--mm-gold); }
       .mm-promo-main__title {
-        margin: 22px 0 20px;
-        font: 500 clamp(30px,3.6vw,52px)/1.05 var(--mm-font-sans);
-        letter-spacing: -.015em;
-        max-width: 20ch;
+        margin: 0;
+        font: 500 clamp(22px,2.4vw,34px)/1.1 var(--mm-font-sans);
+        letter-spacing: -.01em;
+        color: var(--mm-cream);
+        max-width: 22ch;
       }
       .mm-promo-main__desc {
         margin: 0; max-width: 46ch;
-        font: 400 15px/1.6 var(--mm-font-sans);
-        opacity: .92;
+        font: 400 14px/1.55 var(--mm-font-sans);
+        color: rgba(247,243,230,.92);
       }
       .mm-promo-main__depts {
-        display: flex; flex-wrap: wrap; gap: 8px;
-        margin: 26px 0 32px;
+        display: flex; flex-wrap: wrap; gap: 6px;
+        margin: 0;
       }
       .mm-promo-main__dept {
-        display: inline-block; padding: 6px 12px;
-        border: 1px solid rgba(247,243,230,.35);
-        font: 500 10.5px/1 var(--mm-font-sans);
+        display: inline-block; padding: 5px 11px;
+        border: 1px solid rgba(247,243,230,.32);
+        font: 500 10px/1 var(--mm-font-sans);
         letter-spacing: .14em; text-transform: uppercase;
         color: var(--mm-cream);
         border-radius: var(--mm-radius-pill);
         transition: border-color var(--mm-t-fast) var(--mm-ease);
       }
-      /* Hover sutil: solo el borde se ilumina, sin invertir colores. */
       .mm-promo-main__dept:hover { border-color: rgba(247,243,230,.85); }
       .mm-promo-main__cta {
         display: inline-flex; align-items: center; gap: 10px;
-        align-self: flex-start;
-        padding: 14px 22px;
+        align-self: flex-start; margin-top: auto;
+        padding: 13px 22px;
         background: var(--mm-cream); color: var(--mm-terracota);
-        font: 600 11px/1 var(--mm-font-sans);
+        font: 700 11px/1 var(--mm-font-sans);
         letter-spacing: .22em; text-transform: uppercase;
         border-radius: var(--mm-radius-sm);
-        transition: background var(--mm-t-fast) var(--mm-ease);
+        text-decoration: none;
+        transition: background var(--mm-t-fast) var(--mm-ease), gap var(--mm-t-fast) var(--mm-ease);
       }
-      /* Sombra leve en hover en vez de cambio de color contrastante. */
-      .mm-promo-main__cta:hover { background: #F0EADB; }
+      .mm-promo-main__cta:hover { background: #F0EADB; gap: 14px; }
 
-      /* Dos promos secundarias apiladas */
+      /* ── Cards laterales ──────────────────────────────────────────── */
       .mm-promo-card {
         position: relative; overflow: hidden;
         display: flex; flex-direction: column; justify-content: space-between;
+        gap: 14px;
         padding: clamp(24px,2.4vw,32px);
         color: var(--mm-cream);
         border-radius: var(--mm-radius-sm);
+        text-decoration: none;
         transition: transform var(--mm-t-base) var(--mm-ease);
       }
-      .mm-promo-card:hover { transform: translateY(-2px); }
+      .mm-promo-card:hover { transform: translateY(-2px); color: var(--mm-cream); }
       .mm-promo-card--olive { background: var(--mm-olive); }
       .mm-promo-card--ink   { background: var(--mm-ink); }
+      .mm-promo-card__head { display: flex; flex-direction: column; gap: 12px; }
       .mm-promo-card__eyebrow {
+        display: inline-flex; align-items: center; gap: 10px;
         font: 600 10px/1 var(--mm-font-sans);
         letter-spacing: .28em; text-transform: uppercase;
         color: var(--mm-gold);
       }
+      .mm-promo-card__eyebrow::before { content:''; width:20px; height:1px; background: var(--mm-gold); }
       .mm-promo-card__title {
-        margin: 14px 0 10px;
+        margin: 0;
         font: 500 clamp(22px,1.8vw,28px)/1.15 var(--mm-font-sans);
         letter-spacing: -.005em;
+        color: var(--mm-cream);
       }
       .mm-promo-card__desc {
-        margin: 0; font: 400 13.5px/1.55 var(--mm-font-sans);
-        opacity: .85; max-width: 34ch;
+        margin: 0;
+        font: 400 13.5px/1.55 var(--mm-font-sans);
+        color: rgba(247,243,230,.82);
+        max-width: 32ch;
       }
       .mm-promo-card__cta {
-        margin-top: 22px;
         display: inline-flex; align-items: center; gap: 8px;
-        font: 600 10.5px/1 var(--mm-font-sans);
+        align-self: flex-start;
+        font: 700 10.5px/1 var(--mm-font-sans);
         letter-spacing: .22em; text-transform: uppercase;
         color: var(--mm-cream);
-        padding-bottom: 5px; border-bottom: 1px solid var(--mm-gold);
-        transition: color var(--mm-t-fast) var(--mm-ease);
+        padding-bottom: 6px; border-bottom: 1px solid var(--mm-gold);
+        transition: gap var(--mm-t-fast) var(--mm-ease), color var(--mm-t-fast) var(--mm-ease);
       }
-      .mm-promo-card:hover .mm-promo-card__cta { color: var(--mm-gold); }
+      .mm-promo-card:hover .mm-promo-card__cta { color: var(--mm-gold); gap: 12px; }
     </style>
 
     <div class="mm-promo-grid">
       <a class="mm-promo-main" href="./Catalogo.dc.html" aria-label="Ver el catálogo completo de Marilia Magazine">
-        <div>
+        <div class="mm-promo-main__head">
           <span class="mm-promo-main__eyebrow">Tienda departamental</span>
           <h3 class="mm-promo-main__title">Un catálogo pensado para todo</h3>
           <p class="mm-promo-main__desc">Moda, hogar, belleza, tecnología y más. Un mismo lugar para lo que necesitás cada día — pensado para vos, para tu familia y para tu casa.</p>
-          <div class="mm-promo-main__depts" aria-hidden="true">
-            <span class="mm-promo-main__dept">Mujer</span>
-            <span class="mm-promo-main__dept">Hombre</span>
-            <span class="mm-promo-main__dept">Infantil</span>
-            <span class="mm-promo-main__dept">Belleza</span>
-            <span class="mm-promo-main__dept">Hogar</span>
-            <span class="mm-promo-main__dept">Tecnología</span>
-            <span class="mm-promo-main__dept">Deportes</span>
-          </div>
+        </div>
+        <div class="mm-promo-main__depts" aria-hidden="true">
+          <span class="mm-promo-main__dept">Mujer</span>
+          <span class="mm-promo-main__dept">Hombre</span>
+          <span class="mm-promo-main__dept">Infantil</span>
+          <span class="mm-promo-main__dept">Belleza</span>
+          <span class="mm-promo-main__dept">Hogar</span>
+          <span class="mm-promo-main__dept">Tecnología</span>
+          <span class="mm-promo-main__dept">Deportes</span>
         </div>
         <span class="mm-promo-main__cta">Ver el catálogo <span aria-hidden="true">→</span></span>
       </a>
 
       <div class="mm-promo-side">
         <a class="mm-promo-card mm-promo-card--olive" href="./Catalogo.dc.html?nuevo=1">
-          <div>
+          <div class="mm-promo-card__head">
             <span class="mm-promo-card__eyebrow">Novedades</span>
             <h3 class="mm-promo-card__title">Lo último que entró</h3>
             <p class="mm-promo-card__desc">Actualizamos el catálogo cada semana con productos recién llegados.</p>
@@ -867,7 +890,7 @@
           <span class="mm-promo-card__cta">Ver novedades <span aria-hidden="true">→</span></span>
         </a>
         <a class="mm-promo-card mm-promo-card--ink" href="./Catalogo.dc.html?oferta=1">
-          <div>
+          <div class="mm-promo-card__head">
             <span class="mm-promo-card__eyebrow">Ofertas</span>
             <h3 class="mm-promo-card__title">Precios rebajados</h3>
             <p class="mm-promo-card__desc">Selección de productos con descuento por tiempo limitado.</p>
