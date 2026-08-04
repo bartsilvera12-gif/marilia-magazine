@@ -325,6 +325,23 @@
     }
   }
 
+  /**
+   * Igual que `api` pero devuelve el total de filas que matchean, leyendo el
+   * header Content-Range. Sirve para el contador sin traerse el catálogo.
+   */
+  async function apiCount(path) {
+    try {
+      var h = Object.assign({}, HEADERS, { Prefer: "count=exact", Range: "0-0" });
+      var r = await fetch(REST + path, { headers: h, credentials: "omit" });
+      var cr = r.headers.get("content-range");
+      if (!cr) return null;
+      var total = parseInt(String(cr).split("/")[1], 10);
+      return Number.isFinite(total) ? total : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   // ------------------------------------------------------------------
   // 1) Catálogo dinámico
   // ------------------------------------------------------------------
@@ -346,82 +363,64 @@
     // altura para que no salte el layout mientras llega la respuesta del ERP.
     container.style.minHeight = Math.max(container.offsetHeight, 800) + "px";
 
-    // Cache localStorage: render instantáneo si tenemos snapshot < 5min
-    var CACHE_KEY = "mm_prod_cache_v3";
-    var CACHE_TTL = 5 * 60 * 1000;
-    var productos = null;
-    var cats = null;
-    try {
-      var raw = localStorage.getItem(CACHE_KEY);
-      if (raw) {
-        var parsed = JSON.parse(raw);
-        if (parsed && parsed.ts && (Date.now() - parsed.ts < CACHE_TTL) && Array.isArray(parsed.productos)) {
-          productos = parsed.productos;
-          cats = parsed.cats || [];
-        }
-      }
-    } catch (e) {}
+    // El catalogo tiene ~6.300 modelos en 24.000 variantes y PostgREST corta
+    // en 1.000 filas, asi que no se puede traer todo y agrupar en el browser.
+    // Se pagina contra la vista `sitio_modelos` (una fila por modelo) y recien
+    // ahi se piden las variantes de los modelos visibles, para los swatches.
+    var PAGINA = 24;
+    var estado = { q: "", catId: "", offset: 0, total: 0, cargando: false, fin: false };
 
-    if (!productos) {
-      productos = await api(
-        "/productos?select=id,sku,codigo_proveedor,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
-      );
-      if (!productos || productos.length === 0) {
-        // DB vacía: restaurar fallback estático quitando data-hidden.
-        Array.prototype.slice.call(container.querySelectorAll("article")).forEach(function (a) { a.removeAttribute("data-hidden"); });
-        return;
-      }
-      cats = (await api("/categorias_productos?select=id,nombre")) || [];
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), productos: productos, cats: cats })); } catch (e) {}
-    } else {
-      // Refrescar en background para próximas visitas (no re-renderiza esta vista)
-      setTimeout(function () {
-        (async function () {
-          var fresh = await api("/productos?select=id,sku,codigo_proveedor,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc");
-          if (!fresh || fresh.length === 0) return;
-          var freshCats = (await api("/categorias_productos?select=id,nombre")) || [];
-          try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), productos: fresh, cats: freshCats })); } catch (e) {}
-        })();
-      }, 500);
+    var cats = (await api("/categorias_productos?select=id,nombre")) || [];
+    var catById = {};
+    cats.forEach(function (c) { catById[c.id] = c.nombre; });
+
+    // Ocultamos las cards de la maqueta: desde acá manda el ERP.
+    Array.prototype.slice.call(container.querySelectorAll("article"))
+      .forEach(function (a) { a.style.display = "none"; });
+
+    /** Trae las variantes de los modelos de la página y arma sus swatches. */
+    async function armarGrupos(modelosPagina) {
+      var codigos = modelosPagina.map(function (m) { return m.codigo_proveedor; }).filter(Boolean);
+      if (codigos.length === 0) return [];
+      var lista = codigos.map(function (c) { return '"' + String(c).replace(/"/g, '') + '"'; }).join(",");
+      var variantes = (await api(
+        "/productos?codigo_proveedor=in.(" + encodeURIComponent(lista) + ")" +
+        "&select=id,codigo_proveedor,nombre,precio_venta,imagen_url,color_nombre,talla_nombre" +
+        "&activo=eq.true&limit=1000"
+      )) || [];
+
+      var porCodigo = {};
+      variantes.forEach(function (v) {
+        var k = String(v.codigo_proveedor);
+        if (!porCodigo[k]) porCodigo[k] = [];
+        porCodigo[k].push(v);
+      });
+
+      return modelosPagina.map(function (m) {
+        var vs = porCodigo[String(m.codigo_proveedor)] || [];
+        // El representante viene de la vista: ya es la variante con foto.
+        var rep = {
+          id: m.id,
+          nombre: m.nombre_modelo || m.nombre,
+          precio_venta: m.precio_venta,
+          imagen_url: m.imagen_url,
+          categoria_principal_id: m.categoria_principal_id,
+          descripcion: "",
+        };
+        var coloresMap = {}, talles = new Set();
+        vs.forEach(function (v) {
+          if (v.color_nombre) {
+            var c = String(v.color_nombre).trim();
+            if (!coloresMap[c]) coloresMap[c] = { hex: hexForColor(c), imagen_url: v.imagen_url || null };
+            else if (!coloresMap[c].imagen_url && v.imagen_url) coloresMap[c].imagen_url = v.imagen_url;
+          }
+          if (v.talla_nombre) talles.add(v.talla_nombre);
+        });
+        return { representante: rep, coloresMap: coloresMap, talles: talles, variantes: vs };
+      });
     }
 
-    // Categorías para mapear id → nombre
-    var catById = {};
-    (cats || []).forEach(function (c) { catById[c.id] = c.nombre; });
-
-    // AGRUPAR por modelo: todas las variantes de un modelo comparten el
-    // codigo_proveedor (el SKU es interno y unico por variante). UNA card por
-    // modelo, con swatches de todos sus colores; el swatch cambia la imagen.
-    var grupos = {};
-    productos.forEach(function (p) {
-      var baseModelo = String(p.codigo_proveedor || p.sku || p.id);
-      if (!grupos[baseModelo]) {
-        grupos[baseModelo] = {
-          representante: p,
-          coloresMap: {},   // color_nombre → { hex, imagen_url }
-          talles: new Set(),
-          variantes: [],
-        };
-      }
-      var g = grupos[baseModelo];
-      g.variantes.push(p);
-      if (p.color_nombre) {
-        var c = String(p.color_nombre).trim();
-        if (!g.coloresMap[c]) {
-          g.coloresMap[c] = { hex: hexForColor(c), imagen_url: p.imagen_url || null };
-        } else if (!g.coloresMap[c].imagen_url && p.imagen_url) {
-          g.coloresMap[c].imagen_url = p.imagen_url;
-        }
-      }
-      if (p.talla_nombre) g.talles.add(p.talla_nombre);
-      if (!g.representante.imagen_url && p.imagen_url) g.representante = p;
-    });
-    var modelos = Object.values(grupos);
-
-    // Ocultamos template y agregamos las tarjetas nuevas
-    var siblings = Array.prototype.slice.call(container.querySelectorAll("article"));
-    siblings.forEach(function (a) { a.style.display = "none"; });
-
+    function renderModelos(modelos) {
     modelos.forEach(function (grupo, idx) {
       var p = grupo.representante;
       var coloresArr = Object.keys(grupo.coloresMap);
@@ -538,9 +537,105 @@
 
       container.appendChild(card);
     });
+    }
 
-    container.setAttribute("data-mm-count", String(modelos.length));
-    document.dispatchEvent(new CustomEvent("mm:catalogo-loaded", { detail: { total: modelos.length, variantes: productos.length } }));
+    /** Actualiza el contador "N piezas" del encabezado de la grilla. */
+    function pintarContador(n) {
+      var cnt = document.querySelector("#coleccion-grid [data-count]");
+      if (!cnt) return;
+      if (n === 0) cnt.textContent = LANG === "pt" ? "Sem peças" : "Sin piezas";
+      else if (n === 1) cnt.textContent = LANG === "pt" ? "1 peça" : "1 pieza";
+      else cnt.textContent = n.toLocaleString("es-PY") + (LANG === "pt" ? " peças" : " piezas");
+    }
+
+    /** Carga una página de modelos. `reset` limpia la grilla y vuelve al inicio. */
+    async function cargarPagina(reset) {
+      if (estado.cargando) return;
+      estado.cargando = true;
+      if (reset) {
+        estado.offset = 0;
+        estado.fin = false;
+        Array.prototype.slice.call(container.querySelectorAll("article[data-mm]"))
+          .forEach(function (a) { a.remove(); });
+      }
+
+      var filtros = "";
+      if (estado.catId) filtros += "&categoria_principal_id=eq." + encodeURIComponent(estado.catId);
+      if (estado.q) filtros += "&nombre_modelo=ilike." + encodeURIComponent("*" + estado.q + "*");
+
+      var url = "/sitio_modelos?select=id,codigo_proveedor,nombre_modelo,precio_venta,imagen_url,categoria_principal_id" +
+        filtros + "&order=nombre_modelo.asc&limit=" + PAGINA + "&offset=" + estado.offset;
+
+      var modelosPagina = await api(url);
+      if (!modelosPagina) { estado.cargando = false; return; }
+      if (modelosPagina.length < PAGINA) estado.fin = true;
+      estado.offset += modelosPagina.length;
+
+      var grupos = await armarGrupos(modelosPagina);
+      renderModelos(grupos);
+
+      // Marcamos las cards nuestras para poder limpiarlas en el próximo reset.
+      Array.prototype.slice.call(container.querySelectorAll("article"))
+        .forEach(function (a) { if (a.style.display !== "none") a.setAttribute("data-mm", ""); });
+
+      if (vacioEl) vacioEl.style.display = (estado.offset === 0) ? "" : "none";
+      if (masBtn) masBtn.style.display = estado.fin ? "none" : "";
+      container.style.minHeight = "";
+      estado.cargando = false;
+
+      // Contador: total real del filtro actual, no lo que se lleva cargado.
+      if (reset) {
+        var total = await apiCount(
+          "/sitio_modelos?select=id" +
+          (estado.catId ? "&categoria_principal_id=eq." + encodeURIComponent(estado.catId) : "") +
+          (estado.q ? "&nombre_modelo=ilike." + encodeURIComponent("*" + estado.q + "*") : "")
+        );
+        if (total != null) { estado.total = total; pintarContador(total); }
+      }
+      document.dispatchEvent(new CustomEvent("mm:catalogo-loaded", { detail: { total: estado.total } }));
+    }
+
+    // ── Buscador + botón "ver más", inyectados debajo de la grilla ──────────
+    var barra = document.createElement("div");
+    barra.className = "mm-cg-tools";
+    barra.style.cssText = "display:flex;gap:.5rem;align-items:center;justify-content:center;margin:0 0 1.5rem;flex-wrap:wrap;";
+    var buscador = document.createElement("input");
+    buscador.type = "search";
+    buscador.placeholder = LANG === "pt" ? "Buscar peça…" : "Buscar prenda…";
+    buscador.style.cssText = "flex:0 1 320px;padding:.6rem .9rem;border:1px solid #D8CBB0;border-radius:999px;font:inherit;font-size:.9rem;background:#fff;color:#1E1B16;outline:none;";
+    barra.appendChild(buscador);
+    if (container.parentNode) container.parentNode.insertBefore(barra, container);
+
+    var vacioEl = document.createElement("p");
+    vacioEl.style.cssText = "display:none;text-align:center;color:#8A7F6A;padding:3rem 1rem;font-size:.95rem;";
+    vacioEl.textContent = LANG === "pt" ? "Nenhuma peça encontrada." : "No encontramos prendas con ese filtro.";
+    if (container.parentNode) container.parentNode.insertBefore(vacioEl, container.nextSibling);
+
+    var masBtn = document.createElement("button");
+    masBtn.type = "button";
+    masBtn.textContent = LANG === "pt" ? "Ver mais" : "Ver más";
+    masBtn.style.cssText = "display:block;margin:2rem auto 0;padding:.75rem 2.5rem;border:1px solid #1E1B16;background:transparent;color:#1E1B16;border-radius:999px;font:inherit;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;";
+    masBtn.addEventListener("click", function () { cargarPagina(false); });
+    if (container.parentNode) container.parentNode.insertBefore(masBtn, vacioEl.nextSibling);
+
+    var debounce = null;
+    buscador.addEventListener("input", function () {
+      clearTimeout(debounce);
+      debounce = setTimeout(function () {
+        estado.q = buscador.value.trim();
+        cargarPagina(true);
+      }, 350);
+    });
+
+    // Lo exponemos para que los filtros de categoría lo manejen server-side.
+    window.MM_CATALOGO = {
+      filtrarPorCategoria: function (catId) {
+        estado.catId = catId || "";
+        cargarPagina(true);
+      },
+    };
+
+    await cargarPagina(true);
   }
 
   // ------------------------------------------------------------------
@@ -789,6 +884,8 @@
       }
       btn.textContent = display;
       btn.setAttribute("data-cat", c.nombre.toLowerCase());
+      // El id va en el botón: el filtrado lo resuelve el servidor.
+      btn.setAttribute("data-cat-id", c.id);
       var lastWord = c.nombre.trim().split(/\s+/).pop().toLowerCase();
       btn.setAttribute("data-filter", lastWord);
       btn.removeAttribute("data-on");
@@ -802,63 +899,14 @@
     if (!container.__mmFilterAttached) {
       container.__mmFilterAttached = true;
       var grid = document.querySelector('[data-mm-sync="catalogo"]');
-      // Función pura que aplica el filtro actual + gender activo
+
+      // El filtrado lo resuelve el servidor: con 6.300 modelos no se pueden
+      // tener todas las cards en el DOM para mostrarlas y ocultarlas.
       function mmApplyFilter() {
-        if (!grid) return;
-        var activeFilterBtn = container.querySelector("[data-filter][data-on]");
-        var filter = activeFilterBtn ? activeFilterBtn.getAttribute("data-filter") : "todo";
-        var genderBtn = document.querySelector("#coleccion-grid .mm-cf-g[data-on]");
-        var gender = genderBtn ? genderBtn.getAttribute("data-gender") : "todo";
-        var cards = grid.querySelectorAll("article");
-        var visible = 0;
-        cards.forEach(function (c) {
-          var tags = (c.getAttribute("data-cat") || "").toLowerCase().split(/\s+/);
-          var okCat = filter === "todo" || tags.indexOf(filter) > -1;
-          var okGender = gender === "todo" || tags.indexOf(gender) > -1;
-          // Excluir cards template hidden por el loader inicial
-          var isLoaderHidden = c.style.visibility === "hidden";
-          if (okCat && okGender && !isLoaderHidden) {
-            c.removeAttribute("data-hidden"); visible++;
-          } else {
-            c.setAttribute("data-hidden", "");
-          }
-        });
-        var cnt = document.querySelector("#coleccion-grid [data-count]");
-        if (cnt) {
-          if (visible === 0) cnt.textContent = LANG === "pt" ? "Sem peças" : "Sin piezas";
-          else if (visible === 1) cnt.textContent = LANG === "pt" ? "1 peça" : "1 pieza";
-          else cnt.textContent = visible + (LANG === "pt" ? " peças" : " piezas");
-        }
-        // Liberar min-height que se reservó al arranque — evita espacio en blanco largo
+        var activeFilterBtn = container.querySelector("[data-cat-id][data-on]");
+        var catId = activeFilterBtn ? activeFilterBtn.getAttribute("data-cat-id") : "";
         if (grid) grid.style.minHeight = "";
-        var mmCatCont = document.querySelector('[data-mm-sync="catalogo"]');
-        if (mmCatCont) mmCatCont.style.minHeight = "";
-        // Mostrar/ocultar mensaje vacío
-        var emptyEl = document.querySelector("#coleccion-grid [data-empty]");
-        if (emptyEl) {
-          emptyEl.hidden = visible > 0;
-          if (visible === 0 && !emptyEl.textContent.trim()) {
-            emptyEl.textContent = LANG === "pt"
-              ? "Nenhuma peça disponível nesta categoria."
-              : "No hay piezas disponibles en esta categoría.";
-          }
-        } else if (visible === 0) {
-          // Si no existe [data-empty] en el HTML, lo creamos on-the-fly
-          var eDiv = document.getElementById("mm-empty-msg");
-          if (!eDiv) {
-            eDiv = document.createElement("div");
-            eDiv.id = "mm-empty-msg";
-            eDiv.style.cssText = "grid-column:1/-1;padding:60px 20px;text-align:center;color:#8A7F6A;font:400 14px/1.6 'Montserrat',sans-serif;letter-spacing:.04em";
-            grid.appendChild(eDiv);
-          }
-          eDiv.textContent = LANG === "pt"
-            ? "Nenhuma peça disponível nesta categoria por enquanto."
-            : "No hay piezas disponibles en esta categoría por ahora.";
-          eDiv.style.display = "";
-        } else {
-          var eDiv2 = document.getElementById("mm-empty-msg");
-          if (eDiv2) eDiv2.style.display = "none";
-        }
+        if (window.MM_CATALOGO) window.MM_CATALOGO.filtrarPorCategoria(catId);
       }
 
       container.addEventListener("click", function (ev) {
@@ -869,25 +917,15 @@
         mmApplyFilter();
       });
 
-      // Aplicar filtro inicial (respeta el 'Todo' o el que tenga data-on)
-      setTimeout(mmApplyFilter, 200);
-      // Exponer para que otras funciones (gender) puedan llamarlo
       window.__mmApplyFilter = mmApplyFilter;
     }
 
     // Delegación en gender también
     var genderBar = document.querySelector("#coleccion-grid .mm-cf-gender");
-    if (genderBar && !genderBar.__mmGenderAttached) {
-      genderBar.__mmGenderAttached = true;
-      genderBar.addEventListener("click", function (ev) {
-        var btn = ev.target.closest("[data-gender]");
-        if (!btn) return;
-        genderBar.querySelectorAll("[data-gender]").forEach(function (b) { b.removeAttribute("data-on"); });
-        btn.setAttribute("data-on", "");
-        // Re-apply filter con nuevo gender
-        if (window.__mmApplyFilter) window.__mmApplyFilter();
-      });
-    }
+    // El catálogo del proveedor no distingue género (las categorías son
+    // CAMISETA, SHORTS, CALÇA…), así que la barra HOMBRE/MUJER quedaría como
+    // un control que no hace nada. Se oculta hasta que haya con qué filtrar.
+    if (genderBar) genderBar.style.display = "none";
   }
 
   // ------------------------------------------------------------------
