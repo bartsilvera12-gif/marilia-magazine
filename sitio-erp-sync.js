@@ -903,6 +903,7 @@
    */
   var FAMILIAS = [
     {
+      clave: "ropa",
       nombre: "Ropa", nombrePt: "Roupa",
       categorias: ["CAMISETA", "CAMISA", "POLO", "BLUSA", "TOP", "BODY", "MALHA",
         "SHORTS", "BERMUDA", "CALÇA", "CALÇA JEANS", "SAIA", "VESTIDO",
@@ -910,19 +911,23 @@
         "CONJUNTO", "PILOTOS", "CAPA DE CHUVA", "CUECA", "SUNGA", "MEIA"],
     },
     {
+      clave: "calzado",
       nombre: "Calzado", nombrePt: "Calçados",
       categorias: ["TENIS", "CHINELO", "SAPATO", "SAPATENIS", "MULE"],
     },
     {
+      clave: "accesorios",
       nombre: "Accesorios", nombrePt: "Acessórios",
       categorias: ["BONE", "OCULOS", "CINTO", "CARTEIRA", "GORRO", "CHAPEU",
         "MASCARA", "CHAVEIRO"],
     },
     {
+      clave: "bolsos",
       nombre: "Bolsos", nombrePt: "Bolsas",
       categorias: ["MOCHILA", "MALA", "SACOLA", "PORTA TRECO"],
     },
     {
+      clave: "bijou",
       nombre: "Bijou", nombrePt: "Bijuteria",
       categorias: ["PULSEIRA", "COLAR", "BRACELETE", "CORRENTE"],
     },
@@ -957,7 +962,7 @@
     var asignadas = {};
     familias.forEach(function (f) { f.miembros.forEach(function (c) { asignadas[c.id] = true; }); });
     var sueltas = cats.filter(function (c) { return !asignadas[c.id]; });
-    if (sueltas.length) familias.push({ nombre: "Otros", nombrePt: "Outros", miembros: sueltas });
+    if (sueltas.length) familias.push({ clave: "otros", nombre: "Otros", nombrePt: "Outros", miembros: sueltas });
 
     // Dos filas: familias arriba, subcategorías de la elegida abajo.
     var padre = container.parentNode;
@@ -1037,8 +1042,18 @@
         });
         fila2.style.display = "flex";
       });
+      b.setAttribute("data-familia", f.clave || "");
       container.appendChild(b);
     });
+
+    // El menú superior linkea a ?familia=ropa|calzado|…: se aplica al entrar.
+    try {
+      var pedida = new URLSearchParams(location.search).get("familia");
+      if (pedida) {
+        var chipFamilia = container.querySelector('[data-familia="' + pedida.toLowerCase() + '"]');
+        if (chipFamilia) chipFamilia.click();
+      }
+    } catch (e) {}
 
     // Delegación en gender también
     var genderBar = document.querySelector("#coleccion-grid .mm-cf-gender");
