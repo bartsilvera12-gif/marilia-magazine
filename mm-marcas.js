@@ -15,7 +15,8 @@
  *   slug   -> va en la URL: ./Catalogo.dc.html?marca=gap
  *   nombre -> como se muestra (el wordmark se dibuja con tipografia)
  *   desc   -> linea corta opcional
- *   logo   -> opcional: './uploads/marcas/gap.svg'. Si no hay, se usa el
+ *   logo   -> opcional: ruta a un archivo dentro de uploads/marcas/
+ *             (ej: uploads + /marcas/ + gap.svg). Si no hay, se usa el
  *             nombre en tipografia, que es mejor que un logo inventado.
  *   match  -> tokens que tienen que aparecer en el nombre del producto
  *   todo   -> true si la marca cubre TODO el catalogo (ver nota TFLOW)
