@@ -1702,6 +1702,16 @@
     wrap.appendChild(makeOpt("es"));
     wrap.appendChild(makeOpt("pt"));
     document.body.appendChild(wrap);
+
+    // El toggle es fijo y en el celular quedaba encima del logo del pie.
+    // Se le reserva altura al final de la página para que no lo tape.
+    if (!document.getElementById("mm-lang-space")) {
+      var space = document.createElement("style");
+      space.id = "mm-lang-space";
+      space.textContent =
+        "@media (max-width:700px){footer,.mm-footer{padding-bottom:88px}}";
+      document.head.appendChild(space);
+    }
   }
 
   // MutationObserver: re-traduce cada vez que el DOM cambia (útil cuando

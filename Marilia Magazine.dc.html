@@ -1074,17 +1074,26 @@
        AYUDA Y ATENCION
        ================================================================ -->
   <section class="mm-section mm-section--soft" aria-labelledby="help-h">
-    <div class="mm-container" style="display:grid; grid-template-columns:1fr 1.4fr; gap:clamp(32px,4vw,64px); align-items:center;">
-      <style>
-        @media (max-width: 900px) { .mm-help-grid { grid-template-columns:1fr !important; } }
-      </style>
+    <style>
+      /* Las columnas van acá y no inline: un estilo inline le gana a la media
+         query y en el celular las tarjetas quedaban cortadas a la derecha. */
+      .mm-help-2col { display:grid; grid-template-columns:1fr 1.4fr; gap:clamp(32px,4vw,64px); align-items:center; }
+      .mm-help-cards { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+      @media (max-width: 900px) {
+        .mm-help-2col { grid-template-columns:1fr; gap:28px; }
+      }
+      @media (max-width: 560px) {
+        .mm-help-cards { grid-template-columns:1fr; }
+      }
+    </style>
+    <div class="mm-container mm-help-2col">
       <div class="mm-help-grid">
         <span class="mm-section__eyebrow">Estamos para ayudarte</span>
         <h2 id="help-h" class="mm-section__title" style="margin:8px 0 14px">¿Necesitás ayuda?</h2>
         <p class="mm-section__sub" style="margin:0 0 22px">Escribinos por WhatsApp — respondemos consultas de talles, disponibilidad, envíos y cambios.</p>
         <a href="https://wa.me/595981000000" class="mm-btn mm-btn--primary">Escribir por WhatsApp</a>
       </div>
-      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px;">
+      <div class="mm-help-cards">
         <a class="mm-benefit" href="#envios" style="text-decoration:none">
           <div>
             <h3 class="mm-benefit__title">Envíos y entregas</h3>
