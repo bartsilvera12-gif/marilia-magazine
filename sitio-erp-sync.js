@@ -364,7 +364,7 @@
 
     if (!productos) {
       productos = await api(
-        "/productos?select=id,sku,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
+        "/productos?select=id,sku,codigo_proveedor,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc"
       );
       if (!productos || productos.length === 0) {
         // DB vacía: restaurar fallback estático quitando data-hidden.
@@ -377,7 +377,7 @@
       // Refrescar en background para próximas visitas (no re-renderiza esta vista)
       setTimeout(function () {
         (async function () {
-          var fresh = await api("/productos?select=id,sku,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc");
+          var fresh = await api("/productos?select=id,sku,codigo_proveedor,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre&order=nombre.asc");
           if (!fresh || fresh.length === 0) return;
           var freshCats = (await api("/categorias_productos?select=id,nombre")) || [];
           try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), productos: fresh, cats: freshCats })); } catch (e) {}
@@ -389,13 +389,12 @@
     var catById = {};
     (cats || []).forEach(function (c) { catById[c.id] = c.nombre; });
 
-    // AGRUPAR por modelo base: SKU "XXXXX.YYY-TALLA" → modelo = "XXXXX".
-    // Cada modelo puede tener N variantes color+talla; UNA card por modelo,
-    // pero con swatches de todos los colores. Click en swatch cambia la imagen.
+    // AGRUPAR por modelo: todas las variantes de un modelo comparten el
+    // codigo_proveedor (el SKU es interno y unico por variante). UNA card por
+    // modelo, con swatches de todos sus colores; el swatch cambia la imagen.
     var grupos = {};
     productos.forEach(function (p) {
-      var sku = String(p.sku || "");
-      var baseModelo = sku.split(".")[0] || sku;
+      var baseModelo = String(p.codigo_proveedor || p.sku || p.id);
       if (!grupos[baseModelo]) {
         grupos[baseModelo] = {
           representante: p,
@@ -558,7 +557,7 @@
     if (!container) return;
 
     var productos = await api(
-      "/productos?select=id,sku,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre" +
+      "/productos?select=id,sku,codigo_proveedor,nombre,precio_venta,imagen_url,categoria_principal_id,color_nombre,talla_nombre" +
       "&destacado=eq.true&activo=eq.true&visible_web=eq.true&order=nombre.asc"
     );
     if (!productos || productos.length === 0) return;
@@ -567,10 +566,10 @@
     var catById = {};
     cats.forEach(function (c) { catById[c.id] = c.nombre; });
 
-    // Una card por modelo base (SKU "XXXXX.YYY-TALLA" → "XXXXX").
+    // Una card por modelo: las variantes comparten el codigo_proveedor.
     var grupos = {};
     productos.forEach(function (p) {
-      var base = String(p.sku || p.id).split(".")[0];
+      var base = String(p.codigo_proveedor || p.sku || p.id);
       if (!grupos[base]) grupos[base] = { rep: p, colores: {}, talles: {} };
       var g = grupos[base];
       if (p.color_nombre) {
@@ -1559,15 +1558,16 @@
     // Si el ID es corto (p1, h1, t1...) es hardcoded — dejar que la página lo maneje
     if (id.length < 30) return;
     // Fetch el producto por UUID
-    var rows = await api("/productos?id=eq." + encodeURIComponent(id) + "&select=id,sku,nombre,precio_venta,descripcion,imagen_url,categoria_principal_id,color_nombre,talla_nombre");
+    var rows = await api("/productos?id=eq." + encodeURIComponent(id) + "&select=id,sku,codigo_proveedor,nombre,precio_venta,descripcion,imagen_url,categoria_principal_id,color_nombre,talla_nombre");
     if (!rows || rows.length === 0) return;
     var p = rows[0];
-    // Buscar variantes del mismo modelo base
-    var baseSku = String(p.sku || "").split(".")[0];
+    // Variantes del mismo modelo: comparten el codigo_proveedor.
+    var codigoModelo = String(p.codigo_proveedor || "");
     var variantes = [];
-    if (baseSku) {
-      variantes = (await api("/productos?sku=like." + encodeURIComponent(baseSku + ".*") + "&select=id,sku,nombre,precio_venta,imagen_url,color_nombre,talla_nombre")) || [];
+    if (codigoModelo) {
+      variantes = (await api("/productos?codigo_proveedor=eq." + encodeURIComponent(codigoModelo) + "&select=id,sku,codigo_proveedor,nombre,precio_venta,imagen_url,color_nombre,talla_nombre")) || [];
     }
+    if (variantes.length === 0) variantes = [p];
     var colores = new Set(), talles = new Set(), imgPorColor = {};
     variantes.forEach(function (v) {
       if (v.color_nombre) { colores.add(v.color_nombre); if (v.imagen_url && !imgPorColor[v.color_nombre]) imgPorColor[v.color_nombre] = v.imagen_url; }
