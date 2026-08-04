@@ -152,6 +152,16 @@
       <!-- Chips de filtros activos + limpiar -->
       <div data-active-chips style="display:none; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-top:16px" aria-live="polite"></div>
 
+      <!-- ============================================================
+           MARCAS — primer nivel de navegacion, arriba de las categorias.
+           Se arma desde window.MM_MARCAS (mm-marcas.js). Si no hay
+           marcas cargadas la barra queda oculta.
+           ============================================================ -->
+      <div class="mm-cf-marcas" data-marcas-bar hidden>
+        <span class="mm-cf-marcas__label">Marca</span>
+        <div class="mm-cf-marcas__row" data-marcas-row></div>
+      </div>
+
       <!-- Toolbar superior: departamento (izq) + orden y contador (der) -->
       <div class="mm-cf-toolbar">
         <div class="mm-cf-gender" role="group" aria-label="Filtrar por departamento">
@@ -193,6 +203,52 @@
       </div>
 
       <style>
+        /* Barra de marcas: primer nivel, arriba de todo lo demas */
+        #coleccion-grid .mm-cf-marcas {
+          display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          padding:0 0 16px;
+        }
+        #coleccion-grid .mm-cf-marcas__label {
+          font:600 10px/1 var(--mm-font-sans);
+          letter-spacing:.28em; text-transform:uppercase;
+          color:var(--mm-gold-dark);
+          flex:0 0 auto;
+        }
+        #coleccion-grid .mm-cf-marcas__row {
+          display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+        }
+        #coleccion-grid .mm-cf-marca {
+          display:inline-flex; align-items:center; gap:8px;
+          padding:9px 18px;
+          background:var(--mm-bg-alt);
+          border:1px solid var(--mm-border-strong);
+          border-radius:var(--mm-radius-pill);
+          font:700 11.5px/1 var(--mm-font-sans);
+          letter-spacing:.14em; text-transform:uppercase;
+          color:var(--mm-ink);
+          text-decoration:none;
+          transition:border-color var(--mm-t-fast) var(--mm-ease),
+                     background var(--mm-t-fast) var(--mm-ease),
+                     color var(--mm-t-fast) var(--mm-ease);
+        }
+        #coleccion-grid .mm-cf-marca:hover { border-color:var(--mm-ink); color:var(--mm-ink); }
+        #coleccion-grid .mm-cf-marca[data-on] {
+          background:var(--mm-ink); color:var(--mm-cream); border-color:var(--mm-ink);
+        }
+        /* "Todas" pesa menos que las marcas propiamente dichas */
+        #coleccion-grid .mm-cf-marca[data-todas] {
+          font-weight:500; letter-spacing:.1em; text-transform:none;
+          color:var(--mm-fg-muted);
+        }
+        #coleccion-grid .mm-cf-marca[data-todas][data-on] { color:var(--mm-cream); }
+        #coleccion-grid .mm-cf-marca img { max-height:16px; width:auto; display:block; }
+        @media (max-width: 700px) {
+          #coleccion-grid .mm-cf-marcas { gap:10px; padding-bottom:12px; }
+          #coleccion-grid .mm-cf-marcas__row { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }
+          #coleccion-grid .mm-cf-marcas__row::-webkit-scrollbar { display:none; }
+          #coleccion-grid .mm-cf-marca { white-space:nowrap; }
+        }
+
         /* Toolbar: pill de genero + orden + count + toggle */
         #coleccion-grid .mm-cf-toolbar {
           display:flex; align-items:center; gap:16px; flex-wrap:wrap;
@@ -1605,6 +1661,47 @@
   } else {
     setTimeout(initMariliaCatalog, 50);
   }
+
+  // ── Barra de marcas ──────────────────────────────────────────────────
+  // Primer nivel de navegacion del catalogo. Se arma desde window.MM_MARCAS
+  // (mm-marcas.js). Cada marca es un link que agrega/saca ?marca= de la URL,
+  // conservando el resto de los filtros activos.
+  (function(){
+    function render(){
+      var bar = document.querySelector('[data-marcas-bar]');
+      var row = document.querySelector('[data-marcas-row]');
+      if(!bar || !row){ return setTimeout(render, 200); }
+
+      var marcas = window.MM_MARCAS || [];
+      if(!marcas.length){ bar.hidden = true; return; }
+      bar.hidden = false;
+
+      var actual = (new URLSearchParams(location.search).get('marca') || '').toLowerCase();
+
+      function href(slug){
+        var u = new URL(location.href);
+        if(slug) u.searchParams.set('marca', slug);
+        else u.searchParams.delete('marca');
+        return u.pathname + u.search;
+      }
+
+      var html = '<a class="mm-cf-marca" data-todas href="' + href(null) + '"' +
+                 (actual ? '' : ' data-on') + '>Todas</a>';
+      html += marcas.map(function(m){
+        var visual = m.logo
+          ? '<img src="' + m.logo + '" alt="' + m.nombre + '" loading="lazy"/>'
+          : m.nombre;
+        return '<a class="mm-cf-marca" href="' + href(m.slug) + '"' +
+               (actual === m.slug ? ' data-on' : '') + '>' + visual + '</a>';
+      }).join('');
+      row.innerHTML = html;
+    }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', function(){ setTimeout(render, 120); });
+    } else {
+      setTimeout(render, 120);
+    }
+  })();
 </script>
 
 </x-dc>
