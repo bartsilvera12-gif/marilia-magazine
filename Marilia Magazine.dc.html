@@ -139,187 +139,199 @@
        en dos imagenes (grande + detalle) que puede refrescarse por
        campana editando el HTML directo.
        ================================================================ -->
-  <section id="inicio" class="mm-hero">
+  <!-- ================================================================
+       HERO — carrusel full-bleed. Cada slide es una campana con
+       imagen de fondo y texto superpuesto. Controles minimalistas
+       (prev/next + dots). Autoplay pausable, respeta reduced-motion.
+       ================================================================ -->
+  <section id="inicio" class="mm-hero" aria-roledescription="carrusel" aria-label="Campañas destacadas">
     <style>
-      .mm-hero { position:relative; background:var(--mm-bg); }
-      .mm-hero__grid {
-        max-width: var(--mm-container); margin: 0 auto;
-        padding: clamp(24px,3vw,48px) var(--mm-gutter) clamp(20px,2.4vw,36px);
-        display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(24px,3vw,48px);
-        align-items: stretch;
+      .mm-hero { position:relative; background:var(--mm-ink); overflow:hidden; }
+      .mm-hero__track {
+        display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
+        scroll-behavior:smooth; scrollbar-width:none;
+        height:clamp(460px, 68vh, 720px);
       }
-      @media (max-width: 900px) {
-        .mm-hero__grid { grid-template-columns: 1fr; gap: 24px; padding-top: 20px; }
+      .mm-hero__track::-webkit-scrollbar { display:none; }
+      .mm-hero__slide {
+        position:relative; flex:0 0 100%; scroll-snap-align:start;
+        overflow:hidden; background:var(--mm-ink);
+      }
+      .mm-hero__slide img {
+        position:absolute; inset:0; width:100%; height:100%;
+        object-fit:cover; object-position:center;
+        transition: transform 8s var(--mm-ease);
+      }
+      .mm-hero__slide[data-active] img { transform: scale(1.05); }
+      .mm-hero__slide::after {
+        content:''; position:absolute; inset:0;
+        background: linear-gradient(to right, rgba(30,27,22,.62) 0%, rgba(30,27,22,.28) 45%, rgba(30,27,22,.05) 75%);
+        pointer-events:none;
       }
 
-      /* Columna de texto */
-      .mm-hero__text {
-        display: flex; flex-direction: column; justify-content: center;
-        padding: clamp(12px,2vw,28px) 0;
+      .mm-hero__caption {
+        position:absolute; inset:0; z-index:2;
+        display:flex; flex-direction:column; justify-content:center;
+        color:var(--mm-cream);
+        padding: clamp(28px, 4vw, 72px) clamp(20px, 5vw, 80px);
+        max-width:var(--mm-container); margin:0 auto;
+        left:0; right:0;
       }
       .mm-hero__eyebrow {
-        display: inline-flex; align-items: center; gap: 12px;
-        font: 500 var(--mm-fs-eyebrow)/1 var(--mm-font-sans);
-        letter-spacing: var(--mm-track-widest); text-transform: uppercase;
-        color: var(--mm-gold-dark);
-        margin-bottom: 20px;
-      }
-      .mm-hero__eyebrow::before { content:''; width:32px; height:1px; background:var(--mm-gold); }
-      .mm-hero__title {
-        margin: 0 0 20px;
-        font: 500 clamp(34px, 4.6vw, 62px)/1.05 var(--mm-font-sans);
-        letter-spacing: -.02em;
-        color: var(--mm-ink);
-        text-wrap: balance;
-      }
-      .mm-hero__title strong {
-        color: var(--mm-accent);
-        font-weight: 500;
-        position: relative;
-        white-space: nowrap;
-      }
-      .mm-hero__title strong::after {
-        content: ''; position: absolute; left: 0; right: 0; bottom: -.06em;
-        height: .12em; background: var(--mm-gold); opacity: .55;
-        border-radius: 2px;
-      }
-      .mm-hero__lead {
-        margin: 0 0 26px;
-        max-width: 46ch;
-        font-size: clamp(14px, 1vw, 15.5px);
-        line-height: 1.65;
-        color: var(--mm-fg-muted);
-      }
-      .mm-hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; }
-
-      /* Departamentos como pastilla — reflejan el rango real */
-      .mm-hero__depts {
-        display: flex; gap: 22px; flex-wrap: wrap;
-        padding-top: 22px; border-top: 1px solid var(--mm-border);
-      }
-      .mm-hero__dept {
-        display: inline-flex; align-items: baseline; gap: 6px;
-        font: 500 11px/1 var(--mm-font-sans);
-        letter-spacing: .14em; text-transform: uppercase;
-        color: var(--mm-fg-muted);
-        transition: color var(--mm-t-fast) var(--mm-ease);
-      }
-      .mm-hero__dept:hover { color: var(--mm-ink); }
-      .mm-hero__dept-dot {
-        width: 5px; height: 5px; border-radius: 50%;
-        background: var(--mm-gold-dark);
-        display: inline-block;
-      }
-
-      /* Columna visual */
-      .mm-hero__visual {
-        position: relative;
-        display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1.6fr .55fr .85fr;
-        gap: 10px;
-        min-height: clamp(320px, 42vw, 560px);
-      }
-      .mm-hero__visual img { width:100%; height:100%; object-fit:cover; object-position:center 20%; display:block; }
-      .mm-hero__pic-a {
-        grid-row: 1/4; overflow:hidden; background:var(--mm-cream-2);
-        border-radius: var(--mm-radius-sm);
-      }
-      .mm-hero__pic-b {
-        overflow:hidden; background:var(--mm-cream-2);
-        border-radius: var(--mm-radius-sm);
-      }
-      .mm-hero__pic-b img { object-position: center; }
-      /* Stat card — cifra grande + label */
-      .mm-hero__stat {
-        overflow:hidden; background:var(--mm-cream); border:1px solid var(--mm-border);
-        border-radius: var(--mm-radius-sm);
-        padding: 14px 16px;
-        display: flex; flex-direction: column; justify-content: center; gap: 4px;
-      }
-      .mm-hero__stat-num {
-        font: 500 clamp(22px,2.4vw,32px)/1 var(--mm-font-sans);
-        color: var(--mm-ink);
-        letter-spacing: -.01em;
-      }
-      .mm-hero__stat-label {
-        font: 500 9.5px/1.3 var(--mm-font-sans);
-        letter-spacing: .22em; text-transform: uppercase;
-        color: var(--mm-fg-muted);
-      }
-      /* Envio (bloque ink) */
-      .mm-hero__ship {
-        overflow:hidden; background:var(--mm-ink); color:var(--mm-cream);
-        border-radius: var(--mm-radius-sm);
-        display:flex; align-items:center; gap:12px; padding:14px 16px;
-      }
-      .mm-hero__ship svg { flex: 0 0 auto; color: var(--mm-gold); }
-      .mm-hero__ship-eyebrow {
-        font:600 9.5px/1.2 var(--mm-font-sans);
-        letter-spacing:.28em; text-transform:uppercase;
+        display:inline-flex; align-items:center; gap:12px;
+        font:600 10.5px/1 var(--mm-font-sans);
+        letter-spacing:.32em; text-transform:uppercase;
         color:var(--mm-gold);
+        margin-bottom:22px;
+        opacity:0; transform:translateY(12px);
+        transition: opacity .7s var(--mm-ease) .1s, transform .7s var(--mm-ease) .1s;
       }
-      .mm-hero__ship-txt {
-        font: 500 12.5px/1.3 var(--mm-font-sans);
-        margin-top: 4px;
+      .mm-hero__eyebrow::before { content:''; width:28px; height:1px; background:var(--mm-gold); }
+      .mm-hero__title {
+        margin:0 0 18px; max-width:16ch;
+        font: 500 clamp(38px, 6vw, 88px)/1 var(--mm-font-sans);
+        letter-spacing:-.02em;
+        color:var(--mm-cream);
+        text-wrap:balance;
+        opacity:0; transform:translateY(20px);
+        transition: opacity .8s var(--mm-ease) .2s, transform .8s var(--mm-ease) .2s;
+      }
+      .mm-hero__desc {
+        margin:0 0 30px; max-width:44ch;
+        font: 400 15px/1.6 var(--mm-font-sans);
+        color:rgba(247,243,230,.88);
+        opacity:0; transform:translateY(20px);
+        transition: opacity .8s var(--mm-ease) .3s, transform .8s var(--mm-ease) .3s;
+      }
+      .mm-hero__cta {
+        display:inline-flex; align-items:center; gap:14px;
+        align-self:flex-start;
+        padding:16px 28px;
+        background:var(--mm-cream); color:var(--mm-ink);
+        font:700 11px/1 var(--mm-font-sans);
+        letter-spacing:.22em; text-transform:uppercase;
+        border-radius:var(--mm-radius-sm);
+        text-decoration:none;
+        opacity:0; transform:translateY(20px);
+        transition: opacity .8s var(--mm-ease) .4s, transform .8s var(--mm-ease) .4s,
+                    background .25s var(--mm-ease), gap .25s var(--mm-ease);
+      }
+      .mm-hero__cta:hover { background:#F0EADB; color:var(--mm-ink); gap:18px; }
+
+      .mm-hero__slide[data-active] .mm-hero__eyebrow,
+      .mm-hero__slide[data-active] .mm-hero__title,
+      .mm-hero__slide[data-active] .mm-hero__desc,
+      .mm-hero__slide[data-active] .mm-hero__cta {
+        opacity:1; transform:none;
       }
 
-      .mm-hero__badge {
-        position: absolute; top: 14px; left: 14px; z-index: 2;
-        background: var(--mm-accent); color: var(--mm-white);
-        padding: 6px 12px;
-        font: 600 10px/1 var(--mm-font-sans);
-        letter-spacing: .16em; text-transform: uppercase;
-        border-radius: var(--mm-radius-sm);
+      /* Contador + controles */
+      .mm-hero__ui {
+        position:absolute; bottom:clamp(20px, 3vw, 40px); right:clamp(20px, 5vw, 80px); z-index:3;
+        display:flex; align-items:center; gap:20px;
+        color:var(--mm-cream);
       }
-      @media (max-width: 900px) {
-        .mm-hero__visual {
-          min-height: 380px;
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: 240px auto auto;
-        }
-        .mm-hero__pic-a { grid-column: 1/3; grid-row: 1; }
-        .mm-hero__pic-b { grid-column: 1; grid-row: 2; }
-        .mm-hero__stat { grid-column: 2; grid-row: 2; }
-        .mm-hero__ship { grid-column: 1/3; grid-row: 3; }
+      .mm-hero__counter {
+        font:500 12px/1 var(--mm-font-sans);
+        letter-spacing:.24em; text-transform:uppercase;
+        color:var(--mm-cream);
+      }
+      .mm-hero__counter span { color:var(--mm-gold); }
+      .mm-hero__arrows { display:inline-flex; gap:8px; }
+      .mm-hero__arrow {
+        width:44px; height:44px;
+        background:transparent; color:var(--mm-cream);
+        border:1px solid rgba(247,243,230,.4);
+        border-radius:50%; cursor:pointer;
+        display:flex; align-items:center; justify-content:center;
+        transition: background var(--mm-t-fast) var(--mm-ease), border-color var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-hero__arrow:hover { background:var(--mm-cream); color:var(--mm-ink); border-color:var(--mm-cream); }
+
+      /* Dots — al costado izquierdo, verticales en desktop */
+      .mm-hero__dots {
+        position:absolute; left:clamp(20px, 5vw, 80px); bottom:clamp(20px, 3vw, 40px); z-index:3;
+        display:flex; gap:10px;
+      }
+      .mm-hero__dot {
+        width:32px; height:2px;
+        background:rgba(247,243,230,.28);
+        border:0; padding:0; cursor:pointer;
+        transition: background var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-hero__dot[aria-current="true"] { background:var(--mm-cream); }
+      .mm-hero__dot:hover { background:rgba(247,243,230,.6); }
+
+      @media (max-width: 700px) {
+        .mm-hero__track { height: 78vh; min-height: 480px; }
+        .mm-hero__title { font-size: clamp(32px, 9vw, 52px); }
+        .mm-hero__desc { display:none; }
+        .mm-hero__ui { right:16px; bottom:16px; gap:12px; }
+        .mm-hero__arrow { width:38px; height:38px; }
+        .mm-hero__dots { left:16px; bottom:24px; }
       }
     </style>
 
-    <div class="mm-hero__grid">
-      <div class="mm-hero__text">
-        <span class="mm-hero__eyebrow">Marilia Magazine · Tienda departamental</span>
-        <h1 class="mm-hero__title">Todo lo que buscás, <strong>en un solo lugar</strong>.</h1>
-        <p class="mm-hero__lead">Moda, hogar, belleza, tecnología y mucho más. Un catálogo pensado para cada estilo, cada espacio y cada momento.</p>
-        <div class="mm-hero__cta">
-          <a href="./Catalogo.dc.html" class="mm-btn mm-btn--primary">Explorar productos</a>
-          <a href="./Catalogo.dc.html?nuevo=1" class="mm-btn mm-btn--ghost">Ver novedades</a>
+    <div class="mm-hero__track" data-hero-track>
+      <article class="mm-hero__slide" data-active aria-roledescription="slide" aria-label="Slide 1 de 3">
+        <img src="./uploads/hombre.webp" alt="Selección de temporada" loading="eager" fetchpriority="high"/>
+        <div class="mm-hero__caption">
+          <span class="mm-hero__eyebrow">Nueva temporada</span>
+          <h1 class="mm-hero__title">Todo lo que buscás, en un solo lugar.</h1>
+          <p class="mm-hero__desc">Moda, hogar, belleza, tecnología y mucho más. Un catálogo pensado para cada momento.</p>
+          <a href="./Catalogo.dc.html" class="mm-hero__cta">Explorar productos <span aria-hidden="true">→</span></a>
         </div>
-        <div class="mm-hero__depts" role="list" aria-label="Departamentos principales">
-          <a class="mm-hero__dept" href="./Catalogo.dc.html?genero=mujer"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Mujer</a>
-          <a class="mm-hero__dept" href="./Catalogo.dc.html?genero=hombre"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Hombre</a>
-          <a class="mm-hero__dept" href="./Catalogo.dc.html?cat=accesorios"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Accesorios</a>
-          <a class="mm-hero__dept" href="./Catalogo.dc.html?dept=hogar"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Hogar</a>
-          <a class="mm-hero__dept" href="./Catalogo.dc.html?dept=belleza"><span class="mm-hero__dept-dot" aria-hidden="true"></span>Belleza</a>
-        </div>
-      </div>
+      </article>
 
-      <div class="mm-hero__visual" aria-hidden="false">
-        <span class="mm-hero__badge">Nueva temporada</span>
-        <div class="mm-hero__pic-a"><img src="./uploads/hombre.webp" alt="Selección de temporada Marilia Magazine" loading="eager" fetchpriority="high"/></div>
-        <div class="mm-hero__pic-b"><img src="./uploads/accesorios.webp" alt="Accesorios seleccionados" loading="eager"/></div>
-        <div class="mm-hero__stat" aria-label="9 departamentos disponibles">
-          <span class="mm-hero__stat-num">9</span>
-          <span class="mm-hero__stat-label">Departamentos</span>
+      <article class="mm-hero__slide" aria-roledescription="slide" aria-label="Slide 2 de 3">
+        <img src="./uploads/mujer.webp" alt="Moda mujer — piezas de temporada" loading="lazy"/>
+        <div class="mm-hero__caption">
+          <span class="mm-hero__eyebrow">Moda mujer</span>
+          <h1 class="mm-hero__title">Piezas que se llevan bien con todo.</h1>
+          <p class="mm-hero__desc">Vestidos, blusas, faldas y abrigos. Selección de la temporada.</p>
+          <a href="./Catalogo.dc.html?genero=mujer" class="mm-hero__cta">Ver colección <span aria-hidden="true">→</span></a>
         </div>
-        <div class="mm-hero__ship" aria-label="Envío a todo Paraguay en 24 a 48 horas">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 7h13v10H3zM16 10h3l2 3v4h-5z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
-          <div>
-            <div class="mm-hero__ship-eyebrow">Envío</div>
-            <div class="mm-hero__ship-txt">A todo Paraguay en 24–48&nbsp;h</div>
-          </div>
+      </article>
+
+      <article class="mm-hero__slide" aria-roledescription="slide" aria-label="Slide 3 de 3">
+        <img src="./uploads/accesorios.webp" alt="Accesorios seleccionados" loading="lazy"/>
+        <div class="mm-hero__caption">
+          <span class="mm-hero__eyebrow">Accesorios</span>
+          <h1 class="mm-hero__title">Detalles que suman en cada día.</h1>
+          <p class="mm-hero__desc">Bolsos, cinturones, pañuelos y complementos. Piezas atemporales.</p>
+          <a href="./Catalogo.dc.html?cat=accesorios" class="mm-hero__cta">Ver accesorios <span aria-hidden="true">→</span></a>
         </div>
+      </article>
+    </div>
+
+    <div class="mm-hero__dots" role="tablist" aria-label="Elegir slide">
+      <button class="mm-hero__dot" data-hero-dot="0" aria-current="true" aria-label="Slide 1"></button>
+      <button class="mm-hero__dot" data-hero-dot="1" aria-label="Slide 2"></button>
+      <button class="mm-hero__dot" data-hero-dot="2" aria-label="Slide 3"></button>
+    </div>
+
+    <div class="mm-hero__ui">
+      <span class="mm-hero__counter" aria-live="polite" data-hero-counter><span>01</span> / 03</span>
+      <div class="mm-hero__arrows">
+        <button class="mm-hero__arrow" data-hero-prev aria-label="Slide anterior">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg>
+        </button>
+        <button class="mm-hero__arrow" data-hero-next aria-label="Slide siguiente">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
       </div>
     </div>
 
-    <!-- Banda de confianza: 4 senales rapidas debajo del hero. -->
+    <!-- La logica del carrusel vive fuera de <x-dc>, al final del body,
+         porque el runtime DC hidrata el DOM y los <script> internos se
+         quedan sin listeners. -->
+
+  </section>
+
+  <!-- ================================================================
+       BANDA DE CONFIANZA — 4 tiles rapidos debajo del carrusel.
+       ================================================================ -->
+  <section aria-label="Beneficios de comprar en Marilia">
     <div class="mm-trust">
       <style>
         .mm-trust {
@@ -1337,6 +1349,87 @@
 
 </div>
 </x-dc>
+
+<!-- Carrusel del hero: bindea con retry hasta que los elementos aparezcan
+     porque el runtime DC hidrata mas tarde. Delegacion en document para
+     que sobrevivan re-renders. -->
+<script>
+(function(){
+  var idx = 0, autoT = null;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function els(){
+    return {
+      track: document.querySelector('[data-hero-track]'),
+      slides: document.querySelectorAll('.mm-hero__slide'),
+      dots: document.querySelectorAll('[data-hero-dot]'),
+      counter: document.querySelector('[data-hero-counter]')
+    };
+  }
+
+  function go(i){
+    var e = els();
+    if(!e.track || e.slides.length === 0) return;
+    idx = (i + e.slides.length) % e.slides.length;
+    e.track.style.scrollSnapType = 'none';
+    e.track.scrollTo({ left: e.track.clientWidth * idx, behavior: reduced ? 'auto' : 'smooth' });
+    setTimeout(function(){ e.track.style.scrollSnapType = ''; }, reduced ? 30 : 600);
+    e.slides.forEach(function(s, n){ s.toggleAttribute('data-active', n === idx); });
+    e.dots.forEach(function(d, n){ d.setAttribute('aria-current', n === idx ? 'true' : 'false'); });
+    if(e.counter) e.counter.innerHTML = '<span>' + String(idx+1).padStart(2,'0') + '</span> / ' + String(e.slides.length).padStart(2,'0');
+  }
+
+  function startAutoplay(){ if(reduced) return; pauseAutoplay(); autoT = setInterval(function(){ go(idx+1); }, 6000); }
+  function pauseAutoplay(){ if(autoT){ clearInterval(autoT); autoT = null; } }
+
+  // Delegacion global: los clicks funcionan aunque el DOM se re-renderice.
+  document.addEventListener('click', function(ev){
+    if(ev.target.closest('[data-hero-prev]')){ ev.preventDefault(); go(idx-1); pauseAutoplay(); return; }
+    if(ev.target.closest('[data-hero-next]')){ ev.preventDefault(); go(idx+1); pauseAutoplay(); return; }
+    var dot = ev.target.closest('[data-hero-dot]');
+    if(dot){ ev.preventDefault(); go(+dot.dataset.heroDot); pauseAutoplay(); }
+  });
+
+  // Sync cuando el usuario hace swipe.
+  var scrollT = null;
+  document.addEventListener('scroll', function(ev){
+    if(!ev.target.matches || !ev.target.matches('[data-hero-track]')) return;
+    clearTimeout(scrollT);
+    scrollT = setTimeout(function(){
+      var track = ev.target;
+      var n = Math.round(track.scrollLeft / track.clientWidth);
+      if(n !== idx){ idx = n; go(idx); }
+    }, 120);
+  }, true);
+
+  // Pausar autoplay al hover / focus sobre el hero.
+  document.addEventListener('mouseover', function(ev){
+    if(ev.target.closest('.mm-hero')) pauseAutoplay();
+  });
+  document.addEventListener('mouseout', function(ev){
+    if(ev.target.closest('.mm-hero') && !ev.relatedTarget?.closest('.mm-hero') && !autoT) startAutoplay();
+  });
+
+  // Recentrar en resize.
+  window.addEventListener('resize', function(){
+    var e = els();
+    if(e.track) e.track.scrollLeft = e.track.clientWidth * idx;
+  });
+
+  // Arrancar autoplay cuando los elementos ya existan.
+  var boot = function(){
+    var e = els();
+    if(!e.track || e.slides.length === 0){ return setTimeout(boot, 200); }
+    startAutoplay();
+  };
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    setTimeout(boot, 100);
+  }
+})();
+</script>
+
 <script type="text/x-dc" data-dc-script data-props="{}">
 class Component extends DCLogic {
   state = { cart: [], cartOpen: false, quick: null, searchOpen: false, menuOpen: false, isMobile: false };
