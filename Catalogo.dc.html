@@ -126,32 +126,34 @@
       <div class="mm-nav__inner">
         <a class="mm-nav__item" href="./Catalogo.dc.html?genero=mujer">Mujer</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?genero=hombre">Hombre</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=infantil">Infantil</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=calzados">Calzados</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?cat=accesorios">Accesorios</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=abrigos">Abrigos</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=camisas">Camisas</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=pantalones">Pantalones</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=belleza">Belleza</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=hogar">Hogar</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=tecnologia">Tecnología</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=deportes">Deportes</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?nuevo=1" data-highlight>Novedades</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?oferta=1" data-highlight>Ofertas</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html" aria-current="page">Ver todo</a>
       </div>
     </nav>
   </header>
 
-  <section style="padding:clamp(60px,8vw,120px) clamp(20px,5vw,72px) clamp(30px,4vw,60px)">
+  <section style="padding:clamp(24px,3vw,48px) clamp(20px,5vw,72px) clamp(20px,2.4vw,32px)">
     <div style="max-width:1560px;margin:0 auto">
       <!-- Breadcrumbs -->
-      <nav aria-label="Ruta de navegación" style="margin-bottom:22px;font:500 11px/1 var(--mm-font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mm-fg-muted)">
+      <nav aria-label="Ruta de navegación" style="margin-bottom:18px;font:500 10.5px/1 var(--mm-font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mm-fg-muted)">
         <a href="./Marilia Magazine.dc.html" style="color:var(--mm-fg-muted)">Inicio</a>
         <span style="margin:0 10px;opacity:.5">/</span>
         <span data-crumb-cat aria-current="page" style="color:var(--mm-ink)">Catálogo</span>
       </nav>
 
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;padding-top:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap">
         <div>
-          <h1 style="margin:0;font:500 clamp(28px,3.6vw,44px)/1.05 var(--mm-font-sans);letter-spacing:-.01em;color:var(--mm-ink)"><span data-page-title>Catálogo completo</span></h1>
-          <p style="margin:10px 0 0;max-width:56ch;font:400 14px/1.55 var(--mm-font-sans);color:var(--mm-fg-muted)"><span data-page-sub>Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.</span></p>
+          <h1 style="margin:0;font:500 clamp(26px,3.2vw,40px)/1.05 var(--mm-font-sans);letter-spacing:-.01em;color:var(--mm-ink)"><span data-page-title>Catálogo</span></h1>
+          <p style="margin:8px 0 0;max-width:56ch;font:400 14px/1.55 var(--mm-font-sans);color:var(--mm-fg-muted)"><span data-page-sub>Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.</span></p>
         </div>
-        <div style="font:500 12px/1 var(--mm-font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mm-fg-muted)"><span data-count-lead>0 piezas</span></div>
+        <div style="font:500 11px/1 var(--mm-font-sans);letter-spacing:.24em;text-transform:uppercase;color:var(--mm-fg-muted)"><span data-count-lead>0 piezas</span></div>
       </div>
     </div>
   </section>
@@ -162,61 +164,154 @@
       <!-- Chips de filtros activos + limpiar -->
       <div data-active-chips style="display:none; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-top:16px" aria-live="polite"></div>
 
-      <div class="mm-cf-bar" style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;padding-bottom:clamp(24px,3vw,40px);border-bottom:1px solid rgba(30,27,22,.14);margin-bottom:clamp(30px,3.4vw,50px)">
-        <div style="display:flex;flex-direction:column;gap:clamp(14px,1.8vw,22px);min-width:0">
-          <div class="mm-cf-gender" role="group" aria-label="Filtrar por género">
-            <button class="mm-cf-g" data-gender="todo" data-on>Todos</button>
-            <button class="mm-cf-g" data-gender="mujer">Mujer</button>
-            <button class="mm-cf-g" data-gender="hombre">Hombre</button>
-          </div>
-          <div class="mm-cf-filters" data-mm-sync="filtros" style="display:flex;flex-wrap:wrap;gap:clamp(14px,2.4vw,32px)">
-            <button class="mm-cf-btn" data-filter="todo" data-on>Todo</button>
-            <button class="mm-cf-btn" data-filter="vestidos">Vestidos</button>
-            <button class="mm-cf-btn" data-filter="conjuntos">Conjuntos</button>
-            <button class="mm-cf-btn" data-filter="blusas">Blusas</button>
-            <button class="mm-cf-btn" data-filter="camisas">Camisas</button>
-            <button class="mm-cf-btn" data-filter="pantalones">Pantalones</button>
-            <button class="mm-cf-btn" data-filter="faldas">Faldas</button>
-            <button class="mm-cf-btn" data-filter="abrigos">Abrigos</button>
-            <button class="mm-cf-btn" data-filter="accesorios">Accesorios</button>
-          </div>
+      <!-- Toolbar superior: departamento (izq) + orden y contador (der) -->
+      <div class="mm-cf-toolbar">
+        <div class="mm-cf-gender" role="group" aria-label="Filtrar por departamento">
+          <button class="mm-cf-g" data-gender="todo" data-on>Todos</button>
+          <button class="mm-cf-g" data-gender="mujer">Mujer</button>
+          <button class="mm-cf-g" data-gender="hombre">Hombre</button>
         </div>
-        <div style="display:flex;align-items:center;gap:14px;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#8A7F6A">
-          <span data-count>10 piezas</span>
-          <span style="color:#D4AF37">·</span>
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div class="mm-cf-toolbar__right">
+          <span class="mm-cf-count"><span data-count>0 piezas</span></span>
+          <label class="mm-cf-sort">
             <span>Ordenar</span>
-            <select data-sort style="background:none;border:0;font:500 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#25251F;cursor:pointer">
+            <select data-sort>
               <option value="feat">Destacados</option>
-              <option value="asc">Precio ascendente</option>
-              <option value="desc">Precio descendente</option>
+              <option value="asc">Precio asc</option>
+              <option value="desc">Precio desc</option>
               <option value="name">Nombre A–Z</option>
             </select>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
           </label>
+          <button class="mm-cf-toggle" type="button" data-filters-toggle aria-label="Mostrar filtros">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            <span>Filtros</span>
+          </button>
         </div>
       </div>
 
-      <style>
-        #coleccion-grid .mm-cf-btn { background:none; border:0; padding:0 0 10px; cursor:pointer; position:relative;
-          font:500 11px/1 'Montserrat',sans-serif; letter-spacing:.14em; color:#8A7F6A; transition:color .4s ease; text-transform:capitalize }
-        #coleccion-grid .mm-cf-btn::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1.5px;
-          background:#D4AF37; transform:scaleX(0); transform-origin:center;
-          transition:transform .55s cubic-bezier(.22,1,.36,1) }
-        #coleccion-grid .mm-cf-btn:hover { color:#25251F }
-        #coleccion-grid .mm-cf-btn[data-on] { color:#25251F }
-        #coleccion-grid .mm-cf-btn[data-on]::after { transform:scaleX(1) }
-        #coleccion-grid .mm-cf-btn[data-empty-cat] { opacity:.3; cursor:not-allowed }
-        #coleccion-grid .mm-cf-btn[data-empty-cat]:hover { color:#8A7F6A }
+      <!-- Chips de categoria (fila con scroll horizontal). Datos del ERP con
+           `data-mm-sync="filtros"` — el sync los reemplaza en runtime. -->
+      <div class="mm-cf-filters" data-mm-sync="filtros" data-filters-panel>
+        <button class="mm-cf-btn" data-filter="todo" data-on>Todo</button>
+        <button class="mm-cf-btn" data-filter="vestidos">Vestidos</button>
+        <button class="mm-cf-btn" data-filter="conjuntos">Conjuntos</button>
+        <button class="mm-cf-btn" data-filter="blusas">Blusas</button>
+        <button class="mm-cf-btn" data-filter="camisas">Camisas</button>
+        <button class="mm-cf-btn" data-filter="pantalones">Pantalones</button>
+        <button class="mm-cf-btn" data-filter="faldas">Faldas</button>
+        <button class="mm-cf-btn" data-filter="abrigos">Abrigos</button>
+        <button class="mm-cf-btn" data-filter="accesorios">Accesorios</button>
+      </div>
 
-        /* Gender is a second, independent axis — it reads as a segmented
-           control so it is not mistaken for one more category. */
-        #coleccion-grid .mm-cf-gender { display:inline-flex; gap:0; border:1px solid rgba(30,27,22,.16); border-radius:2px; overflow:hidden; align-self:flex-start }
-        #coleccion-grid .mm-cf-g { background:none; border:0; cursor:pointer; padding:9px clamp(14px,1.6vw,22px);
-          font:500 9.5px/1 'Montserrat',sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#8A7F6A;
-          transition:background .35s ease, color .35s ease }
-        #coleccion-grid .mm-cf-g + .mm-cf-g { border-left:1px solid rgba(30,27,22,.14) }
-        #coleccion-grid .mm-cf-g:hover { color:#25251F }
-        #coleccion-grid .mm-cf-g[data-on] { background:#25251F; color:#F7F3E6 }
+      <style>
+        /* Toolbar: pill de genero + orden + count + toggle */
+        #coleccion-grid .mm-cf-toolbar {
+          display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          padding:14px 0; border-top:1px solid var(--mm-border);
+          border-bottom:1px solid var(--mm-border);
+          margin-bottom:18px;
+        }
+        #coleccion-grid .mm-cf-toolbar__right {
+          margin-left:auto;
+          display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+        }
+        #coleccion-grid .mm-cf-count {
+          font:500 11px/1 var(--mm-font-sans);
+          letter-spacing:.22em; text-transform:uppercase;
+          color:var(--mm-fg-muted);
+        }
+        #coleccion-grid .mm-cf-sort {
+          display:inline-flex; align-items:center; gap:8px;
+          padding:6px 12px; border:1px solid var(--mm-border-strong);
+          border-radius:var(--mm-radius-pill);
+          background:var(--mm-bg-alt); cursor:pointer;
+          font:500 11px/1 var(--mm-font-sans);
+          letter-spacing:.14em; text-transform:uppercase;
+          color:var(--mm-ink);
+          transition:border-color var(--mm-t-fast) var(--mm-ease);
+        }
+        #coleccion-grid .mm-cf-sort:hover { border-color:var(--mm-ink); }
+        #coleccion-grid .mm-cf-sort > span { color:var(--mm-fg-muted); }
+        #coleccion-grid .mm-cf-sort select {
+          background:none; border:0; outline:none; cursor:pointer;
+          font:500 11px/1 var(--mm-font-sans);
+          letter-spacing:.14em; text-transform:uppercase;
+          color:var(--mm-ink);
+          padding-right:2px;
+          appearance:none; -webkit-appearance:none; -moz-appearance:none;
+        }
+        #coleccion-grid .mm-cf-toggle {
+          display:none; align-items:center; gap:8px;
+          padding:8px 14px; border:1px solid var(--mm-ink);
+          border-radius:var(--mm-radius-pill);
+          background:var(--mm-ink); color:var(--mm-cream);
+          font:500 11px/1 var(--mm-font-sans);
+          letter-spacing:.14em; text-transform:uppercase;
+          cursor:pointer;
+        }
+
+        /* Chips de categoria como pills */
+        #coleccion-grid .mm-cf-filters {
+          display:flex; gap:8px; flex-wrap:wrap;
+          padding:0 0 clamp(20px,2.4vw,32px);
+          border-bottom:1px solid var(--mm-border);
+          margin-bottom:clamp(24px,2.8vw,40px);
+        }
+        #coleccion-grid .mm-cf-btn {
+          background:var(--mm-bg-alt);
+          border:1px solid var(--mm-border-strong);
+          padding:8px 16px; cursor:pointer;
+          font:500 11px/1 var(--mm-font-sans);
+          letter-spacing:.06em;
+          color:var(--mm-fg);
+          border-radius:var(--mm-radius-pill);
+          transition:border-color var(--mm-t-fast) var(--mm-ease),
+                     background var(--mm-t-fast) var(--mm-ease),
+                     color var(--mm-t-fast) var(--mm-ease);
+        }
+        #coleccion-grid .mm-cf-btn:hover { border-color:var(--mm-ink); }
+        #coleccion-grid .mm-cf-btn[data-on] {
+          background:var(--mm-ink); color:var(--mm-cream);
+          border-color:var(--mm-ink);
+        }
+        #coleccion-grid .mm-cf-btn[data-empty-cat] {
+          opacity:.35; cursor:not-allowed;
+          background:transparent;
+        }
+        #coleccion-grid .mm-cf-btn[data-empty-cat]:hover { border-color:var(--mm-border-strong); }
+
+        /* Pills de departamento (segmented control) */
+        #coleccion-grid .mm-cf-gender {
+          display:inline-flex; gap:4px; padding:4px;
+          background:var(--mm-bg-alt);
+          border:1px solid var(--mm-border-strong);
+          border-radius:var(--mm-radius-pill);
+        }
+        #coleccion-grid .mm-cf-g {
+          background:none; border:0; cursor:pointer;
+          padding:8px 18px;
+          font:500 11px/1 var(--mm-font-sans);
+          letter-spacing:.14em; text-transform:uppercase;
+          color:var(--mm-fg-muted);
+          border-radius:var(--mm-radius-pill);
+          transition:background var(--mm-t-fast) var(--mm-ease),
+                     color var(--mm-t-fast) var(--mm-ease);
+        }
+        #coleccion-grid .mm-cf-g:hover { color:var(--mm-ink); }
+        #coleccion-grid .mm-cf-g[data-on] {
+          background:var(--mm-ink); color:var(--mm-cream);
+        }
+
+        @media (max-width: 700px) {
+          #coleccion-grid .mm-cf-toolbar__right { width:100%; justify-content:space-between; }
+          #coleccion-grid .mm-cf-count { display:none; }
+          #coleccion-grid .mm-cf-toggle { display:inline-flex; }
+          #coleccion-grid .mm-cf-filters { display:none; overflow-x:auto; scrollbar-width:none; }
+          #coleccion-grid .mm-cf-filters::-webkit-scrollbar { display:none; }
+          #coleccion-grid .mm-cf-filters[data-open] { display:flex; flex-wrap:nowrap; }
+          #coleccion-grid .mm-cf-btn { white-space:nowrap; }
+        }
 
         #coleccion-grid .mm-cg { display:grid; grid-template-columns:repeat(4, 1fr); gap:clamp(24px,2.4vw,40px) clamp(16px,1.6vw,28px) }
         #coleccion-grid .mm-cg-card { position:relative; opacity:1; transform:none;
@@ -974,6 +1069,37 @@
     if(cards.length === 0){ return setTimeout(initMariliaCatalog, 80); }
     var filterBtns = document.querySelectorAll('#coleccion-grid .mm-cf-btn');
     var genderBtns = document.querySelectorAll('#coleccion-grid .mm-cf-g');
+    var filtersPanel = document.querySelector('#coleccion-grid [data-filters-panel]');
+    var filtersToggle = document.querySelector('#coleccion-grid [data-filters-toggle]');
+
+    // Toggle "Filtros" para movil — abre/cierra el panel de chips de categoria.
+    if(filtersToggle && filtersPanel){
+      filtersToggle.addEventListener('click', function(){
+        var open = filtersPanel.toggleAttribute('data-open');
+        filtersToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+
+    // El sync ERP inserta chips con "Hombre Camisas" / "Mujer Vestidos" —
+    // cuando ya elegiste el genero, sobra el prefijo. Limpiamos en runtime.
+    function cleanFilterLabels(){
+      var g = document.querySelector('#coleccion-grid .mm-cf-g[data-on]');
+      var gVal = g ? g.dataset.gender : 'todo';
+      document.querySelectorAll('#coleccion-grid .mm-cf-btn').forEach(function(b){
+        var raw = (b.textContent || '').trim();
+        // rawLabel = version completa del label. Si el texto actual ya no
+        // matchea el rawLabel guardado (paso el sync o cambio), refrescamos.
+        var stored = b.dataset.rawLabel;
+        if(!stored || (stored !== raw && stored.replace(/^(Hombre|Mujer)\s+/i,'') !== raw)){
+          b.dataset.rawLabel = raw;
+          stored = raw;
+        }
+        var label = stored;
+        if(gVal === 'hombre'){ label = label.replace(/^Hombre\s+/i, ''); }
+        else if(gVal === 'mujer'){ label = label.replace(/^Mujer\s+/i, ''); }
+        if(raw !== label) b.textContent = label;
+      });
+    }
     var countEl = document.querySelector('#coleccion-grid [data-count]');
     var emptyEl = document.querySelector('#coleccion-grid [data-empty]');
     var sortSel = document.querySelector('#coleccion-grid [data-sort]');
@@ -1032,13 +1158,16 @@
       // Reaplicar filtro contra el catalogo completo (antes del sync solo
       // veiamos las 26 tarjetas hardcoded del fallback).
       applyFilter();
+      cleanFilterLabels();
     });
 
     // Backstop: por si el sync termina sin dispatchar el evento (fetch fail,
     // cache miss race), reaplicamos el filtro varias veces en la carga.
     [400, 1200, 2500, 4500].forEach(function(ms){
-      setTimeout(function(){ buildProducts(); applyFilter(); }, ms);
+      setTimeout(function(){ buildProducts(); applyFilter(); cleanFilterLabels(); }, ms);
     });
+
+    cleanFilterLabels();
 
     function load(k){ try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch(e){ return []; } }
     function save(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
@@ -1179,6 +1308,7 @@
           filterBtns.forEach(function(x){ x.toggleAttribute('data-on', x.dataset.filter === 'todo'); });
         }
         applyFilter();
+        cleanFilterLabels();
       });
     });
     if(sortSel) sortSel.addEventListener('change', function(){ sortBy(sortSel.value); });
