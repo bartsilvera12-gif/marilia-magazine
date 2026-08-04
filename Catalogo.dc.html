@@ -15,6 +15,7 @@
     anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc0MTAxNDYxLCJleHAiOjE5MzE3ODE0NjF9.7_wAph8IolPMXtgfpezSwS5XR62IdD__qhqCywLDp3Q",
   };
 </script>
+<script src="./mm-marcas.js"></script>
 <script defer src="./sitio-erp-sync.js"></script>
 </head>
 <body>
@@ -1175,6 +1176,7 @@
     var currentNew = false;
     var currentSale = false;
     var forceEmpty = false; // departamentos aun no cargados en ERP
+    var currentMarca = null; // objeto de mm-marcas.js, o null
 
     // Normaliza texto para busqueda tolerante: minusculas + sin tildes.
     function norm(s){
@@ -1205,7 +1207,8 @@
       cards.forEach(function(c){
         // Cuando el usuario aterriza en un dept que aun no tiene productos,
         // forzamos vacio para mostrar el mensaje "muy pronto".
-        var ok = !forceEmpty && hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery);
+        var ok = !forceEmpty && hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery)
+                 && (!currentMarca || !window.mmProductoEsDeMarca || window.mmProductoEsDeMarca(currentMarca, c.dataset.name));
         if(ok){ c.removeAttribute('data-hidden'); visible++; }
         else c.setAttribute('data-hidden','');
       });
@@ -1233,6 +1236,7 @@
       var chips = [];
       if(currentGender && currentGender !== 'todo') chips.push({k:'gender', l: currentGender.charAt(0).toUpperCase()+currentGender.slice(1)});
       if(currentFilter && currentFilter !== 'todo') chips.push({k:'cat', l: currentFilter.charAt(0).toUpperCase()+currentFilter.slice(1)});
+      if(currentMarca) chips.push({k:'marca', l: 'Marca: ' + currentMarca.nombre});
       if(currentQuery && !forceEmpty) chips.push({k:'q', l: 'Búsqueda: "' + currentQuery + '"'});
       if(forceEmpty){
         // El dept aun no tiene productos: chip informativo (URL param `dept`).
@@ -1254,13 +1258,14 @@
       if(!b) return;
       var k = b.dataset.clear;
       var u = new URL(location.href);
-      if(k === 'all'){ u.searchParams.delete('genero'); u.searchParams.delete('cat'); u.searchParams.delete('q'); u.searchParams.delete('nuevo'); u.searchParams.delete('oferta'); u.searchParams.delete('dept'); }
+      if(k === 'all'){ u.searchParams.delete('genero'); u.searchParams.delete('cat'); u.searchParams.delete('q'); u.searchParams.delete('nuevo'); u.searchParams.delete('oferta'); u.searchParams.delete('dept'); u.searchParams.delete('marca'); }
       else if(k === 'gender'){ u.searchParams.delete('genero'); }
       else if(k === 'cat'){ u.searchParams.delete('cat'); }
       else if(k === 'q'){ u.searchParams.delete('q'); }
       else if(k === 'new'){ u.searchParams.delete('nuevo'); }
       else if(k === 'sale'){ u.searchParams.delete('oferta'); }
       else if(k === 'dept'){ u.searchParams.delete('dept'); }
+      else if(k === 'marca'){ u.searchParams.delete('marca'); }
       location.href = u.toString();
     });
     function sortBy(mode){
@@ -1524,6 +1529,8 @@
       var f = (q.get('cat') || '').trim().toLowerCase();
       var t = norm(q.get('q') || '');
       var d = (q.get('dept') || '').trim().toLowerCase();
+      var marcaSlug = (q.get('marca') || '').trim().toLowerCase();
+      currentMarca = (marcaSlug && window.mmMarcaPorSlug) ? window.mmMarcaPorSlug(marcaSlug) : null;
       var isNew = q.get('nuevo') === '1' || q.get('nuevo') === 'true';
       var isSale = q.get('oferta') === '1' || q.get('oferta') === 'true';
       // Nombres de departamentos amplios (fuera del ERP hoy: activar cuando
@@ -1559,7 +1566,11 @@
       var sub = document.querySelector('[data-page-sub]');
       var etiqueta = 'Catálogo';
       var subtxt = 'Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.';
-      if(t){ etiqueta = 'Resultados: "' + q.get('q') + '"'; subtxt = 'Estos son los productos que coinciden con tu búsqueda.'; }
+      if(currentMarca){
+        etiqueta = currentMarca.nombre;
+        subtxt = currentMarca.desc || ('Todos los productos de ' + currentMarca.nombre + '.');
+      }
+      else if(t){ etiqueta = 'Resultados: "' + q.get('q') + '"'; subtxt = 'Estos son los productos que coinciden con tu búsqueda.'; }
       else if(d && DEPT_LABELS[d]){
         // Departamento amplio sin productos aun — mensaje "muy pronto".
         etiqueta = DEPT_LABELS[d];

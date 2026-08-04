@@ -36,6 +36,7 @@ const SCRIPTS = [
   "sitio-erp-sync.js",
   "support.js",
   "image-slot.js",
+  "mm-marcas.js",
 ];
 
 /** Stylesheets del sitio (design system compartido). */

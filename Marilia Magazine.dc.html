@@ -15,6 +15,7 @@
     anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc0MTAxNDYxLCJleHAiOjE5MzE3ODE0NjF9.7_wAph8IolPMXtgfpezSwS5XR62IdD__qhqCywLDp3Q",
   };
 </script>
+<script src="./mm-marcas.js"></script>
 <script defer src="./sitio-erp-sync.js"></script>
 </head>
 <body>
@@ -1057,6 +1058,100 @@
   </section>
 
   <!-- ================================================================
+       MARCAS
+       Se arma desde window.MM_MARCAS (mm-marcas.js). No hay logos
+       cargados, asi que el wordmark se dibuja con tipografia — mas
+       honesto y prolijo que inventar un logo. Si una marca tiene
+       `logo`, se usa la imagen.
+       ================================================================ -->
+  <section class="mm-section mm-section--soft" aria-labelledby="marcas-h" data-marcas-section hidden>
+    <style>
+      .mm-marcas {
+        max-width: var(--mm-container); margin: 0 auto;
+        display: grid; gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 220px));
+        justify-content: center;
+      }
+      .mm-marca {
+        position: relative; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 10px; min-height: 132px; padding: 24px 18px;
+        background: var(--mm-bg-alt);
+        border: 1px solid var(--mm-border);
+        border-radius: var(--mm-radius-md);
+        text-decoration: none;
+        transition: border-color var(--mm-t-fast) var(--mm-ease),
+                    transform var(--mm-t-fast) var(--mm-ease),
+                    box-shadow var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-marca:hover {
+        border-color: var(--mm-ink);
+        transform: translateY(-2px);
+        box-shadow: var(--mm-shadow-2);
+      }
+      /* Linea de acento que se dibuja al pasar el cursor */
+      .mm-marca::after {
+        content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+        background: var(--mm-accent);
+        transform: scaleX(0); transform-origin: center;
+        transition: transform var(--mm-t-base) var(--mm-ease);
+      }
+      .mm-marca:hover::after { transform: scaleX(1); }
+      .mm-marca__word {
+        font: 700 clamp(19px, 1.8vw, 24px)/1 var(--mm-font-sans);
+        letter-spacing: .16em; text-transform: uppercase;
+        color: var(--mm-ink);
+        transition: color var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-marca:hover .mm-marca__word { color: var(--mm-accent); }
+      .mm-marca__logo { max-height: 34px; width: auto; object-fit: contain; }
+      .mm-marca__meta {
+        font: 500 10px/1 var(--mm-font-sans);
+        letter-spacing: .22em; text-transform: uppercase;
+        color: var(--mm-fg-muted);
+      }
+
+      /* Una sola marca: en vez de una tarjeta chiquita perdida al medio,
+         se muestra una tarjeta ancha con descripcion y CTA. */
+      .mm-marcas[data-solo] { grid-template-columns: minmax(0, 620px); }
+      .mm-marcas[data-solo] .mm-marca {
+        flex-direction: row; justify-content: flex-start; text-align: left;
+        gap: 22px; padding: 28px 30px; min-height: 0;
+      }
+      .mm-marcas[data-solo] .mm-marca__word { font-size: clamp(24px, 2.6vw, 34px); }
+      .mm-marcas[data-solo] .mm-marca__body { display: flex; flex-direction: column; gap: 6px; }
+      .mm-marcas[data-solo] .mm-marca__desc {
+        font: 400 13.5px/1.5 var(--mm-font-sans); color: var(--mm-fg-muted); margin: 0;
+      }
+      .mm-marcas[data-solo] .mm-marca__sep {
+        width: 1px; align-self: stretch; background: var(--mm-border); flex: 0 0 auto;
+      }
+      .mm-marcas[data-solo] .mm-marca__cta {
+        margin-left: auto; flex: 0 0 auto;
+        font: 700 10.5px/1 var(--mm-font-sans);
+        letter-spacing: .22em; text-transform: uppercase;
+        color: var(--mm-accent);
+        display: inline-flex; align-items: center; gap: 8px;
+        transition: gap var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-marcas[data-solo] .mm-marca:hover .mm-marca__cta { gap: 12px; }
+      @media (max-width: 560px) {
+        .mm-marcas[data-solo] .mm-marca { flex-direction: column; align-items: flex-start; gap: 14px; }
+        .mm-marcas[data-solo] .mm-marca__sep { display: none; }
+        .mm-marcas[data-solo] .mm-marca__cta { margin-left: 0; }
+      }
+    </style>
+
+    <div class="mm-section__head mm-section__head--center mm-container" style="padding:0">
+      <span class="mm-section__eyebrow">Marcas</span>
+      <h2 id="marcas-h" class="mm-section__title">Las marcas que trabajamos</h2>
+      <p class="mm-section__sub" data-marcas-sub>Seleccionamos marcas por calidad y respaldo.</p>
+    </div>
+
+    <div class="mm-marcas" data-marcas-grid></div>
+  </section>
+
+  <!-- ================================================================
        BENEFICIOS DE COMPRA
        Cinta con 4 tarjetas. Textos editables directo en HTML.
        ================================================================ -->
@@ -1453,6 +1548,76 @@
     document.addEventListener('DOMContentLoaded', boot);
   } else {
     setTimeout(boot, 100);
+  }
+})();
+</script>
+
+<!-- Seccion de marcas: se arma desde window.MM_MARCAS (mm-marcas.js). -->
+<script>
+(function(){
+  function render(){
+    var sec  = document.querySelector('[data-marcas-section]');
+    var grid = document.querySelector('[data-marcas-grid]');
+    if(!sec || !grid){ return setTimeout(render, 200); }
+
+    var marcas = window.MM_MARCAS || [];
+    if(!marcas.length){ sec.hidden = true; return; }   // sin marcas no mostramos seccion vacia
+    sec.hidden = false;
+
+    var solo = marcas.length === 1;
+    grid.toggleAttribute('data-solo', solo);
+
+    var sub = document.querySelector('[data-marcas-sub]');
+    if(sub && solo) sub.textContent = 'Hoy trabajamos una marca. A medida que sumemos más, van a aparecer acá.';
+
+    grid.innerHTML = marcas.map(function(m){
+      var visual = m.logo
+        ? '<img class="mm-marca__logo" src="' + m.logo + '" alt="' + m.nombre + '" loading="lazy"/>'
+        : '<span class="mm-marca__word">' + m.nombre + '</span>';
+      if(solo){
+        return '<a class="mm-marca" href="./Catalogo.dc.html?marca=' + m.slug + '" aria-label="Ver productos de ' + m.nombre + '">' +
+                 visual +
+                 '<span class="mm-marca__sep" aria-hidden="true"></span>' +
+                 '<span class="mm-marca__body">' +
+                   (m.desc ? '<span class="mm-marca__desc">' + m.desc + '</span>' : '') +
+                   '<span class="mm-marca__meta" data-marca-count="' + m.slug + '"></span>' +
+                 '</span>' +
+                 '<span class="mm-marca__cta">Ver productos <span aria-hidden="true">→</span></span>' +
+               '</a>';
+      }
+      return '<a class="mm-marca" href="./Catalogo.dc.html?marca=' + m.slug + '" aria-label="Ver productos de ' + m.nombre + '">' +
+               visual +
+               '<span class="mm-marca__meta" data-marca-count="' + m.slug + '"></span>' +
+             '</a>';
+    }).join('');
+
+    // Cantidad real de productos por marca. Solo la pedimos para las marcas
+    // que cubren todo el catalogo; para las demas haria falta el campo marca
+    // en el ERP y preferimos no mostrar un numero inventado.
+    var cfg = window.MM_SUPABASE;
+    if(!cfg) return;
+    marcas.forEach(function(m){
+      if(!m.todo) return;
+      var el = grid.querySelector('[data-marca-count="' + m.slug + '"]');
+      if(!el) return;
+      fetch(cfg.url + '/rest/v1/productos?select=id&activo=eq.true&visible_web=eq.true&limit=1', {
+        headers: {
+          apikey: cfg.anonKey,
+          Authorization: 'Bearer ' + cfg.anonKey,
+          'Accept-Profile': 'mariliaerp',
+          Prefer: 'count=exact'
+        }
+      }).then(function(r){
+        var cr = r.headers.get('content-range') || '';    // formato "0-0/21000"
+        var total = parseInt((cr.split('/')[1] || ''), 10);
+        if(total > 0) el.textContent = total.toLocaleString('es-PY') + ' productos';
+      }).catch(function(){ /* sin conteo, la tarjeta igual funciona */ });
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(render, 120); });
+  } else {
+    setTimeout(render, 120);
   }
 })();
 </script>
