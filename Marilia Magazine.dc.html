@@ -246,11 +246,14 @@
 
       @media (max-width: 700px) {
         .mm-hero__track { height: 78vh; min-height: 480px; }
-        /* En movil el container es vertical y la foto (1600x656)
-           panoramica: con object-position:center la persona queda
-           recortada por debajo. Priorizamos la parte superior de
-           la foto para no perder cabeza/torso. */
-        .mm-hero__slide img { object-position: center 18%; }
+        /* Las fotos del hero son panoramicas (2.45) y el container en
+           movil es vertical (~0.59): con la foto ancha el height llena
+           exacto y el recorte es 100% HORIZONTAL — se veia apenas el
+           24% del ancho y el sujeto quedaba fuera. object-position en
+           Y no servia de nada porque no hay desborde vertical.
+           Solucion real: <picture> sirve un recorte 3:4 hecho a mano
+           centrado en el sujeto (ver uploads/hero-*-mobile.webp). */
+        .mm-hero__slide img { object-position: center; }
         /* Overlay mas fuerte porque el texto queda sobre mas area
            de la foto (no hay tanto lateral libre como en desktop). */
         .mm-hero__slide::after {
@@ -270,7 +273,10 @@
 
     <div class="mm-hero__track" data-hero-track>
       <article class="mm-hero__slide" data-active aria-roledescription="slide" aria-label="Slide 1 de 3">
-        <img src="./uploads/hero-1-tienda.webp" alt="Selección de temporada" loading="eager" fetchpriority="high"/>
+        <picture>
+          <source media="(max-width: 700px)" srcset="./uploads/hero-1-tienda-mobile.webp"/>
+          <img src="./uploads/hero-1-tienda.webp" alt="Selección de temporada" loading="eager" fetchpriority="high"/>
+        </picture>
         <div class="mm-hero__caption">
           <span class="mm-hero__eyebrow">Nueva temporada</span>
           <h1 class="mm-hero__title">Todo lo que buscás, en un solo lugar.</h1>
@@ -280,7 +286,13 @@
       </article>
 
       <article class="mm-hero__slide" aria-roledescription="slide" aria-label="Slide 2 de 3">
-        <img src="./uploads/hero-2-showroom.webp" alt="Marilia Magazine — vidriera" loading="lazy"/>
+        <picture>
+          <source media="(max-width: 700px)" srcset="./uploads/hero-2-showroom-mobile.webp"/>
+          <!-- eager, no lazy: dentro de un scroller horizontal el lazy no
+               dispara hasta que el slide entra por scroll, y el carrusel
+               avanaba a un slide en blanco. Son 3 fotos, ~155 KB total. -->
+          <img src="./uploads/hero-2-showroom.webp" alt="Marilia Magazine — vidriera" loading="eager"/>
+        </picture>
         <div class="mm-hero__caption">
           <span class="mm-hero__eyebrow">Marilia Magazine</span>
           <h1 class="mm-hero__title">Un catálogo pensado para cada estilo.</h1>
@@ -290,7 +302,10 @@
       </article>
 
       <article class="mm-hero__slide" aria-roledescription="slide" aria-label="Slide 3 de 3">
-        <img src="./uploads/accesorios.webp" alt="Accesorios seleccionados" loading="lazy"/>
+        <picture>
+          <source media="(max-width: 700px)" srcset="./uploads/hero-3-accesorios-mobile.webp"/>
+          <img src="./uploads/accesorios.webp" alt="Accesorios seleccionados" loading="eager"/>
+        </picture>
         <div class="mm-hero__caption">
           <span class="mm-hero__eyebrow">Accesorios</span>
           <h1 class="mm-hero__title">Detalles que suman en cada día.</h1>
@@ -403,10 +418,23 @@
         .mm-cats { grid-template-columns: repeat(4, 1fr); }
         .mm-cat[data-featured] { grid-column: span 2; grid-row: span 2; }
       }
+      /* El encuadre de cada tile depende del ratio de SU foto. Fijar un
+         aspect-ratio unico recortaba muchisimo:
+           mujer.webp      864x1821 (0.47) -> se veia 28% del alto
+           hombre.webp    1000x1250 (0.80)
+           accesorios.webp 1000x667 (1.50)
+         Con data-fit le damos a cada tile el ratio de su imagen, asi el
+         recorte es casi nulo y no se corta la cabeza de nadie. */
+      .mm-cat[data-fit="tall"] img     { object-position: 50% 8%; }
+      .mm-cat[data-fit="portrait"] img { object-position: 50% 12%; }
+
       @media (max-width: 700px) {
-        .mm-cats { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(200px, auto); }
-        .mm-cat, .mm-cat[data-featured], .mm-cat[data-tone] { grid-column: span 1; grid-row: span 1; }
-        .mm-cat[data-featured] { grid-column: span 2; }
+        .mm-cats { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; }
+        .mm-cat, .mm-cat[data-featured] { grid-column: span 2; grid-row: span 1; }
+        .mm-cat[data-tone] { grid-column: span 1; grid-row: span 1; aspect-ratio: 1/1; }
+        .mm-cat[data-fit="tall"]     { aspect-ratio: 3/4; }   /* mujer */
+        .mm-cat[data-fit="portrait"] { aspect-ratio: 4/5; }   /* hombre — calza exacto */
+        .mm-cat[data-fit="wide"]     { aspect-ratio: 3/2; }   /* accesorios — calza exacto */
       }
 
       .mm-cat {
@@ -495,7 +523,7 @@
     </style>
 
     <div class="mm-cats">
-      <a class="mm-cat" data-featured href="./Catalogo.dc.html?genero=mujer">
+      <a class="mm-cat" data-featured data-fit="tall" href="./Catalogo.dc.html?genero=mujer">
         <img src="./uploads/mujer.webp" alt="Departamento Mujer"/>
         <span class="mm-cat__arrow" aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17L17 7M8 7h9v9"/></svg>
@@ -505,7 +533,7 @@
           <span class="mm-cat__sub">Vestidos · Blusas · Faldas</span>
         </span>
       </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?genero=hombre">
+      <a class="mm-cat" data-fit="portrait" href="./Catalogo.dc.html?genero=hombre">
         <img src="./uploads/hombre.webp" alt="Departamento Hombre"/>
         <span class="mm-cat__arrow" aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17L17 7M8 7h9v9"/></svg>
@@ -515,7 +543,7 @@
           <span class="mm-cat__sub">Camisas · Pantalones · Abrigos</span>
         </span>
       </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?familia=accesorios">
+      <a class="mm-cat" data-fit="wide" href="./Catalogo.dc.html?familia=accesorios">
         <img src="./uploads/accesorios.webp" alt="Accesorios"/>
         <span class="mm-cat__arrow" aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17L17 7M8 7h9v9"/></svg>
@@ -1341,13 +1369,28 @@
     };
   }
 
+  // Mientras corre un scroll programatico ignoramos los eventos de scroll:
+  // si no, el handler de swipe lee una posicion intermedia de la animacion,
+  // cree que el usuario movio el carrusel y llama a go() de vuelta,
+  // cancelando el scroll a mitad de camino.
+  var programmatic = false, progT = null;
+
   function go(i){
     var e = els();
     if(!e.track || e.slides.length === 0) return;
     idx = (i + e.slides.length) % e.slides.length;
+
+    programmatic = true;
+    // El snap mandatory bloquea el scrollTo animado: se saca mientras dura
+    // la animacion y se restaura despues.
     e.track.style.scrollSnapType = 'none';
     e.track.scrollTo({ left: e.track.clientWidth * idx, behavior: reduced ? 'auto' : 'smooth' });
-    setTimeout(function(){ e.track.style.scrollSnapType = ''; }, reduced ? 30 : 600);
+    clearTimeout(progT);
+    progT = setTimeout(function(){
+      programmatic = false;
+      e.track.style.scrollSnapType = '';
+    }, reduced ? 50 : 700);
+
     e.slides.forEach(function(s, n){ s.toggleAttribute('data-active', n === idx); });
     e.dots.forEach(function(d, n){ d.setAttribute('aria-current', n === idx ? 'true' : 'false'); });
     if(e.counter) e.counter.innerHTML = '<span>' + String(idx+1).padStart(2,'0') + '</span> / ' + String(e.slides.length).padStart(2,'0');
@@ -1364,15 +1407,25 @@
     if(dot){ ev.preventDefault(); go(+dot.dataset.heroDot); pauseAutoplay(); }
   });
 
-  // Sync cuando el usuario hace swipe.
+  // Sync cuando el usuario hace swipe (ignorado durante scroll programatico).
   var scrollT = null;
   document.addEventListener('scroll', function(ev){
+    if(programmatic) return;
     if(!ev.target.matches || !ev.target.matches('[data-hero-track]')) return;
     clearTimeout(scrollT);
     scrollT = setTimeout(function(){
+      if(programmatic) return;
       var track = ev.target;
       var n = Math.round(track.scrollLeft / track.clientWidth);
-      if(n !== idx){ idx = n; go(idx); }
+      if(n !== idx){
+        // Solo actualizamos indicadores; no volvemos a scrollear porque
+        // el usuario ya esta donde quiere estar.
+        var e = els();
+        idx = n;
+        e.slides.forEach(function(s, k){ s.toggleAttribute('data-active', k === idx); });
+        e.dots.forEach(function(d, k){ d.setAttribute('aria-current', k === idx ? 'true' : 'false'); });
+        if(e.counter) e.counter.innerHTML = '<span>' + String(idx+1).padStart(2,'0') + '</span> / ' + String(e.slides.length).padStart(2,'0');
+      }
     }, 120);
   }, true);
 
