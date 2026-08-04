@@ -929,116 +929,6 @@
   }
 
   // ------------------------------------------------------------------
-  // 3) Shop the look
-  // ------------------------------------------------------------------
-
-  async function syncShopTheLook() {
-    var container = document.querySelector('[data-mm-sync="shop-the-look"]');
-    if (!container) return;
-
-    var looks = await api(
-      "/sitio_shop_the_look?select=id,titulo,subtitulo,imagen_url,orden,sitio_shop_the_look_items(id,producto_id,orden,etiqueta,productos(id,nombre,precio_venta,imagen_url,imagen_path))&activo=eq.true&order=orden.asc"
-    );
-    if (!looks || looks.length === 0) return;
-
-    var look = looks[0]; // usamos el primer look para "El look completo"
-    var items = (look.sitio_shop_the_look_items || []).sort(function (a, b) { return a.orden - b.orden; });
-
-    // Actualizar título e imagen principal si están presentes
-    var tituloEl = container.querySelector("[data-mm-look-title]");
-    if (tituloEl && look.titulo) tituloEl.textContent = look.titulo;
-    var subEl = container.querySelector("[data-mm-look-sub]");
-    if (subEl && look.subtitulo) subEl.textContent = look.subtitulo;
-    // La foto del look: preferimos el marcador explicito, pero caemos a la
-    // primera <img> de la seccion para no depender de que el HTML lo tenga.
-    var imgEl = container.querySelector("[data-mm-look-img]") || container.querySelector("img");
-    if (imgEl && look.imagen_url) {
-      if (imgEl.tagName === "IMG") {
-        imgEl.setAttribute("src", look.imagen_url);
-        imgEl.removeAttribute("srcset");
-        if (look.titulo) imgEl.setAttribute("alt", look.titulo);
-      } else {
-        imgEl.style.backgroundImage = "url(" + look.imagen_url + ")";
-      }
-    }
-
-    // Reemplazar rows con productos del look
-    var rowsContainer = container.querySelector("[data-mm-look-rows]");
-    if (rowsContainer) {
-      var rowTemplate = rowsContainer.querySelector(".mm-look-row, [data-mm-look-row]");
-      if (rowTemplate) {
-        rowsContainer.innerHTML = "";
-        var totalLook = 0;
-        items.forEach(function (it, idx) {
-          var prod = it.productos;
-          if (!prod) return;
-          var row = rowTemplate.cloneNode(true);
-          row.setAttribute("data-name", prod.nombre);
-          row.setAttribute("data-price", prod.precio_venta);
-          totalLook += Number(prod.precio_venta) || 0;
-          var nameEl = row.querySelector(".mm-look-name, [data-mm-look-name]");
-          if (nameEl) nameEl.textContent = prod.nombre;
-          var priceEl = row.querySelector(".mm-look-price, [data-mm-look-price]");
-          if (priceEl) priceEl.textContent = fmtGs(prod.precio_venta);
-          // Sin etiqueta cargada en el ERP se vacia: dejar la del template
-          // mostraba una categoria equivocada (todas decian "Vestidos").
-          var etiquetaEl = row.querySelector(".mm-look-cat, [data-mm-look-etiqueta]");
-          if (etiquetaEl) etiquetaEl.textContent = it.etiqueta || "";
-          // El numerito de la fila: la clase en el HTML es `mm-look-num`.
-          var indexEl = row.querySelector(".mm-look-num, .mm-look-index, [data-mm-look-index]");
-          if (indexEl) indexEl.textContent = String(idx + 1).padStart(2, "0");
-          rowsContainer.appendChild(row);
-        });
-
-        // Boton "Añadir el look — Gs. X": el total tambien sale del ERP.
-        var btnLook = container.querySelector("[data-add-look]");
-        if (btnLook) {
-          btnLook.textContent = (LANG === "pt" ? "Adicionar o look — " : "Añadir el look — ") + fmtGs(totalLook);
-        }
-      }
-    }
-  }
-
-  // ------------------------------------------------------------------
-  // 4) Instagram grid
-  // ------------------------------------------------------------------
-
-  async function syncInstagram() {
-    var container = document.querySelector('[data-mm-sync="instagram"]');
-    if (!container) return;
-
-    var posts = await api(
-      "/sitio_instagram_posts?select=id,imagen_url,link,orden&activo=eq.true&order=orden.asc"
-    );
-    if (!posts || posts.length === 0) return;
-
-    var template = container.querySelector("[data-mm-ig-cell], .mm-ig-cell, article, a, div");
-    if (!template) return;
-
-    var cells = Array.prototype.slice.call(container.children);
-    cells.forEach(function (c) { c.style.display = "none"; });
-
-    posts.forEach(function (p) {
-      var cell = template.cloneNode(true);
-      cell.style.display = "";
-      var imgEl = cell.querySelector("img");
-      if (imgEl) {
-        imgEl.setAttribute("src", p.imagen_url);
-      } else {
-        cell.style.backgroundImage = "url(" + p.imagen_url + ")";
-        cell.style.backgroundSize = "cover";
-        cell.style.backgroundPosition = "center";
-      }
-      if (p.link && cell.tagName === "A") {
-        cell.setAttribute("href", p.link);
-        cell.setAttribute("target", "_blank");
-        cell.setAttribute("rel", "noreferrer noopener");
-      }
-      container.appendChild(cell);
-    });
-  }
-
-  // ------------------------------------------------------------------
   // Boot
   // ------------------------------------------------------------------
 
@@ -1674,7 +1564,7 @@
     injectLangToggle();
     if (LANG !== "es") translatePageDeep();
     // Correr en paralelo — cualquiera puede fallar sin bloquear al resto
-    Promise.allSettled([syncCatalogo(), syncExplorar(), syncCategoriasTiles(), syncFiltros(), syncShopTheLook(), syncInstagram(), syncProductoPage()]).then(function () {
+    Promise.allSettled([syncCatalogo(), syncExplorar(), syncCategoriasTiles(), syncFiltros(), syncProductoPage()]).then(function () {
       if (LANG !== "es") translatePageDeep();
       // Ticks progresivos para capturar hidratación tardía del DC runtime
       [400, 1000, 2500, 5000].forEach(function (ms) {
