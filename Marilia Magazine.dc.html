@@ -616,61 +616,168 @@
   </section>
 
   <!-- ================================================================
-       CAMPANAS DESTACADAS
-       Bloque editorial asimetrico con dos campanas mayores. Uso mas
-       comercial del terracota (bloque contenido, no fondo dominante).
+       PROMESA DEPARTAMENTAL
+       Bloque editorial con lenguaje tipografico + 2 promos apiladas.
+       Sin fotos porque el ERP hoy solo tiene ropa y la foto sesgaba
+       la lectura a "boutique". Composicion 100% con la paleta.
        ================================================================ -->
-  <section class="mm-section" style="padding-top:clamp(48px,6vw,90px);padding-bottom:0">
+  <section class="mm-section" style="padding-top:clamp(48px,6vw,90px);padding-bottom:clamp(48px,6vw,90px)">
     <div class="mm-section__head mm-section__head--between mm-container" style="padding:0">
       <div>
-        <span class="mm-section__eyebrow">Campañas</span>
-        <h2 class="mm-section__title">Selecciones de la temporada</h2>
+        <span class="mm-section__eyebrow">Marilia Magazine</span>
+        <h2 class="mm-section__title">La tienda para todo lo tuyo</h2>
       </div>
-      <a href="./Catalogo.dc.html" class="mm-btn mm-btn--link">Ver todas →</a>
+      <a href="./Catalogo.dc.html" class="mm-btn mm-btn--link">Ver el catálogo →</a>
     </div>
+
     <style>
-      .mm-campaigns { display:grid; grid-template-columns:1.4fr 1fr; gap:18px; max-width:var(--mm-container); margin:0 auto; }
-      @media (max-width: 900px) { .mm-campaigns { grid-template-columns:1fr; } }
-      .mm-camp {
-        position:relative; overflow:hidden;
-        min-height: clamp(280px, 34vw, 460px);
-        display:flex; align-items:flex-end; padding:clamp(24px,3vw,40px);
-        color:var(--mm-cream);
+      .mm-promo-grid {
+        max-width: var(--mm-container); margin: 0 auto;
+        display: grid; grid-template-columns: 1.55fr 1fr; gap: 18px;
       }
-      .mm-camp img {
-        position:absolute; inset:0; width:100%; height:100%;
-        object-fit:cover; object-position:center;
-        transition: transform .8s var(--mm-ease);
+      @media (max-width: 900px) { .mm-promo-grid { grid-template-columns: 1fr; } }
+
+      .mm-promo-side { display: grid; grid-template-rows: 1fr 1fr; gap: 18px; }
+      @media (max-width: 900px) { .mm-promo-side { grid-template-columns: 1fr 1fr; grid-template-rows: auto; } }
+      @media (max-width: 520px) { .mm-promo-side { grid-template-columns: 1fr; } }
+
+      /* Bloque principal — terracota grande con marca de agua tipografica */
+      .mm-promo-main {
+        position: relative; overflow: hidden;
+        background: var(--mm-terracota); color: var(--mm-cream);
+        border-radius: var(--mm-radius-sm);
+        padding: clamp(28px,4vw,56px);
+        display: flex; flex-direction: column; justify-content: space-between;
+        min-height: clamp(360px, 44vw, 540px);
+        transition: transform var(--mm-t-base) var(--mm-ease);
       }
-      .mm-camp:hover img { transform: scale(1.03); }
-      .mm-camp::after {
-        content:''; position:absolute; inset:0;
-        background: linear-gradient(to top, rgba(30,27,22,.72) 0%, rgba(30,27,22,.15) 55%, rgba(30,27,22,0) 90%);
+      .mm-promo-main::before {
+        content: 'MM'; position: absolute; right: -.05em; bottom: -.35em;
+        font: 900 clamp(240px, 34vw, 460px)/.75 var(--mm-font-serif);
+        color: rgba(247,243,230,.09);
+        letter-spacing: -.05em; pointer-events: none;
+        z-index: 0;
       }
-      .mm-camp__body { position:relative; z-index:1; max-width:32ch; }
-      .mm-camp__eyebrow { display:block; font:600 10px/1 var(--mm-font-sans); letter-spacing:.28em; text-transform:uppercase; color:var(--mm-gold); margin-bottom:12px; }
-      .mm-camp__title { font:500 clamp(24px,2.4vw,36px)/1.1 var(--mm-font-sans); margin:0 0 12px; letter-spacing:-.005em; }
-      .mm-camp__desc { font-size:13px; line-height:1.6; margin:0 0 16px; opacity:.9; }
-      .mm-camp__cta { display:inline-flex; align-items:center; gap:10px; font:600 11px/1 var(--mm-font-sans); letter-spacing:.16em; text-transform:uppercase; padding-bottom:6px; border-bottom:1px solid currentColor; color:var(--mm-cream); }
+      .mm-promo-main > * { position: relative; z-index: 1; }
+      .mm-promo-main__eyebrow {
+        display: inline-flex; align-items: center; gap: 12px;
+        font: 600 10.5px/1 var(--mm-font-sans);
+        letter-spacing: .28em; text-transform: uppercase;
+        color: var(--mm-gold);
+      }
+      .mm-promo-main__eyebrow::before { content:''; width:32px; height:1px; background: var(--mm-gold); }
+      .mm-promo-main__title {
+        margin: 22px 0 20px;
+        font: 500 clamp(30px,3.6vw,52px)/1.05 var(--mm-font-sans);
+        letter-spacing: -.015em;
+        max-width: 20ch;
+      }
+      .mm-promo-main__desc {
+        margin: 0; max-width: 46ch;
+        font: 400 15px/1.6 var(--mm-font-sans);
+        opacity: .92;
+      }
+      .mm-promo-main__depts {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        margin: 26px 0 32px;
+      }
+      .mm-promo-main__dept {
+        display: inline-block; padding: 6px 12px;
+        border: 1px solid rgba(247,243,230,.35);
+        font: 500 10.5px/1 var(--mm-font-sans);
+        letter-spacing: .14em; text-transform: uppercase;
+        color: var(--mm-cream);
+        border-radius: var(--mm-radius-pill);
+        transition: background var(--mm-t-fast) var(--mm-ease), color var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-promo-main__dept:hover { background: var(--mm-cream); color: var(--mm-terracota); }
+      .mm-promo-main__cta {
+        display: inline-flex; align-items: center; gap: 10px;
+        align-self: flex-start;
+        padding: 14px 22px;
+        background: var(--mm-cream); color: var(--mm-terracota);
+        font: 600 11px/1 var(--mm-font-sans);
+        letter-spacing: .22em; text-transform: uppercase;
+        border-radius: var(--mm-radius-sm);
+        transition: background var(--mm-t-fast) var(--mm-ease), color var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-promo-main__cta:hover { background: var(--mm-ink); color: var(--mm-cream); }
+
+      /* Dos promos secundarias apiladas */
+      .mm-promo-card {
+        position: relative; overflow: hidden;
+        display: flex; flex-direction: column; justify-content: space-between;
+        padding: clamp(24px,2.4vw,32px);
+        color: var(--mm-cream);
+        border-radius: var(--mm-radius-sm);
+        transition: transform var(--mm-t-base) var(--mm-ease);
+      }
+      .mm-promo-card:hover { transform: translateY(-2px); }
+      .mm-promo-card--olive { background: var(--mm-olive); }
+      .mm-promo-card--ink   { background: var(--mm-ink); }
+      .mm-promo-card__eyebrow {
+        font: 600 10px/1 var(--mm-font-sans);
+        letter-spacing: .28em; text-transform: uppercase;
+        color: var(--mm-gold);
+      }
+      .mm-promo-card__title {
+        margin: 14px 0 10px;
+        font: 500 clamp(22px,1.8vw,28px)/1.15 var(--mm-font-sans);
+        letter-spacing: -.005em;
+      }
+      .mm-promo-card__desc {
+        margin: 0; font: 400 13.5px/1.55 var(--mm-font-sans);
+        opacity: .85; max-width: 34ch;
+      }
+      .mm-promo-card__cta {
+        margin-top: 22px;
+        display: inline-flex; align-items: center; gap: 8px;
+        font: 600 10.5px/1 var(--mm-font-sans);
+        letter-spacing: .22em; text-transform: uppercase;
+        color: var(--mm-cream);
+        padding-bottom: 5px; border-bottom: 1px solid var(--mm-gold);
+        transition: color var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-promo-card:hover .mm-promo-card__cta { color: var(--mm-gold); }
     </style>
-    <div class="mm-campaigns">
-      <a class="mm-camp" href="./Catalogo.dc.html">
-        <img src="./uploads/2.webp" alt="Marilia Magazine — tienda departamental" loading="lazy"/>
-        <div class="mm-camp__body">
-          <span class="mm-camp__eyebrow">Tienda departamental</span>
-          <h3 class="mm-camp__title">Un catálogo pensado para todo</h3>
-          <p class="mm-camp__desc">Moda, hogar, belleza, tecnología y más. Un mismo lugar para lo que necesitás cada día.</p>
-          <span class="mm-camp__cta">Ver el catálogo →</span>
+
+    <div class="mm-promo-grid">
+      <a class="mm-promo-main" href="./Catalogo.dc.html" aria-label="Ver el catálogo completo de Marilia Magazine">
+        <div>
+          <span class="mm-promo-main__eyebrow">Tienda departamental</span>
+          <h3 class="mm-promo-main__title">Un catálogo pensado para todo</h3>
+          <p class="mm-promo-main__desc">Moda, hogar, belleza, tecnología y más. Un mismo lugar para lo que necesitás cada día — pensado para vos, para tu familia y para tu casa.</p>
+          <div class="mm-promo-main__depts" aria-hidden="true">
+            <span class="mm-promo-main__dept">Mujer</span>
+            <span class="mm-promo-main__dept">Hombre</span>
+            <span class="mm-promo-main__dept">Infantil</span>
+            <span class="mm-promo-main__dept">Belleza</span>
+            <span class="mm-promo-main__dept">Hogar</span>
+            <span class="mm-promo-main__dept">Tecnología</span>
+            <span class="mm-promo-main__dept">Deportes</span>
+          </div>
         </div>
+        <span class="mm-promo-main__cta">Ver el catálogo <span aria-hidden="true">→</span></span>
       </a>
-      <a class="mm-camp" href="./Catalogo.dc.html?nuevo=1" style="background:var(--mm-olive)">
-        <div class="mm-camp__body" style="max-width:34ch">
-          <span class="mm-camp__eyebrow">Novedades</span>
-          <h3 class="mm-camp__title">Lo último que entró</h3>
-          <p class="mm-camp__desc">Productos recién llegados de las categorías activas. Actualizamos cada semana.</p>
-          <span class="mm-camp__cta">Ver novedades →</span>
-        </div>
-      </a>
+
+      <div class="mm-promo-side">
+        <a class="mm-promo-card mm-promo-card--olive" href="./Catalogo.dc.html?nuevo=1">
+          <div>
+            <span class="mm-promo-card__eyebrow">Novedades</span>
+            <h3 class="mm-promo-card__title">Lo último que entró</h3>
+            <p class="mm-promo-card__desc">Actualizamos el catálogo cada semana con productos recién llegados.</p>
+          </div>
+          <span class="mm-promo-card__cta">Ver novedades <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="mm-promo-card mm-promo-card--ink" href="./Catalogo.dc.html?oferta=1">
+          <div>
+            <span class="mm-promo-card__eyebrow">Ofertas</span>
+            <h3 class="mm-promo-card__title">Precios rebajados</h3>
+            <p class="mm-promo-card__desc">Selección de productos con descuento por tiempo limitado.</p>
+          </div>
+          <span class="mm-promo-card__cta">Ver ofertas <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
     </div>
   </section>
 
