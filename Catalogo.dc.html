@@ -141,7 +141,6 @@
           <h1 style="margin:0;font:500 clamp(26px,3.2vw,40px)/1.05 var(--mm-font-sans);letter-spacing:-.01em;color:var(--mm-ink)"><span data-page-title>Catálogo</span></h1>
           <p style="margin:8px 0 0;max-width:56ch;font:400 14px/1.55 var(--mm-font-sans);color:var(--mm-fg-muted)"><span data-page-sub>Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.</span></p>
         </div>
-        <div style="font:500 11px/1 var(--mm-font-sans);letter-spacing:.24em;text-transform:uppercase;color:var(--mm-fg-muted)"><span data-count-lead>0 piezas</span></div>
       </div>
     </div>
   </section>
@@ -203,50 +202,74 @@
       </div>
 
       <style>
-        /* Barra de marcas: primer nivel, arriba de todo lo demas */
+        /* ── Barra de marcas ────────────────────────────────────────────
+           Riel con superficie propia para que se lea como un nivel de
+           navegacion aparte, no como unos chips sueltos flotando. */
         #coleccion-grid .mm-cf-marcas {
-          display:flex; align-items:center; gap:16px; flex-wrap:wrap;
-          padding:0 0 16px;
+          display:inline-flex; align-items:stretch; gap:0;
+          margin:4px 0 22px;
+          padding:5px;
+          background:var(--mm-cream-2);
+          border:1px solid var(--mm-border);
+          border-radius:var(--mm-radius-pill);
+          max-width:100%;
         }
         #coleccion-grid .mm-cf-marcas__label {
-          font:600 10px/1 var(--mm-font-sans);
-          letter-spacing:.28em; text-transform:uppercase;
-          color:var(--mm-gold-dark);
+          display:inline-flex; align-items:center;
+          padding:0 16px 0 14px;
+          font:600 9.5px/1 var(--mm-font-sans);
+          letter-spacing:.26em; text-transform:uppercase;
+          color:var(--mm-fg-muted);
           flex:0 0 auto;
+          position:relative;
+        }
+        /* Separador fino entre la etiqueta y las opciones */
+        #coleccion-grid .mm-cf-marcas__label::after {
+          content:''; position:absolute; right:0; top:22%; bottom:22%;
+          width:1px; background:var(--mm-border-strong); opacity:.7;
         }
         #coleccion-grid .mm-cf-marcas__row {
-          display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+          display:flex; gap:4px; align-items:center;
+          padding-left:6px;
+          min-width:0;
         }
         #coleccion-grid .mm-cf-marca {
           display:inline-flex; align-items:center; gap:8px;
-          padding:9px 18px;
-          background:var(--mm-bg-alt);
-          border:1px solid var(--mm-border-strong);
+          padding:10px 20px;
+          background:transparent;
+          border:0;
           border-radius:var(--mm-radius-pill);
-          font:700 11.5px/1 var(--mm-font-sans);
-          letter-spacing:.14em; text-transform:uppercase;
+          font:700 12px/1 var(--mm-font-sans);
+          letter-spacing:.18em; text-transform:uppercase;
           color:var(--mm-ink);
-          text-decoration:none;
-          transition:border-color var(--mm-t-fast) var(--mm-ease),
-                     background var(--mm-t-fast) var(--mm-ease),
-                     color var(--mm-t-fast) var(--mm-ease);
+          text-decoration:none; white-space:nowrap;
+          transition:background var(--mm-t-fast) var(--mm-ease),
+                     color var(--mm-t-fast) var(--mm-ease),
+                     box-shadow var(--mm-t-fast) var(--mm-ease);
         }
-        #coleccion-grid .mm-cf-marca:hover { border-color:var(--mm-ink); color:var(--mm-ink); }
+        #coleccion-grid .mm-cf-marca:hover {
+          background:var(--mm-bg-alt); color:var(--mm-ink);
+        }
         #coleccion-grid .mm-cf-marca[data-on] {
-          background:var(--mm-ink); color:var(--mm-cream); border-color:var(--mm-ink);
+          background:var(--mm-ink); color:var(--mm-cream);
+          box-shadow:var(--mm-shadow-1);
         }
-        /* "Todas" pesa menos que las marcas propiamente dichas */
+        /* "Todas" es un atajo, no una marca: pesa menos tipograficamente */
         #coleccion-grid .mm-cf-marca[data-todas] {
-          font-weight:500; letter-spacing:.1em; text-transform:none;
+          font-weight:500; font-size:11.5px;
+          letter-spacing:.12em; text-transform:none;
           color:var(--mm-fg-muted);
         }
+        #coleccion-grid .mm-cf-marca[data-todas]:hover { color:var(--mm-ink); }
         #coleccion-grid .mm-cf-marca[data-todas][data-on] { color:var(--mm-cream); }
-        #coleccion-grid .mm-cf-marca img { max-height:16px; width:auto; display:block; }
+        #coleccion-grid .mm-cf-marca img { max-height:18px; width:auto; display:block; }
+
         @media (max-width: 700px) {
-          #coleccion-grid .mm-cf-marcas { gap:10px; padding-bottom:12px; }
-          #coleccion-grid .mm-cf-marcas__row { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }
+          #coleccion-grid .mm-cf-marcas { display:flex; margin-bottom:16px; }
+          #coleccion-grid .mm-cf-marcas__label { padding:0 12px 0 10px; letter-spacing:.18em; }
+          #coleccion-grid .mm-cf-marcas__row { overflow-x:auto; scrollbar-width:none; }
           #coleccion-grid .mm-cf-marcas__row::-webkit-scrollbar { display:none; }
-          #coleccion-grid .mm-cf-marca { white-space:nowrap; }
+          #coleccion-grid .mm-cf-marca { padding:10px 16px; }
         }
 
         /* Toolbar: pill de genero + orden + count + toggle */
