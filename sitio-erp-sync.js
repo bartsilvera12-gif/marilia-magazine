@@ -1451,31 +1451,60 @@
 
   function injectLangToggle() {
     if (document.getElementById("mm-lang-toggle")) return;
-    var btn = document.createElement("button");
-    btn.id = "mm-lang-toggle";
-    btn.type = "button";
-    btn.textContent = LANG === "pt" ? "ES" : "PT";
-    btn.title = LANG === "pt" ? "Ver en español" : "Ver em português";
-    // El chip vive abajo a la izquierda: fuera del header y sin pisar el
-    // WhatsApp flotante (que ocupa bottom-right). Mismo lugar en desktop y
-    // movil para que el usuario lo aprenda una sola vez.
-    btn.style.cssText = [
-      "position:fixed",
-      "bottom:20px", "left:20px", "z-index:99999",
-      "background:#1E1B16", "color:#F7F3E6", "border:1px solid #C8962A",
-      "padding:8px 12px", "font:600 10.5px/1 'Montserrat',sans-serif",
-      "letter-spacing:.24em", "text-transform:uppercase", "cursor:pointer",
-      "border-radius:2px", "box-shadow:0 4px 12px rgba(0,0,0,.18)",
-      "opacity:.9",
+    // Contenedor con dos opciones visibles: bandera + codigo. La activa
+    // esta remarcada, la otra transparente — se lee como un toggle claro
+    // de idioma, no como un chip con codigo suelto.
+    var wrap = document.createElement("div");
+    wrap.id = "mm-lang-toggle";
+    wrap.setAttribute("role", "group");
+    wrap.setAttribute("aria-label", "Cambiar idioma / Trocar idioma");
+    wrap.style.cssText = [
+      "position:fixed", "bottom:20px", "left:20px", "z-index:99999",
+      "display:inline-flex", "align-items:center", "gap:4px", "padding:4px",
+      "background:#1E1B16", "border:1px solid #C8962A",
+      "border-radius:999px",
+      "box-shadow:0 4px 12px rgba(0,0,0,.18)",
+      "font:600 11px/1 'Montserrat',sans-serif", "letter-spacing:.14em",
     ].join(";");
-    btn.addEventListener("click", function () {
-      var next = (LANG === "pt") ? "es" : "pt";
-      LANG = next;
-      localStorage.setItem("mm_lang", next);
-      setGoogleLang(next);
-      location.reload();
-    });
-    document.body.appendChild(btn);
+
+    var LABEL = {
+      es: { flag: "🇵🇾", code: "ES", full: "Español", other: "Ver em português" },
+      pt: { flag: "🇧🇷", code: "PT", full: "Português", other: "Ver en español" },
+    };
+
+    function makeOpt(lang) {
+      var b = document.createElement("button");
+      b.type = "button";
+      var isActive = (LANG === lang);
+      b.setAttribute("aria-pressed", isActive ? "true" : "false");
+      b.title = isActive ? LABEL[lang].full : "Cambiar a " + LABEL[lang].full;
+      b.innerHTML = '<span aria-hidden="true" style="font-size:14px;line-height:1">' + LABEL[lang].flag + '</span> <span>' + LABEL[lang].code + '</span>';
+      b.style.cssText = [
+        "display:inline-flex", "align-items:center", "gap:6px",
+        "padding:7px 12px", "border:0", "cursor:pointer",
+        "background:" + (isActive ? "#F7F3E6" : "transparent"),
+        "color:" + (isActive ? "#1E1B16" : "#F7F3E6"),
+        "border-radius:999px",
+        "font:inherit",
+        "transition:background .2s ease, color .2s ease",
+      ].join(";");
+      b.addEventListener("click", function () {
+        if (LANG === lang) return; // ya activo
+        LANG = lang;
+        localStorage.setItem("mm_lang", lang);
+        setGoogleLang(lang);
+        location.reload();
+      });
+      if (!isActive) {
+        b.addEventListener("mouseenter", function () { b.style.background = "rgba(247,243,230,.14)"; });
+        b.addEventListener("mouseleave", function () { b.style.background = "transparent"; });
+      }
+      return b;
+    }
+
+    wrap.appendChild(makeOpt("es"));
+    wrap.appendChild(makeOpt("pt"));
+    document.body.appendChild(wrap);
   }
 
   // MutationObserver: re-traduce cada vez que el DOM cambia (útil cuando
