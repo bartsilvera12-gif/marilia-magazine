@@ -73,9 +73,9 @@
        ================================================================ -->
   <div class="mm-topbar" role="region" aria-label="Anuncios">
     <div class="mm-topbar__slide">
-      <span>Envío a todo Paraguay</span>
+      <span>Moda · Hogar · Belleza · Tecnología</span>
       <span style="opacity:.4">·</span>
-      <span>Cambios dentro de 30 días</span>
+      <span>Envío a todo Paraguay</span>
       <span style="opacity:.4">·</span>
       <a href="https://wa.me/595981000000">Atención por WhatsApp</a>
     </div>
@@ -120,13 +120,15 @@
       <div class="mm-nav__inner">
         <a class="mm-nav__item" href="./Catalogo.dc.html?genero=mujer">Mujer</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?genero=hombre">Hombre</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=infantil">Infantil</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=calzados">Calzados</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?cat=accesorios">Accesorios</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=abrigos">Abrigos</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=camisas">Camisas</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=pantalones">Pantalones</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=belleza">Belleza</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=hogar">Hogar</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=tecnologia">Tecnología</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?dept=deportes">Deportes</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?nuevo=1" data-highlight>Novedades</a>
         <a class="mm-nav__item" href="./Catalogo.dc.html?oferta=1" data-highlight>Ofertas</a>
-        <a class="mm-nav__item" href="./Catalogo.dc.html">Ver todo</a>
       </div>
     </nav>
   </header>
@@ -204,9 +206,9 @@
     </style>
     <div class="mm-hero__grid">
       <div class="mm-hero__text">
-        <span class="mm-hero__eyebrow">Marilia Magazine</span>
+        <span class="mm-hero__eyebrow">Marilia Magazine · Tienda departamental</span>
         <h1 class="mm-hero__title">Todo lo que buscás,<br /><strong>en un solo lugar.</strong></h1>
-        <p class="mm-hero__lead">Descubrí productos seleccionados para cada estilo, cada espacio y cada momento. Camisas, pantalones, abrigos, accesorios — y todo lo que va sumando la temporada.</p>
+        <p class="mm-hero__lead">Moda, hogar, belleza, tecnología y mucho más. Un catálogo pensado para cada estilo, cada espacio y cada momento de tu día.</p>
         <div class="mm-hero__cta">
           <a href="./Catalogo.dc.html" class="mm-btn mm-btn--primary">Explorar productos</a>
           <a href="./Catalogo.dc.html?nuevo=1" class="mm-btn mm-btn--ghost">Ver novedades</a>
@@ -243,46 +245,88 @@
     </div>
 
     <style>
-      .mm-cats { display:grid; grid-template-columns:repeat(6,1fr); gap:14px; max-width:var(--mm-container); margin:0 auto; }
-      @media (max-width: 1080px) { .mm-cats { grid-template-columns:repeat(3,1fr); } }
+      /* Cada tile es un departamento. Los que ya tienen productos usan foto;
+         los que estan por incorporarse usan solo tipografia sobre color plano
+         — mas honesto que forzar una foto de ropa fingiendo ser tecnologia. */
+      .mm-cats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; max-width:var(--mm-container); margin:0 auto; }
+      @media (max-width: 1080px) { .mm-cats { grid-template-columns:repeat(2,1fr); } }
       @media (max-width: 540px)  {
-        .mm-cats { grid-template-columns:auto; grid-auto-flow:column; grid-auto-columns:52vw;
+        .mm-cats { grid-template-columns:auto; grid-auto-flow:column; grid-auto-columns:62vw;
           overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:4px; scrollbar-width:none; }
         .mm-cats::-webkit-scrollbar { display:none; }
         .mm-cat { scroll-snap-align:start; }
       }
       .mm-cat {
-        position:relative; display:block; overflow:hidden;
-        background:var(--mm-cream-2); aspect-ratio:3/4;
+        position:relative; display:flex; align-items:flex-end; overflow:hidden;
+        aspect-ratio:5/4; padding:20px;
         border-radius:var(--mm-radius-sm);
+        color:var(--mm-cream);
         transition: transform var(--mm-t-base) var(--mm-ease);
       }
-      .mm-cat img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 35%;
-        transition: transform .6s var(--mm-ease); }
+      .mm-cat:hover { color:var(--mm-cream); }
+      .mm-cat img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%;
+        transition: transform .6s var(--mm-ease); z-index:0; }
       .mm-cat:hover img { transform: scale(1.04); }
-      .mm-cat::after {
-        content:''; position:absolute; inset:0;
-        background: linear-gradient(to top, rgba(30,27,22,.66) 0%, rgba(30,27,22,0) 55%);
-        pointer-events:none;
+      .mm-cat::before {
+        content:''; position:absolute; inset:0; z-index:1;
+        background: linear-gradient(to top, rgba(30,27,22,.68) 0%, rgba(30,27,22,.10) 65%);
       }
+      /* Departamento sin foto: color plano de la paleta actual */
+      .mm-cat[data-tone="terracota"] { background: var(--mm-terracota); }
+      .mm-cat[data-tone="olive"]     { background: var(--mm-olive); }
+      .mm-cat[data-tone="ink"]       { background: var(--mm-ink); }
+      .mm-cat[data-tone="cream"]     { background: var(--mm-cream-2); color: var(--mm-ink); }
+      .mm-cat[data-tone="cream"]::before { display:none; }
+      .mm-cat[data-tone] img { display:none; }
+      .mm-cat[data-tone] .mm-cat__soon { opacity:.9; }
       .mm-cat__label {
-        position:absolute; left:14px; right:14px; bottom:14px;
-        color:var(--mm-cream);
-        font: 600 14px/1.15 var(--mm-font-sans);
+        position:relative; z-index:2;
+        font: 600 16px/1.15 var(--mm-font-sans);
         letter-spacing: .06em;
         text-transform: uppercase;
-        z-index:1;
+        display:flex; flex-direction:column; gap:6px;
       }
-      .mm-cat__count { display:block; font:400 10px/1 var(--mm-font-sans); letter-spacing:.24em; opacity:.75; margin-top:6px; text-transform:uppercase; }
+      .mm-cat__sub {
+        font:400 11px/1 var(--mm-font-sans);
+        letter-spacing:.24em; opacity:.85; text-transform:uppercase;
+      }
+      .mm-cat__soon {
+        display:inline-block; margin-top:8px;
+        font:500 9.5px/1 var(--mm-font-sans);
+        letter-spacing:.24em; text-transform:uppercase;
+        border:1px solid currentColor; padding:5px 10px;
+        opacity:.75;
+      }
     </style>
 
     <div class="mm-cats">
-      <a class="mm-cat" href="./Catalogo.dc.html?cat=camisas"><img src="./uploads/destacado/camisa-azul.webp" alt="Camisas"/><span class="mm-cat__label">Camisas<span class="mm-cat__count">Ver productos</span></span></a>
-      <a class="mm-cat" href="./Catalogo.dc.html?cat=pantalones"><img src="./uploads/destacado/pantalon-gris.webp" alt="Pantalones"/><span class="mm-cat__label">Pantalones<span class="mm-cat__count">Ver productos</span></span></a>
-      <a class="mm-cat" href="./Catalogo.dc.html?cat=abrigos"><img src="./uploads/destacado/blazer-verde.webp" alt="Abrigos"/><span class="mm-cat__label">Abrigos<span class="mm-cat__count">Ver productos</span></span></a>
-      <a class="mm-cat" href="./Catalogo.dc.html?cat=accesorios"><img src="./uploads/accesorios.webp" alt="Accesorios"/><span class="mm-cat__label">Accesorios<span class="mm-cat__count">Ver productos</span></span></a>
-      <a class="mm-cat" href="./Catalogo.dc.html?cat=conjuntos"><img src="./uploads/destacado/traje-gris.webp" alt="Conjuntos"/><span class="mm-cat__label">Conjuntos<span class="mm-cat__count">Ver productos</span></span></a>
-      <a class="mm-cat" href="./Catalogo.dc.html?nuevo=1"><img src="./uploads/mujer.webp" alt="Novedades"/><span class="mm-cat__label">Novedades<span class="mm-cat__count">Ver últimos</span></span></a>
+      <a class="mm-cat" href="./Catalogo.dc.html?genero=hombre">
+        <img src="./uploads/hombre.webp" alt="Departamento Hombre"/>
+        <span class="mm-cat__label">Moda hombre<span class="mm-cat__sub">Camisas · Pantalones · Abrigos</span></span>
+      </a>
+      <a class="mm-cat" href="./Catalogo.dc.html?genero=mujer">
+        <img src="./uploads/mujer.webp" alt="Departamento Mujer"/>
+        <span class="mm-cat__label">Moda mujer<span class="mm-cat__sub">Vestidos · Blusas · Faldas</span></span>
+      </a>
+      <a class="mm-cat" href="./Catalogo.dc.html?cat=accesorios">
+        <img src="./uploads/accesorios.webp" alt="Accesorios"/>
+        <span class="mm-cat__label">Accesorios<span class="mm-cat__sub">Bolsos · Cinturones · Pañuelos</span></span>
+      </a>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=infantil" data-tone="olive">
+        <span class="mm-cat__label">Infantil<span class="mm-cat__sub">Ropa · Accesorios</span><span class="mm-cat__soon">Muy pronto</span></span>
+      </a>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=belleza" data-tone="terracota">
+        <span class="mm-cat__label">Belleza<span class="mm-cat__sub">Cuidado · Perfumería</span><span class="mm-cat__soon">Muy pronto</span></span>
+      </a>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=hogar" data-tone="ink">
+        <span class="mm-cat__label">Hogar<span class="mm-cat__sub">Textiles · Decoración</span><span class="mm-cat__soon">Muy pronto</span></span>
+      </a>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=tecnologia" data-tone="cream">
+        <span class="mm-cat__label">Tecnología<span class="mm-cat__sub">Audio · Accesorios</span><span class="mm-cat__soon">Muy pronto</span></span>
+      </a>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=deportes" data-tone="olive">
+        <span class="mm-cat__label">Deportes<span class="mm-cat__sub">Indumentaria · Equipo</span><span class="mm-cat__soon">Muy pronto</span></span>
+      </a>
     </div>
   </section>
 
@@ -610,22 +654,21 @@
       .mm-camp__cta { display:inline-flex; align-items:center; gap:10px; font:600 11px/1 var(--mm-font-sans); letter-spacing:.16em; text-transform:uppercase; padding-bottom:6px; border-bottom:1px solid currentColor; color:var(--mm-cream); }
     </style>
     <div class="mm-campaigns">
-      <a class="mm-camp" href="./Catalogo.dc.html?genero=hombre">
-        <img src="./uploads/2.webp" alt="Selección masculina Marilia Magazine" loading="lazy"/>
+      <a class="mm-camp" href="./Catalogo.dc.html">
+        <img src="./uploads/2.webp" alt="Marilia Magazine — tienda departamental" loading="lazy"/>
         <div class="mm-camp__body">
-          <span class="mm-camp__eyebrow">Hombre</span>
-          <h3 class="mm-camp__title">Sastrería y camisas para el día a día</h3>
-          <p class="mm-camp__desc">Camisas, pantalones y abrigos seleccionados. Series limitadas, tallas del S al XL.</p>
-          <span class="mm-camp__cta">Ver colección hombre →</span>
+          <span class="mm-camp__eyebrow">Tienda departamental</span>
+          <h3 class="mm-camp__title">Un catálogo pensado para todo</h3>
+          <p class="mm-camp__desc">Moda, hogar, belleza, tecnología y más. Un mismo lugar para lo que necesitás cada día.</p>
+          <span class="mm-camp__cta">Ver el catálogo →</span>
         </div>
       </a>
-      <a class="mm-camp" href="./Catalogo.dc.html?cat=accesorios">
-        <img src="./uploads/accesorios.webp" alt="Accesorios Marilia Magazine" loading="lazy"/>
-        <div class="mm-camp__body">
-          <span class="mm-camp__eyebrow">Accesorios</span>
-          <h3 class="mm-camp__title">Detalles que suman</h3>
-          <p class="mm-camp__desc">Cinturones, bolsos, pañuelos y complementos de uso diario.</p>
-          <span class="mm-camp__cta">Ver accesorios →</span>
+      <a class="mm-camp" href="./Catalogo.dc.html?nuevo=1" style="background:var(--mm-olive)">
+        <div class="mm-camp__body" style="max-width:34ch">
+          <span class="mm-camp__eyebrow">Novedades</span>
+          <h3 class="mm-camp__title">Lo último que entró</h3>
+          <p class="mm-camp__desc">Productos recién llegados de las categorías activas. Actualizamos cada semana.</p>
+          <span class="mm-camp__cta">Ver novedades →</span>
         </div>
       </a>
     </div>
@@ -741,7 +784,7 @@
       <div>
         <div class="mm-footer__brand-name">Marilia</div>
         <div class="mm-footer__brand-sub">Magazine</div>
-        <p class="mm-footer__brand-copy">Tienda departamental — ropa, accesorios y más. Envíos a todo Paraguay.</p>
+        <p class="mm-footer__brand-copy">Tienda departamental — moda, hogar, belleza, tecnología y más. Envíos a todo Paraguay.</p>
         <div style="display:flex;gap:14px;margin-top:16px">
           <a href="https://www.instagram.com/marilia.magazine" aria-label="Instagram" style="color:rgba(247,243,230,.78)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
           <a href="https://wa.me/595981000000" aria-label="WhatsApp" style="color:rgba(247,243,230,.78)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12a8 8 0 1 1-14.7 4.4L4 20l3.7-1.2A8 8 0 0 1 20 12z"/><path d="M9 10c.4 2 1.7 3.6 3.6 4.4l1.4-1.4 2.5 1.2c-.2 1.2-1.3 2-2.7 1.8-3.2-.4-5.6-2.9-6-6-.1-1.4.7-2.5 1.9-2.7L11 9.7 9.5 11z" fill="currentColor" stroke="none"/></svg></a>
@@ -772,10 +815,15 @@
       <div class="mm-footer__col">
         <h4>Departamentos</h4>
         <ul>
-          <li><a href="./Catalogo.dc.html?genero=hombre">Hombre</a></li>
-          <li><a href="./Catalogo.dc.html?genero=mujer">Mujer</a></li>
+          <li><a href="./Catalogo.dc.html?genero=mujer">Moda mujer</a></li>
+          <li><a href="./Catalogo.dc.html?genero=hombre">Moda hombre</a></li>
+          <li><a href="./Catalogo.dc.html?dept=infantil">Infantil</a></li>
+          <li><a href="./Catalogo.dc.html?dept=calzados">Calzados</a></li>
           <li><a href="./Catalogo.dc.html?cat=accesorios">Accesorios</a></li>
-          <li><a href="./Catalogo.dc.html?nuevo=1">Novedades</a></li>
+          <li><a href="./Catalogo.dc.html?dept=belleza">Belleza</a></li>
+          <li><a href="./Catalogo.dc.html?dept=hogar">Hogar</a></li>
+          <li><a href="./Catalogo.dc.html?dept=tecnologia">Tecnología</a></li>
+          <li><a href="./Catalogo.dc.html?dept=deportes">Deportes</a></li>
           <li><a href="./Catalogo.dc.html">Ver todo</a></li>
         </ul>
       </div>
@@ -834,15 +882,15 @@
 
       <nav style="flex:1;display:flex;flex-direction:column;gap:0;margin-top:14px" aria-label="Menú principal">
         <div style="padding:14px 0 8px;font:600 10px/1 var(--mm-font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--mm-gold-dark)">Departamentos</div>
-        <a href="./Catalogo.dc.html?genero=mujer" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Mujer</a>
-        <a href="./Catalogo.dc.html?genero=hombre" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Hombre</a>
+        <a href="./Catalogo.dc.html?genero=mujer" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Moda mujer</a>
+        <a href="./Catalogo.dc.html?genero=hombre" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Moda hombre</a>
+        <a href="./Catalogo.dc.html?dept=infantil" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Infantil</a>
+        <a href="./Catalogo.dc.html?dept=calzados" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Calzados</a>
         <a href="./Catalogo.dc.html?cat=accesorios" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Accesorios</a>
-
-        <div style="padding:22px 0 8px;font:600 10px/1 var(--mm-font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--mm-gold-dark)">Categorías</div>
-        <a href="./Catalogo.dc.html?cat=camisas" style="padding:12px 0;border-bottom:1px solid var(--mm-border);font:400 15px/1 var(--mm-font-sans);color:var(--mm-fg)">Camisas</a>
-        <a href="./Catalogo.dc.html?cat=pantalones" style="padding:12px 0;border-bottom:1px solid var(--mm-border);font:400 15px/1 var(--mm-font-sans);color:var(--mm-fg)">Pantalones</a>
-        <a href="./Catalogo.dc.html?cat=abrigos" style="padding:12px 0;border-bottom:1px solid var(--mm-border);font:400 15px/1 var(--mm-font-sans);color:var(--mm-fg)">Abrigos</a>
-        <a href="./Catalogo.dc.html?cat=conjuntos" style="padding:12px 0;border-bottom:1px solid var(--mm-border);font:400 15px/1 var(--mm-font-sans);color:var(--mm-fg)">Conjuntos</a>
+        <a href="./Catalogo.dc.html?dept=belleza" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Belleza</a>
+        <a href="./Catalogo.dc.html?dept=hogar" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Hogar</a>
+        <a href="./Catalogo.dc.html?dept=tecnologia" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-ink)">Tecnología</a>
+        <a href="./Catalogo.dc.html?dept=deportes" style="padding:14px 0;border-bottom:1px solid var(--mm-border);font:500 18px/1 var(--mm-font-sans);color:var(--mm-fg)">Deportes</a>
 
         <div style="padding:22px 0 8px;font:600 10px/1 var(--mm-font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--mm-gold-dark)">Descubrí</div>
         <a href="./Catalogo.dc.html?nuevo=1" style="padding:12px 0;border-bottom:1px solid var(--mm-border);font:500 15px/1 var(--mm-font-sans);color:var(--mm-accent)">Novedades</a>

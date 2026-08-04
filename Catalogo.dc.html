@@ -280,6 +280,15 @@
         }
       </style>
 
+      <div data-empty hidden style="grid-column:1/-1;padding:60px 20px;text-align:center;color:var(--mm-fg-muted);font:400 15px/1.7 var(--mm-font-sans);letter-spacing:.02em;max-width:60ch;margin:0 auto">
+        <div style="font:500 11px/1 var(--mm-font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--mm-accent);margin-bottom:12px">Muy pronto</div>
+        <div>Todavía no cargamos productos en este departamento. Mientras tanto, explorá el resto del catálogo o dejanos tu email para avisarte cuando estén disponibles.</div>
+        <div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <a href="./Catalogo.dc.html" class="mm-btn mm-btn--primary">Ver el catálogo</a>
+          <a href="./Marilia Magazine.dc.html#news-h" class="mm-btn mm-btn--ghost">Recibir novedades</a>
+        </div>
+      </div>
+
       <div class="mm-cg" data-cg data-mm-sync="catalogo">
         <article class="mm-cg-card" data-cg-card data-hidden data-id="h1" data-cat="hombre camisas" data-name="Camisa Sauce" data-price="590000" data-sub="Camisa de lino en azul profundo" data-img="./uploads/destacado/camisa-azul.webp" data-sizes="S,M,L,XL" data-colors="#1F4E6B,#E4DCC6,#1E1B16">
           <div class="mm-cg-frame">
@@ -1022,7 +1031,13 @@
       renderFavs();
       // Reaplicar filtro contra el catalogo completo (antes del sync solo
       // veiamos las 26 tarjetas hardcoded del fallback).
-      if(typeof applyFilter === 'function') applyFilter();
+      applyFilter();
+    });
+
+    // Backstop: por si el sync termina sin dispatchar el evento (fetch fail,
+    // cache miss race), reaplicamos el filtro varias veces en la carga.
+    [400, 1200, 2500, 4500].forEach(function(ms){
+      setTimeout(function(){ buildProducts(); applyFilter(); }, ms);
     });
 
     function load(k){ try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch(e){ return []; } }
@@ -1039,10 +1054,11 @@
     function hasTag(card, tag){
       return tag === 'todo' || (card.dataset.cat || '').split(/\s+/).indexOf(tag) > -1;
     }
-    // Estado extra: query text y flags novedad/oferta.
+    // Estado extra: query text, flags novedad/oferta, y flag "sin productos".
     var currentQuery = '';
     var currentNew = false;
     var currentSale = false;
+    var forceEmpty = false; // departamentos aun no cargados en ERP
 
     // Normaliza texto para busqueda tolerante: minusculas + sin tildes.
     function norm(s){
@@ -1071,7 +1087,9 @@
     function applyFilter(){
       var visible = 0;
       cards.forEach(function(c){
-        var ok = hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery);
+        // Cuando el usuario aterriza en un dept que aun no tiene productos,
+        // forzamos vacio para mostrar el mensaje "muy pronto".
+        var ok = !forceEmpty && hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery);
         if(ok){ c.removeAttribute('data-hidden'); visible++; }
         else c.setAttribute('data-hidden','');
       });
@@ -1099,7 +1117,12 @@
       var chips = [];
       if(currentGender && currentGender !== 'todo') chips.push({k:'gender', l: currentGender.charAt(0).toUpperCase()+currentGender.slice(1)});
       if(currentFilter && currentFilter !== 'todo') chips.push({k:'cat', l: currentFilter.charAt(0).toUpperCase()+currentFilter.slice(1)});
-      if(currentQuery) chips.push({k:'q', l: 'Búsqueda: "' + currentQuery + '"'});
+      if(currentQuery && !forceEmpty) chips.push({k:'q', l: 'Búsqueda: "' + currentQuery + '"'});
+      if(forceEmpty){
+        // El dept aun no tiene productos: chip informativo (URL param `dept`).
+        var qp = new URLSearchParams(location.search);
+        var dLbl = qp.get('dept'); if(dLbl) chips.push({k:'dept', l: dLbl.charAt(0).toUpperCase()+dLbl.slice(1)});
+      }
       if(currentNew) chips.push({k:'new', l:'Novedades'});
       if(currentSale) chips.push({k:'sale', l:'Ofertas'});
       if(chips.length === 0){ wrap.style.display='none'; wrap.innerHTML=''; return; }
@@ -1115,12 +1138,13 @@
       if(!b) return;
       var k = b.dataset.clear;
       var u = new URL(location.href);
-      if(k === 'all'){ u.searchParams.delete('genero'); u.searchParams.delete('cat'); u.searchParams.delete('q'); u.searchParams.delete('nuevo'); u.searchParams.delete('oferta'); }
+      if(k === 'all'){ u.searchParams.delete('genero'); u.searchParams.delete('cat'); u.searchParams.delete('q'); u.searchParams.delete('nuevo'); u.searchParams.delete('oferta'); u.searchParams.delete('dept'); }
       else if(k === 'gender'){ u.searchParams.delete('genero'); }
       else if(k === 'cat'){ u.searchParams.delete('cat'); }
       else if(k === 'q'){ u.searchParams.delete('q'); }
       else if(k === 'new'){ u.searchParams.delete('nuevo'); }
       else if(k === 'sale'){ u.searchParams.delete('oferta'); }
+      else if(k === 'dept'){ u.searchParams.delete('dept'); }
       location.href = u.toString();
     });
     function sortBy(mode){
@@ -1382,8 +1406,15 @@
       var g = (q.get('genero') || '').trim().toLowerCase();
       var f = (q.get('cat') || '').trim().toLowerCase();
       var t = norm(q.get('q') || '');
+      var d = (q.get('dept') || '').trim().toLowerCase();
       var isNew = q.get('nuevo') === '1' || q.get('nuevo') === 'true';
       var isSale = q.get('oferta') === '1' || q.get('oferta') === 'true';
+      // Nombres de departamentos amplios (fuera del ERP hoy: activar cuando
+      // haya productos y quitarlos de esta lista).
+      var DEPT_LABELS = {
+        infantil:'Infantil', calzados:'Calzados', belleza:'Belleza',
+        hogar:'Hogar', tecnologia:'Tecnología', deportes:'Deportes'
+      };
 
       var gBtn = g ? Array.from(genderBtns).find(function(b){ return b.dataset.gender === g; }) : null;
       if(gBtn){
@@ -1412,6 +1443,12 @@
       var etiqueta = 'Catálogo';
       var subtxt = 'Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.';
       if(t){ etiqueta = 'Resultados: "' + q.get('q') + '"'; subtxt = 'Estos son los productos que coinciden con tu búsqueda.'; }
+      else if(d && DEPT_LABELS[d]){
+        // Departamento amplio sin productos aun — mensaje "muy pronto".
+        etiqueta = DEPT_LABELS[d];
+        subtxt = 'Muy pronto vas a encontrar productos de ' + DEPT_LABELS[d].toLowerCase() + ' en Marilia Magazine. Mientras tanto, explorá el resto del catálogo.';
+        forceEmpty = true;
+      }
       else if(isSale){ etiqueta = 'Ofertas'; subtxt = 'Piezas con precio rebajado por tiempo limitado.'; }
       else if(isNew){ etiqueta = 'Novedades'; subtxt = 'Lo último que ingresó a Marilia Magazine.'; }
       else if(f && g){ etiqueta = g.charAt(0).toUpperCase()+g.slice(1) + ' · ' + f.charAt(0).toUpperCase()+f.slice(1); subtxt = 'Selección de ' + f + ' para ' + g + '.'; }
