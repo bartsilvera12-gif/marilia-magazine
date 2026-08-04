@@ -250,6 +250,20 @@
 
       @media (max-width: 700px) {
         .mm-hero__track { height: 78vh; min-height: 480px; }
+        /* En movil el container es vertical y la foto (1600x656)
+           panoramica: con object-position:center la persona queda
+           recortada por debajo. Priorizamos la parte superior de
+           la foto para no perder cabeza/torso. */
+        .mm-hero__slide img { object-position: center 18%; }
+        /* Overlay mas fuerte porque el texto queda sobre mas area
+           de la foto (no hay tanto lateral libre como en desktop). */
+        .mm-hero__slide::after {
+          background: linear-gradient(to top, rgba(30,27,22,.78) 0%, rgba(30,27,22,.35) 55%, rgba(30,27,22,.05) 90%);
+        }
+        .mm-hero__caption {
+          justify-content: flex-end;
+          padding-bottom: clamp(80px, 14vw, 120px);
+        }
         .mm-hero__title { font-size: clamp(32px, 9vw, 52px); }
         .mm-hero__desc { display:none; }
         .mm-hero__ui { right:16px; bottom:16px; gap:12px; }
