@@ -355,8 +355,11 @@
     var container = document.querySelector('[data-mm-sync="catalogo"]');
     if (!container) return;
 
-    var template = container.querySelector("article");
-    if (!template) return;
+    var templateVivo = container.querySelector("article");
+    if (!templateVivo) return;
+    // Copia desprendida del DOM: las cards de la maqueta se eliminan más abajo
+    // y necesitamos conservar el molde para clonar.
+    var template = templateVivo.cloneNode(true);
 
     // Los 26 articles fallback del HTML ya arrancan con data-hidden (CSS: display:none)
     // asi que no hay flash del catalogo viejo al navegar sin cache. Solo reservamos
@@ -374,9 +377,10 @@
     var catById = {};
     cats.forEach(function (c) { catById[c.id] = c.nombre; });
 
-    // Ocultamos las cards de la maqueta: desde acá manda el ERP.
+    // Las cards de la maqueta se sacan del DOM (no se ocultan): si quedan, el
+    // contador propio del diseño las suma y muestra "50 piezas".
     Array.prototype.slice.call(container.querySelectorAll("article"))
-      .forEach(function (a) { a.style.display = "none"; });
+      .forEach(function (a) { a.parentNode.removeChild(a); });
 
     /** Trae las variantes de los modelos de la página y arma sus swatches. */
     async function armarGrupos(modelosPagina) {
@@ -429,6 +433,13 @@
       card.style.display = "";
       card.style.visibility = "visible";  // resetear el hide inicial que se propaga del template
       card.removeAttribute("data-hidden");
+      // El diseño arranca las cards con `data-pending` (opacity:0) y las revela
+      // con un IntersectionObserver que solo mira las del HTML original. Las
+      // nuestras se agregan después: si se lo dejamos puesto, nunca se ven.
+      card.removeAttribute("data-pending");
+      card.style.opacity = "1";
+      card.style.transform = "none";
+      card.setAttribute("data-mm", "");   // marca para poder limpiar al filtrar
       card.setAttribute("data-id", p.id);
       card.setAttribute("data-name", p.nombre);
       card.setAttribute("data-price", p.precio_venta);
@@ -574,10 +585,6 @@
       var grupos = await armarGrupos(modelosPagina);
       renderModelos(grupos);
 
-      // Marcamos las cards nuestras para poder limpiarlas en el próximo reset.
-      Array.prototype.slice.call(container.querySelectorAll("article"))
-        .forEach(function (a) { if (a.style.display !== "none") a.setAttribute("data-mm", ""); });
-
       if (vacioEl) vacioEl.style.display = (estado.offset === 0) ? "" : "none";
       if (masBtn) masBtn.style.display = estado.fin ? "none" : "";
       container.style.minHeight = "";
@@ -590,7 +597,13 @@
           (estado.catId ? "&categoria_principal_id=eq." + encodeURIComponent(estado.catId) : "") +
           (estado.q ? "&nombre_modelo=ilike." + encodeURIComponent("*" + estado.q + "*") : "")
         );
-        if (total != null) { estado.total = total; pintarContador(total); }
+        if (total != null) {
+          estado.total = total;
+          pintarContador(total);
+          // El script del diseño recuenta las cards del DOM y pisa el valor;
+          // se vuelve a escribir después de que corra.
+          setTimeout(function () { pintarContador(total); }, 400);
+        }
       }
       document.dispatchEvent(new CustomEvent("mm:catalogo-loaded", { detail: { total: estado.total } }));
     }
@@ -692,6 +705,11 @@
       var tallesArr = Object.keys(g.talles);
       var img = p.imagen_url || "";
       var card = moldes[idx % moldes.length].cloneNode(true);
+      // Mismo motivo que en el catálogo: el observer del diseño no ve las
+      // cards que agregamos, así que se quedarían en opacity:0.
+      card.removeAttribute("data-pending");
+      card.style.opacity = "1";
+      card.style.transform = "none";
 
       card.setAttribute("data-id", p.id);
       card.setAttribute("data-pid", p.id);
