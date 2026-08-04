@@ -49,6 +49,23 @@
   var LANG = localStorage.getItem("mm_lang") || "es"; // "es" | "pt"
 
   var DICT_PT_ES = {
+    // Categorías del catálogo TFLOW (vienen en portugués desde el proveedor)
+    "SAIA":"FALDA", "SAIAS":"FALDAS", "CASACO":"ABRIGO", "CASACOS":"ABRIGOS",
+    "CALÇAS":"PANTALONES", "CALCAS":"PANTALONES", "VESTIDO":"VESTIDO",
+    "ACESSÓRIOS":"ACCESORIOS", "ACESSORIOS":"ACCESORIOS",
+    "MULHER":"MUJER", "HOMEM":"HOMBRE", "TUDO":"TODO",
+    "BONE":"GORRA", "BONÉ":"GORRA", "OCULOS":"LENTES", "ÓCULOS":"LENTES",
+    "PULSEIRA":"PULSERA", "COLAR":"COLLAR", "CORRENTE":"CADENA",
+    "BRACELETE":"BRAZALETE", "CHINELO":"OJOTA", "MALA":"VALIJA",
+    "CARTEIRA":"BILLETERA", "MOLETOM":"BUZO", "SUETER":"SUÉTER",
+    "COLETE":"CHALECO", "SUNGA":"MALLA", "MALHA":"TEJIDO",
+    "COPO":"VASO", "CANECA":"TAZA", "GARRAFA TERMICA":"TERMO",
+    "ESSENCIA":"ESENCIA", "BALA":"CARAMELO", "CERVEJA":"CERVEZA",
+    "SAPATO":"ZAPATO", "SAPATENIS":"ZAPATILLA", "CHAPEU":"SOMBRERO",
+    "MASCARA":"MÁSCARA", "ADESIVO":"ADHESIVO", "CARTAO":"TARJETA",
+    "CABIDE":"PERCHA", "FITA":"CINTA", "EXPOSITOR":"EXHIBIDOR",
+    "IMPRESSOS":"IMPRESOS", "DIVERSOS":"VARIOS", "PECAS BAZAR":"BAZAR",
+    "PORTA TRECO":"ORGANIZADOR", "CAPA DE CHUVA":"PILOTO",
     // Prendas
     "CAMISETA":"CAMISETA", "CAMISA":"CAMISA", "POLO":"POLO", "BLUSA":"BLUSA",
     "BERMUDA":"BERMUDA", "SHORT":"SHORT", "CALCA":"PANTALÓN", "CALÇA":"PANTALÓN",
@@ -1069,6 +1086,45 @@
 
   // Frases específicas de Marilia (copywriting). Ampliar cuando se sume nueva copy.
   var COPY_ES_PT = {
+    // ── Mosaicos del home (familias del catálogo) ──────────────────────────
+    "Moda mujer": "Moda mulher",
+    "Moda hombre": "Moda masculina",
+    "Vestidos · Blusas · Faldas": "Vestidos · Blusas · Saias",
+    "Camisas · Pantalones · Abrigos": "Camisas · Calças · Casacos",
+    "Gorras · Lentes · Cinturones": "Bonés · Óculos · Cintos",
+    "Championes · Zapatos · Ojotas": "Tênis · Sapatos · Chinelos",
+    "Mochilas · Valijas · Bandoleras": "Mochilas · Malas · Bolsas",
+    "Pulseras · Collares · Cadenas": "Pulseiras · Colares · Correntes",
+    "Bazar · Perfumería · Varios": "Bazar · Perfumaria · Diversos",
+    "Bolsos": "Bolsas",
+    "Bijou": "Bijuteria",
+    "Otros": "Outros",
+    "Tienda departamental": "Loja departamental",
+
+    // ── Bloque de beneficios ───────────────────────────────────────────────
+    "Beneficios": "Benefícios",
+    "Comprar en Marilia": "Comprar na Marilia",
+    "Compra tranquila, con seguimiento y atención personalizada.":
+      "Compra tranquila, com acompanhamento e atendimento personalizado.",
+    "Envío a todo Paraguay": "Envio para todo o Paraguai",
+    "Despacho en 24–48 h desde Asunción por correo o cadetería.":
+      "Despacho em 24–48 h desde Assunção por correio ou motoboy.",
+    "Cambios en 30 días": "Trocas em 30 dias",
+    "Si algo no te queda, lo cambiamos. Solo pedimos que llegue en su estado original.":
+      "Se algo não servir, trocamos. Só pedimos que chegue no estado original.",
+    "Medios de pago": "Meios de pagamento",
+    "Transferencia bancaria, efectivo en tienda y consultas por WhatsApp.":
+      "Transferência bancária, dinheiro na loja e consultas pelo WhatsApp.",
+    "Asesoramiento": "Atendimento",
+    "Consultá tallas, disponibilidad y combinaciones — te respondemos por WhatsApp.":
+      "Consulte tamanhos, disponibilidade e combinações — respondemos pelo WhatsApp.",
+
+    // ── Ayuda ──────────────────────────────────────────────────────────────
+    "Estamos para ayudarte": "Estamos aqui para ajudar",
+    "¿Necesitás ayuda?": "Precisa de ajuda?",
+    "Tiempos, zonas y costos.": "Prazos, zonas e custos.",
+    "Cómo funciona y qué pedimos.": "Como funciona e o que pedimos.",
+
     "Explora prendas y accesorios seleccionados para mujer y hombre, pensados para acompañar cada estilo y ocasión.":
       "Explore peças e acessórios selecionados para mulher e homem, pensados para acompanhar cada estilo e ocasião.",
     "Tu estilo, tu mejor versión.": "Seu estilo, sua melhor versão.",
