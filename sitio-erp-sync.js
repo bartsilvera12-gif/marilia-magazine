@@ -322,6 +322,29 @@
     "CROMO":"#B9B9B4", "KAKI":"#8A7A4A", "CAQUI":"#8A7A4A",
     "INCOLOR":"#EFEFEF", "UNICA":"#B0B0B0", "BRANCA TFLW":"#F5F1E8",
   };
+  /**
+   * Imagen de reemplazo para productos sin foto.
+   *
+   * Sin esto la tarjeta se queda con la foto del molde de la maqueta, así que
+   * un AROMATIZADOR aparecía ilustrado con un señor de camisa azul. Devuelve un
+   * SVG en data URI (no pega a la red) con la paleta del sitio y el nombre de
+   * la categoría, para que se lea claramente como "todavía sin foto".
+   */
+  function placeholderImg(etiqueta) {
+    var txt = String(etiqueta || "").toUpperCase().slice(0, 22);
+    var svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">' +
+      '<rect width="600" height="800" fill="#EFE9DC"/>' +
+      '<circle cx="300" cy="330" r="86" fill="none" stroke="#C8AE86" stroke-width="2"/>' +
+      '<path d="M262 356l30-32 24 26 18-18 26 28v20H262z" fill="#C8AE86" opacity=".55"/>' +
+      '<circle cx="330" cy="300" r="12" fill="#C8AE86" opacity=".55"/>' +
+      '<text x="300" y="470" text-anchor="middle" fill="#8A7F6A" ' +
+      'font-family="Montserrat,Helvetica,Arial,sans-serif" font-size="22" letter-spacing="4">' +
+      txt.replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+      "</text></svg>";
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+
   function hexForColor(name) {
     if (!name) return "#B0B0B0";
     var up = String(name).toUpperCase().trim();
@@ -473,7 +496,9 @@
       card.setAttribute("data-price", p.precio_venta);
       card.setAttribute("data-sub", p.descripcion || "");
       card.setAttribute("data-cat", (catById[p.categoria_principal_id] || "").toLowerCase());
-      var img = p.imagen_url || p.imagen_path || "";
+      // Sin foto propia va el placeholder: nunca la del molde de la maqueta.
+      var img = p.imagen_url || p.imagen_path ||
+        placeholderImg(catById[p.categoria_principal_id] || "Sin foto");
       if (img) card.setAttribute("data-img", img);
 
       // Nombre (traducido si LANG=es)
@@ -733,7 +758,7 @@
       var p = g.rep;
       var coloresArr = Object.keys(g.colores);
       var tallesArr = Object.keys(g.talles);
-      var img = p.imagen_url || "";
+      var img = p.imagen_url || placeholderImg(catById[p.categoria_principal_id] || "Sin foto");
       var card = moldes[idx % moldes.length].cloneNode(true);
       // Mismo motivo que en el catálogo: el observer del diseño no ve las
       // cards que agregamos, así que se quedarían en opacity:0.
@@ -1086,6 +1111,24 @@
 
   // Frases específicas de Marilia (copywriting). Ampliar cuando se sume nueva copy.
   var COPY_ES_PT = {
+    // ── Hero y textos de portada ───────────────────────────────────────────
+    // La frase completa va ANTES que sus palabras sueltas: el walker ordena
+    // por longitud, si no "Todo" se traduciría solo y quedaba "Tudo lo que…".
+    "Todo lo que buscás, en un solo lugar.": "Tudo o que você procura, em um só lugar.",
+    "Todo lo que buscás,": "Tudo o que você procura,",
+    "en un solo lugar.": "em um só lugar.",
+    "Nueva temporada": "Nova temporada",
+    "Ropa, calzado, accesorios y bijou. Un catálogo pensado para cada momento.":
+      "Roupa, calçados, acessórios e bijuteria. Um catálogo pensado para cada momento.",
+    "Ropa, calzado, accesorios y bijou. Un mismo lugar para lo que buscás cada día — pensado para vos y para toda la familia.":
+      "Roupa, calçados, acessórios e bijuteria. Um só lugar para o que você procura todo dia — pensado para você e para toda a família.",
+    "Tienda de moda — ropa, calzado, accesorios y bijou. Envíos a todo Paraguay.":
+      "Loja de moda — roupa, calçados, acessórios e bijuteria. Enviamos para todo o Paraguai.",
+    "Explorar productos": "Explorar produtos",
+    "EXPLORAR PRODUCTOS": "EXPLORAR PRODUTOS",
+    "La tienda para todo lo tuyo": "A loja para tudo o que é seu",
+    "Un catálogo pensado para todo": "Um catálogo pensado para tudo",
+
     // ── Mosaicos del home (familias del catálogo) ──────────────────────────
     "Moda mujer": "Moda mulher",
     "Moda hombre": "Moda masculina",
