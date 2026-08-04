@@ -688,9 +688,10 @@
         letter-spacing: .14em; text-transform: uppercase;
         color: var(--mm-cream);
         border-radius: var(--mm-radius-pill);
-        transition: background var(--mm-t-fast) var(--mm-ease), color var(--mm-t-fast) var(--mm-ease);
+        transition: border-color var(--mm-t-fast) var(--mm-ease);
       }
-      .mm-promo-main__dept:hover { background: var(--mm-cream); color: var(--mm-terracota); }
+      /* Hover sutil: solo el borde se ilumina, sin invertir colores. */
+      .mm-promo-main__dept:hover { border-color: rgba(247,243,230,.85); }
       .mm-promo-main__cta {
         display: inline-flex; align-items: center; gap: 10px;
         align-self: flex-start;
@@ -699,9 +700,10 @@
         font: 600 11px/1 var(--mm-font-sans);
         letter-spacing: .22em; text-transform: uppercase;
         border-radius: var(--mm-radius-sm);
-        transition: background var(--mm-t-fast) var(--mm-ease), color var(--mm-t-fast) var(--mm-ease);
+        transition: background var(--mm-t-fast) var(--mm-ease);
       }
-      .mm-promo-main__cta:hover { background: var(--mm-ink); color: var(--mm-cream); }
+      /* Sombra leve en hover en vez de cambio de color contrastante. */
+      .mm-promo-main__cta:hover { background: #F0EADB; }
 
       /* Dos promos secundarias apiladas */
       .mm-promo-card {
