@@ -371,7 +371,18 @@
     // Se pagina contra la vista `sitio_modelos` (una fila por modelo) y recien
     // ahi se piden las variantes de los modelos visibles, para los swatches.
     var PAGINA = 24;
-    var estado = { q: "", catId: "", offset: 0, total: 0, cargando: false, fin: false };
+    // `catIds` es una lista: un chip de familia filtra por todas sus categorías.
+    var estado = { q: "", catIds: [], offset: 0, total: 0, cargando: false, fin: false };
+
+    /** Fragmento de filtro por categoría, sirva para una o para muchas. */
+    function filtroCategorias() {
+      if (!estado.catIds.length) return "";
+      if (estado.catIds.length === 1) {
+        return "&categoria_principal_id=eq." + encodeURIComponent(estado.catIds[0]);
+      }
+      var lista = estado.catIds.map(function (id) { return '"' + id + '"'; }).join(",");
+      return "&categoria_principal_id=in.(" + encodeURIComponent(lista) + ")";
+    }
 
     var cats = (await api("/categorias_productos?select=id,nombre")) || [];
     var catById = {};
@@ -570,8 +581,7 @@
           .forEach(function (a) { a.remove(); });
       }
 
-      var filtros = "";
-      if (estado.catId) filtros += "&categoria_principal_id=eq." + encodeURIComponent(estado.catId);
+      var filtros = filtroCategorias();
       if (estado.q) filtros += "&nombre_modelo=ilike." + encodeURIComponent("*" + estado.q + "*");
 
       var url = "/sitio_modelos?select=id,codigo_proveedor,nombre_modelo,precio_venta,imagen_url,categoria_principal_id" +
@@ -594,7 +604,7 @@
       if (reset) {
         var total = await apiCount(
           "/sitio_modelos?select=id" +
-          (estado.catId ? "&categoria_principal_id=eq." + encodeURIComponent(estado.catId) : "") +
+          filtroCategorias() +
           (estado.q ? "&nombre_modelo=ilike." + encodeURIComponent("*" + estado.q + "*") : "")
         );
         if (total != null) {
@@ -641,9 +651,12 @@
     });
 
     // Lo exponemos para que los filtros de categoría lo manejen server-side.
+    // Acepta un id suelto o una lista (un chip de familia manda varias).
     window.MM_CATALOGO = {
-      filtrarPorCategoria: function (catId) {
-        estado.catId = catId || "";
+      filtrarPorCategoria: function (cat) {
+        if (!cat) estado.catIds = [];
+        else if (Array.isArray(cat)) estado.catIds = cat.filter(Boolean);
+        else estado.catIds = [cat];
         cargarPagina(true);
       },
     };
@@ -878,6 +891,43 @@
   // 2) Filtros de categoría dinámicos
   // ------------------------------------------------------------------
 
+  /**
+   * Agrupamiento de las categorías del proveedor en familias.
+   *
+   * El catálogo trae 64 categorías sueltas (CAMISETA, CHINELO, PULSEIRA…) que
+   * como chips ocupaban seis filas. Acá se juntan en cinco familias para que el
+   * filtro entre en una línea; al elegir una se abren sus subcategorías.
+   *
+   * Los nombres son los del proveedor (portugués). Una categoría que no figure
+   * en ninguna familia cae automáticamente en "Otros".
+   */
+  var FAMILIAS = [
+    {
+      nombre: "Ropa", nombrePt: "Roupa",
+      categorias: ["CAMISETA", "CAMISA", "POLO", "BLUSA", "TOP", "BODY", "MALHA",
+        "SHORTS", "BERMUDA", "CALÇA", "CALÇA JEANS", "SAIA", "VESTIDO",
+        "JAQUETA", "CASACO", "BLAZER", "COLETE", "SUETER", "MOLETOM",
+        "CONJUNTO", "PILOTOS", "CAPA DE CHUVA", "CUECA", "SUNGA", "MEIA"],
+    },
+    {
+      nombre: "Calzado", nombrePt: "Calçados",
+      categorias: ["TENIS", "CHINELO", "SAPATO", "SAPATENIS", "MULE"],
+    },
+    {
+      nombre: "Accesorios", nombrePt: "Acessórios",
+      categorias: ["BONE", "OCULOS", "CINTO", "CARTEIRA", "GORRO", "CHAPEU",
+        "MASCARA", "CHAVEIRO"],
+    },
+    {
+      nombre: "Bolsos", nombrePt: "Bolsas",
+      categorias: ["MOCHILA", "MALA", "SACOLA", "PORTA TRECO"],
+    },
+    {
+      nombre: "Bijou", nombrePt: "Bijuteria",
+      categorias: ["PULSEIRA", "COLAR", "BRACELETE", "CORRENTE"],
+    },
+  ];
+
   async function syncFiltros() {
     var container = document.querySelector('[data-mm-sync="filtros"]');
     if (!container) return;
@@ -893,73 +943,102 @@
     var template = container.querySelector("button, a");
     if (!template) return;
 
-    // Una sola fila deslizable en vez de un muro de seis. Mantiene la estética
-    // de chips y no se come media pantalla.
-    container.style.display = "flex";
-    container.style.flexWrap = "nowrap";
-    container.style.overflowX = "auto";
-    container.style.gap = "0.5rem";
-    container.style.paddingBottom = "0.5rem";
-    container.style.scrollbarWidth = "thin";
-    container.style.webkitOverflowScrolling = "touch";
-    container.style.maskImage = "linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 28px), transparent 100%)";
-    container.style.webkitMaskImage = container.style.maskImage;
+    // Índice nombre → categoría, para resolver cada familia a sus ids.
+    var porNombre = {};
+    cats.forEach(function (c) { porNombre[String(c.nombre).toUpperCase()] = c; });
 
-    // Limpiamos hijos excepto el primero ("Todo")
+    var familias = FAMILIAS.map(function (f) {
+      var miembros = f.categorias.map(function (n) { return porNombre[n]; }).filter(Boolean);
+      return { nombre: f.nombre, nombrePt: f.nombrePt, miembros: miembros };
+    }).filter(function (f) { return f.miembros.length > 0; });
+
+    // Las que no entraron en ninguna familia van a "Otros": así una categoría
+    // nueva del proveedor aparece igual en vez de desaparecer del filtro.
+    var asignadas = {};
+    familias.forEach(function (f) { f.miembros.forEach(function (c) { asignadas[c.id] = true; }); });
+    var sueltas = cats.filter(function (c) { return !asignadas[c.id]; });
+    if (sueltas.length) familias.push({ nombre: "Otros", nombrePt: "Outros", miembros: sueltas });
+
+    // Dos filas: familias arriba, subcategorías de la elegida abajo.
+    var padre = container.parentNode;
+    var fila2 = document.getElementById("mm-subfiltros");
+    if (!fila2) {
+      fila2 = document.createElement("div");
+      fila2.id = "mm-subfiltros";
+      padre.insertBefore(fila2, container.nextSibling);
+    }
+    [container, fila2].forEach(function (row) {
+      row.style.display = "flex";
+      row.style.flexWrap = "wrap";
+      row.style.justifyContent = "center";
+      row.style.gap = "0.5rem";
+    });
+    fila2.style.margin = "0.75rem 0 0";
+    fila2.style.display = "none";
+
+    function chip(texto, titulo) {
+      var b = template.cloneNode(true);
+      b.textContent = texto;
+      if (titulo) b.title = titulo;
+      b.style.whiteSpace = "nowrap";
+      b.removeAttribute("data-on");
+      b.classList.remove("active", "is-active");
+      return b;
+    }
+    var t = function (es, pt) { return LANG === "pt" ? pt : es; };
+
+    // Fila 1: "Todo" (el del HTML) + una familia por chip.
     var childs = Array.prototype.slice.call(container.children);
     childs.slice(1).forEach(function (c) { c.remove(); });
-    if (container.firstElementChild) container.firstElementChild.style.flex = "0 0 auto";
+    var btnTodo = container.firstElementChild;
 
-    cats.forEach(function (c) {
-      var btn = template.cloneNode(true);
-      var display = c.nombre;
-      if (LANG === "pt") {
-        display = display.split(/\s+/).map(function (w) {
-          return DICT_ES_PT[w] || w;
-        }).join(" ");
-      }
-      btn.textContent = display;
-      btn.title = c.modelos != null
-        ? c.modelos + (LANG === "pt" ? " modelos" : " modelos")
-        : display;
-      btn.style.flex = "0 0 auto";
-      btn.style.whiteSpace = "nowrap";
-      btn.setAttribute("data-cat", c.nombre.toLowerCase());
-      // El id va en el botón: el filtrado lo resuelve el servidor.
-      btn.setAttribute("data-cat-id", c.id);
-      var lastWord = c.nombre.trim().split(/\s+/).pop().toLowerCase();
-      btn.setAttribute("data-filter", lastWord);
-      btn.removeAttribute("data-on");
-      btn.classList.remove("active", "is-active");
-      container.appendChild(btn);
-    });
-
-    // Delegación de eventos: los handlers originales del catálogo (registrados
-    // sobre los botones template) se pierden al reemplazarlos. Adjunto el
-    // handler acá al container así funciona con cualquier botón futuro.
-    if (!container.__mmFilterAttached) {
-      container.__mmFilterAttached = true;
-      var grid = document.querySelector('[data-mm-sync="catalogo"]');
-
-      // El filtrado lo resuelve el servidor: con 6.300 modelos no se pueden
-      // tener todas las cards en el DOM para mostrarlas y ocultarlas.
-      function mmApplyFilter() {
-        var activeFilterBtn = container.querySelector("[data-cat-id][data-on]");
-        var catId = activeFilterBtn ? activeFilterBtn.getAttribute("data-cat-id") : "";
-        if (grid) grid.style.minHeight = "";
-        if (window.MM_CATALOGO) window.MM_CATALOGO.filtrarPorCategoria(catId);
-      }
-
-      container.addEventListener("click", function (ev) {
-        var btn = ev.target.closest("[data-filter]");
-        if (!btn || !container.contains(btn)) return;
-        container.querySelectorAll("[data-filter]").forEach(function (b) { b.removeAttribute("data-on"); });
-        btn.setAttribute("data-on", "");
-        mmApplyFilter();
-      });
-
-      window.__mmApplyFilter = mmApplyFilter;
+    var grid = document.querySelector('[data-mm-sync="catalogo"]');
+    function aplicar(ids, chipActivo, fila) {
+      Array.prototype.forEach.call(fila.children, function (b) { b.removeAttribute("data-on"); });
+      if (chipActivo) chipActivo.setAttribute("data-on", "");
+      if (grid) grid.style.minHeight = "";
+      if (window.MM_CATALOGO) window.MM_CATALOGO.filtrarPorCategoria(ids);
     }
+
+    if (btnTodo) {
+      btnTodo.setAttribute("data-on", "");
+      btnTodo.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        fila2.style.display = "none";
+        fila2.innerHTML = "";
+        aplicar(null, btnTodo, container);
+      });
+    }
+
+    familias.forEach(function (f) {
+      var total = f.miembros.reduce(function (a, c) { return a + (c.modelos || 0); }, 0);
+      var b = chip(t(f.nombre, f.nombrePt), total + " " + t("modelos", "modelos"));
+      b.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        aplicar(f.miembros.map(function (c) { return c.id; }), b, container);
+
+        // Subcategorías de la familia, ordenadas por cantidad.
+        fila2.innerHTML = "";
+        var orden = f.miembros.slice().sort(function (a, c) { return (c.modelos || 0) - (a.modelos || 0); });
+        var todas = chip(t("Todo en " + f.nombre, "Tudo em " + f.nombrePt));
+        todas.setAttribute("data-on", "");
+        todas.addEventListener("click", function (e2) {
+          e2.preventDefault();
+          aplicar(f.miembros.map(function (c) { return c.id; }), todas, fila2);
+        });
+        fila2.appendChild(todas);
+        orden.forEach(function (c) {
+          var sb = chip(c.nombre, (c.modelos || 0) + " " + t("modelos", "modelos"));
+          sb.addEventListener("click", function (e2) {
+            e2.preventDefault();
+            aplicar([c.id], sb, fila2);
+          });
+          fila2.appendChild(sb);
+        });
+        fila2.style.display = "flex";
+      });
+      container.appendChild(b);
+    });
 
     // Delegación en gender también
     var genderBar = document.querySelector("#coleccion-grid .mm-cf-gender");
