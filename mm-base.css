@@ -1,0 +1,123 @@
+/* ============================================================================
+ * mm-base.css
+ * Reset ligero + estilos globales. Depende de mm-tokens.css.
+ *
+ * Objetivo: sacar el sitio del look editorial romantico. Menos cursiva,
+ * menos serif, mas jerarquia clara con Montserrat.
+ * ============================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mm-bg);
+  color: var(--mm-fg);
+  font-family: var(--mm-font-sans);
+  font-size: var(--mm-fs-body);
+  line-height: var(--mm-lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg, video { display: block; max-width: 100%; height: auto; }
+
+a {
+  color: var(--mm-fg);
+  text-decoration: none;
+  transition: color var(--mm-t-fast) var(--mm-ease);
+}
+a:hover { color: var(--mm-accent); }
+
+button { font-family: inherit; cursor: pointer; }
+
+::selection { background: var(--mm-gold); color: var(--mm-ink); }
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+input::placeholder, textarea::placeholder { color: var(--mm-fg-muted); }
+
+/* Focus visible en cualquier control (accesibilidad) */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--mm-focus);
+  outline-offset: 2px;
+}
+
+/* ── Tipografia semantica ─────────────────────────────────────────────────
+ * Titulos: los H usan sans por default (comercial), no serif. Solo cuando
+ * una campana editorial lo quiera se aplica .mm-serif.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--mm-font-sans);
+  font-weight: 500;
+  color: var(--mm-fg);
+  line-height: var(--mm-lh-tight);
+  letter-spacing: var(--mm-track-tight);
+  margin: 0;
+}
+
+h1 { font-size: var(--mm-fs-h1); font-weight: 400; }
+h2 { font-size: var(--mm-fs-h2); font-weight: 400; }
+h3 { font-size: var(--mm-fs-h3); }
+h4 { font-size: var(--mm-fs-h4); }
+
+p { margin: 0 0 var(--mm-space-4); }
+
+.mm-serif { font-family: var(--mm-font-serif); }
+.mm-eyebrow {
+  font-size: var(--mm-fs-eyebrow);
+  letter-spacing: var(--mm-track-widest);
+  text-transform: uppercase;
+  color: var(--mm-fg-muted);
+  font-weight: 500;
+}
+
+/* Contenedor centrado estandar */
+.mm-container {
+  max-width: var(--mm-container);
+  margin: 0 auto;
+  padding: 0 var(--mm-gutter);
+}
+
+/* Reglas y separadores */
+hr, .mm-rule {
+  border: 0;
+  border-top: 1px solid var(--mm-border);
+  margin: var(--mm-space-6) 0;
+}
+
+/* Utilidades de accesibilidad */
+.mm-sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Skip link para teclado */
+.mm-skip {
+  position: absolute; top: -40px; left: 0;
+  background: var(--mm-ink); color: var(--mm-cream);
+  padding: 10px 16px; z-index: 9999;
+  transition: top var(--mm-t-fast) var(--mm-ease);
+}
+.mm-skip:focus { top: 0; }
+
+/* prefers-reduced-motion: sacar animaciones costosas */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

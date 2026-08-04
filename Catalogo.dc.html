@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marilia Magazine</title>
+<link rel="stylesheet" href="./mm-tokens.css">
+<link rel="stylesheet" href="./mm-base.css">
+<link rel="stylesheet" href="./mm-components.css">
 <script src="./sitio-erp-shadow-hack.js"></script>
 <script src="./support.js"></script>
 <script>
@@ -82,41 +85,82 @@
 </helmet>
 <div style="position:relative;overflow-x:hidden;background:#F7F3E6">
 
-  <header style="position:sticky;top:0;z-index:60;background:#F7F3E6;border-bottom:1px solid rgba(30,27,22,.10)">
-    <div style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px);height:96px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-      <nav style="flex:1 1 0;display:flex;align-items:center;gap:clamp(10px,1.1vw,22px);font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:400;min-width:0;white-space:nowrap;overflow:hidden">
-        <a href="./Marilia Magazine.dc.html">Inicio</a>
-        <a href="./Catalogo.dc.html" style="color:#C8962A">Catálogo</a>
-        <a href="./Marilia Magazine.dc.html#categorias">Categorías</a>
-        <a href="./Marilia Magazine.dc.html#esencia">Nosotros</a>
-      </nav>
+  <div class="mm-topbar" role="region" aria-label="Anuncios">
+    <div class="mm-topbar__slide">
+      <span>Envío a todo Paraguay</span>
+      <span style="opacity:.4">·</span>
+      <span>Cambios dentro de 30 días</span>
+      <span style="opacity:.4">·</span>
+      <a href="https://wa.me/595981000000">Atención por WhatsApp</a>
+    </div>
+  </div>
 
-      <a href="./Marilia Magazine.dc.html" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px">
-        <span style="font:400 clamp(26px,3.4vw,40px)/1 'Cormorant Garamond',serif;font-style:italic;letter-spacing:.02em">Marilia</span>
-        <span style="font-size:8.5px;letter-spacing:.52em;text-transform:uppercase;color:#8A7F6A;padding-left:.52em">Magazine</span>
+  <header data-header class="mm-header">
+    <div data-header-inner class="mm-header__inner">
+      <button data-menu-open class="mm-header__mobile-toggle" aria-label="Abrir menú">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <span style="font:500 10.5px/1 var(--mm-font-sans);letter-spacing:.22em;text-transform:uppercase">Menú</span>
+      </button>
+
+      <a href="./Marilia Magazine.dc.html" data-logo class="mm-header__logo" aria-label="Marilia Magazine — inicio">
+        <span class="mm-header__logo-name">Marilia</span>
+        <span class="mm-header__logo-sub">Magazine</span>
       </a>
 
-      <div style="flex:1 1 0;display:flex;align-items:center;justify-content:flex-end;gap:clamp(12px,1.6vw,26px);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;min-width:0;white-space:nowrap;overflow:hidden">
-        <button data-fav-open style="background:none;border:none;padding:0;cursor:pointer;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#1E1B16">Favoritos <span data-fav-count style="color:#C8962A">(0)</span></button>
-        <button data-cart-open style="background:none;border:none;padding:0;cursor:pointer;font:400 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#1E1B16">Bolsa <span data-cart-count style="color:#C8962A">(0)</span></button>
+      <form class="mm-header__search" role="search" onsubmit="event.preventDefault(); var q=this.querySelector('input').value.trim(); var u=new URL(location.href); if(q){u.searchParams.set('q',q);}else{u.searchParams.delete('q');} location.href=u.toString();">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" name="q" placeholder="Buscar productos, categorías y marcas" aria-label="Buscar en Marilia Magazine">
+      </form>
+
+      <div class="mm-header__actions">
+        <button data-fav-open type="button" aria-label="Favoritos">
+          Favoritos <span class="mm-count" data-fav-count>(0)</span>
+        </button>
+        <button data-cart-open type="button" aria-label="Bolsa">
+          Bolsa <span class="mm-count" data-cart-count>(0)</span>
+        </button>
       </div>
     </div>
+
+    <nav class="mm-nav" aria-label="Departamentos">
+      <div class="mm-nav__inner">
+        <a class="mm-nav__item" href="./Catalogo.dc.html?genero=mujer">Mujer</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?genero=hombre">Hombre</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=accesorios">Accesorios</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=abrigos">Abrigos</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=camisas">Camisas</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=pantalones">Pantalones</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?nuevo=1" data-highlight>Novedades</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?oferta=1" data-highlight>Ofertas</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html" aria-current="page">Ver todo</a>
+      </div>
+    </nav>
   </header>
 
   <section style="padding:clamp(60px,8vw,120px) clamp(20px,5vw,72px) clamp(30px,4vw,60px)">
     <div style="max-width:1560px;margin:0 auto">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
-        <span style="font:300 13px/1 'Cormorant Garamond',serif;color:#C8962A">01</span>
-        <span style="width:34px;height:1px;background:#D4AF37;display:block"></span>
-        <span style="font:500 10px/1 'Montserrat',sans-serif;letter-spacing:.32em;text-transform:uppercase;color:#25251F">Catálogo completo</span>
+      <!-- Breadcrumbs -->
+      <nav aria-label="Ruta de navegación" style="margin-bottom:22px;font:500 11px/1 var(--mm-font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mm-fg-muted)">
+        <a href="./Marilia Magazine.dc.html" style="color:var(--mm-fg-muted)">Inicio</a>
+        <span style="margin:0 10px;opacity:.5">/</span>
+        <span data-crumb-cat aria-current="page" style="color:var(--mm-ink)">Catálogo</span>
+      </nav>
+
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;padding-top:8px">
+        <div>
+          <h1 style="margin:0;font:500 clamp(28px,3.6vw,44px)/1.05 var(--mm-font-sans);letter-spacing:-.01em;color:var(--mm-ink)"><span data-page-title>Catálogo completo</span></h1>
+          <p style="margin:10px 0 0;max-width:56ch;font:400 14px/1.55 var(--mm-font-sans);color:var(--mm-fg-muted)"><span data-page-sub>Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.</span></p>
+        </div>
+        <div style="font:500 12px/1 var(--mm-font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mm-fg-muted)"><span data-count-lead>0 piezas</span></div>
       </div>
-      <h1 style="margin:0 0 20px;font:400 clamp(46px,7vw,108px)/1.02 'Cormorant Garamond',serif;letter-spacing:-.018em;color:#25251F">El <em style="font-style:normal;font-weight:500;color:#C46A4A">catálogo</em></h1>
-      <p style="margin:0;max-width:640px;font:400 14.5px/1.75 'Montserrat',sans-serif;color:#4A443A;text-wrap:pretty">Todas las piezas disponibles del atelier — filtrá por categoría, ordená por precio y explorá el trabajo temporada por temporada.</p>
     </div>
   </section>
 
   <section id="coleccion-grid" style="padding:0 clamp(20px,5vw,72px) clamp(80px,10vw,160px)">
     <div style="max-width:1560px;margin:0 auto">
+
+      <!-- Chips de filtros activos + limpiar -->
+      <div data-active-chips style="display:none; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-top:16px" aria-live="polite"></div>
 
       <div class="mm-cf-bar" style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;padding-bottom:clamp(24px,3vw,40px);border-bottom:1px solid rgba(30,27,22,.14);margin-bottom:clamp(30px,3.4vw,50px)">
         <div style="display:flex;flex-direction:column;gap:clamp(14px,1.8vw,22px);min-width:0">
@@ -821,7 +865,9 @@
     </div>
   </footer>
 
-  <a href="https://wa.me/595981000000" style="position:fixed;right:clamp(16px,2.5vw,32px);bottom:clamp(54px,7vw,80px);z-index:50;background:#1E1B16;color:#F7F3E6;border:1px solid rgba(212,175,55,.5);padding:15px 22px;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;box-shadow:0 20px 50px -30px rgba(30,27,22,.8);transition:background .45s ease,color .45s ease" style-hover="background:#D4AF37;color:#1E1B16">WhatsApp</a>
+  <a href="https://wa.me/595981000000" class="mm-whatsapp" aria-label="Chatear por WhatsApp">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 3.6 17L2 22l5.2-1.4a11 11 0 0 0 5.3 1.4h.1A11 11 0 0 0 20.5 3.5zM12.6 20.1a9 9 0 0 1-4.6-1.3l-.3-.2-3.1.8.8-3-.2-.3a9 9 0 1 1 7.4 4zm5.1-6.7c-.3-.1-1.7-.8-1.9-.9s-.4-.1-.6.1-.7.9-.8 1.1-.3.2-.5.1c-.3-.1-1.2-.5-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9s0-.4.1-.5l.4-.4c.1-.2.2-.3.3-.5s0-.4 0-.5c-.1-.1-.6-1.5-.8-2s-.4-.5-.6-.5h-.5c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.2 5 4.5 2.1.8 2.5.7 3 .6.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.5-.3z"/></svg>
+  </a>
 
   <!-- Cart drawer -->
   <div data-cart-backdrop style="position:fixed;inset:0;background:rgba(20,15,10,.55);z-index:80;opacity:0;pointer-events:none;transition:opacity .4s ease"></div>
@@ -974,6 +1020,9 @@
       buildProducts();
       setDetailLinks();
       renderFavs();
+      // Reaplicar filtro contra el catalogo completo (antes del sync solo
+      // veiamos las 26 tarjetas hardcoded del fallback).
+      if(typeof applyFilter === 'function') applyFilter();
     });
 
     function load(k){ try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch(e){ return []; } }
@@ -990,11 +1039,39 @@
     function hasTag(card, tag){
       return tag === 'todo' || (card.dataset.cat || '').split(/\s+/).indexOf(tag) > -1;
     }
+    // Estado extra: query text y flags novedad/oferta.
+    var currentQuery = '';
+    var currentNew = false;
+    var currentSale = false;
+
+    // Normaliza texto para busqueda tolerante: minusculas + sin tildes.
+    function norm(s){
+      return String(s||'').toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g,'')
+        .replace(/[^a-z0-9\s]/g,' ')
+        .replace(/\s+/g,' ').trim();
+    }
+
+    // Match del texto contra nombre + categoria + sub + id (SKU cuando existe).
+    function matchesQuery(card, q){
+      if(!q) return true;
+      var hay = norm([card.dataset.name, card.dataset.cat, card.dataset.sub, card.dataset.id].join(' '));
+      // Cada palabra buscada debe aparecer al menos como prefijo/substring — tolerante a plural simple.
+      var terms = q.split(' ').filter(Boolean);
+      return terms.every(function(t){
+        if(hay.indexOf(t) > -1) return true;
+        // singular <-> plural basico
+        if(t.endsWith('s') && hay.indexOf(t.slice(0,-1)) > -1) return true;
+        if(!t.endsWith('s') && hay.indexOf(t + 's') > -1) return true;
+        return false;
+      });
+    }
+
     // Gender and category are independent axes, combined with AND.
     function applyFilter(){
       var visible = 0;
       cards.forEach(function(c){
-        var ok = hasTag(c, currentGender) && hasTag(c, currentFilter);
+        var ok = hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery);
         if(ok){ c.removeAttribute('data-hidden'); visible++; }
         else c.setAttribute('data-hidden','');
       });
@@ -1004,13 +1081,48 @@
       filterBtns.forEach(function(b){
         var k = b.dataset.filter;
         if(k === 'todo') return;
-        var any = cards.some(function(c){ return hasTag(c, currentGender) && hasTag(c, k); });
+        var any = cards.some(function(c){ return hasTag(c, currentGender) && hasTag(c, k) && matchesQuery(c, currentQuery); });
         b.toggleAttribute('data-empty-cat', !any);
         b.disabled = !any;
       });
       countEl.textContent = fmtCount(visible);
+      var lead = document.querySelector('[data-count-lead]');
+      if(lead) lead.textContent = fmtCount(visible);
       if(emptyEl) emptyEl.hidden = visible > 0;
+      renderActiveChips();
     }
+
+    // Chips visibles con los filtros activos y "limpiar".
+    function renderActiveChips(){
+      var wrap = document.querySelector('[data-active-chips]');
+      if(!wrap) return;
+      var chips = [];
+      if(currentGender && currentGender !== 'todo') chips.push({k:'gender', l: currentGender.charAt(0).toUpperCase()+currentGender.slice(1)});
+      if(currentFilter && currentFilter !== 'todo') chips.push({k:'cat', l: currentFilter.charAt(0).toUpperCase()+currentFilter.slice(1)});
+      if(currentQuery) chips.push({k:'q', l: 'Búsqueda: "' + currentQuery + '"'});
+      if(currentNew) chips.push({k:'new', l:'Novedades'});
+      if(currentSale) chips.push({k:'sale', l:'Ofertas'});
+      if(chips.length === 0){ wrap.style.display='none'; wrap.innerHTML=''; return; }
+      wrap.style.display='flex';
+      wrap.innerHTML = chips.map(function(c){
+        return '<span class="mm-chip" data-on><span>'+c.l+'</span><button class="mm-chip__remove" data-clear="'+c.k+'" aria-label="Quitar ' + c.l + '">×</button></span>';
+      }).join('') + '<button class="mm-chip" data-clear="all" style="border-color:var(--mm-accent);color:var(--mm-accent);background:transparent">Limpiar filtros</button>';
+    }
+
+    // Delegated click sobre chips: cada uno resetea su parte.
+    document.addEventListener('click', function(ev){
+      var b = ev.target.closest('[data-clear]');
+      if(!b) return;
+      var k = b.dataset.clear;
+      var u = new URL(location.href);
+      if(k === 'all'){ u.searchParams.delete('genero'); u.searchParams.delete('cat'); u.searchParams.delete('q'); u.searchParams.delete('nuevo'); u.searchParams.delete('oferta'); }
+      else if(k === 'gender'){ u.searchParams.delete('genero'); }
+      else if(k === 'cat'){ u.searchParams.delete('cat'); }
+      else if(k === 'q'){ u.searchParams.delete('q'); }
+      else if(k === 'new'){ u.searchParams.delete('nuevo'); }
+      else if(k === 'sale'){ u.searchParams.delete('oferta'); }
+      location.href = u.toString();
+    });
     function sortBy(mode){
       var arr = cards.slice();
       arr.sort(function(a,b){
@@ -1263,12 +1375,16 @@
       }
     });
 
-    // Deep link desde las tarjetas de categoría del home:
-    // ./Catalogo.dc.html?genero=hombre  ·  ?cat=accesorios  ·  ?genero=mujer&cat=vestidos
+    // Deep link desde la home / nav / header search:
+    // ./Catalogo.dc.html?genero=hombre  ·  ?cat=accesorios  ·  ?q=camisa  ·  ?nuevo=1  ·  ?oferta=1
     (function(){
       var q = new URLSearchParams(location.search);
       var g = (q.get('genero') || '').trim().toLowerCase();
       var f = (q.get('cat') || '').trim().toLowerCase();
+      var t = norm(q.get('q') || '');
+      var isNew = q.get('nuevo') === '1' || q.get('nuevo') === 'true';
+      var isSale = q.get('oferta') === '1' || q.get('oferta') === 'true';
+
       var gBtn = g ? Array.from(genderBtns).find(function(b){ return b.dataset.gender === g; }) : null;
       if(gBtn){
         genderBtns.forEach(function(x){ x.removeAttribute('data-on'); });
@@ -1276,14 +1392,37 @@
         currentGender = g;
       }
       var fBtn = f ? Array.from(filterBtns).find(function(b){ return b.dataset.filter === f; }) : null;
-      // Sólo respetamos la categoría si el género activo tiene piezas ahí,
-      // para no aterrizar en una grilla vacía.
-      if(fBtn && cards.some(function(c){ return hasTag(c, currentGender) && hasTag(c, f); })){
+      if(fBtn){
         filterBtns.forEach(function(x){ x.removeAttribute('data-on'); });
         fBtn.setAttribute('data-on','');
         currentFilter = f;
       }
-      if(gBtn || fBtn){
+      if(t){
+        currentQuery = t;
+        var input = document.querySelector('.mm-header__search input[type="search"]');
+        if(input) input.value = q.get('q');
+      }
+      currentNew = isNew;
+      currentSale = isSale;
+
+      // Actualiza breadcrumb + titulo + subtitulo segun contexto
+      var crumb = document.querySelector('[data-crumb-cat]');
+      var title = document.querySelector('[data-page-title]');
+      var sub = document.querySelector('[data-page-sub]');
+      var etiqueta = 'Catálogo';
+      var subtxt = 'Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.';
+      if(t){ etiqueta = 'Resultados: "' + q.get('q') + '"'; subtxt = 'Estos son los productos que coinciden con tu búsqueda.'; }
+      else if(isSale){ etiqueta = 'Ofertas'; subtxt = 'Piezas con precio rebajado por tiempo limitado.'; }
+      else if(isNew){ etiqueta = 'Novedades'; subtxt = 'Lo último que ingresó a Marilia Magazine.'; }
+      else if(f && g){ etiqueta = g.charAt(0).toUpperCase()+g.slice(1) + ' · ' + f.charAt(0).toUpperCase()+f.slice(1); subtxt = 'Selección de ' + f + ' para ' + g + '.'; }
+      else if(f){ etiqueta = f.charAt(0).toUpperCase()+f.slice(1); subtxt = 'Todos los productos en la categoría.'; }
+      else if(g){ etiqueta = g.charAt(0).toUpperCase()+g.slice(1); subtxt = 'Selección para ' + g + '.'; }
+      if(crumb) crumb.textContent = etiqueta;
+      if(title) title.textContent = etiqueta;
+      if(sub) sub.textContent = subtxt;
+      document.title = etiqueta + ' — Marilia Magazine';
+
+      if(gBtn || fBtn || t || isNew || isSale){
         var target = document.getElementById('coleccion-grid');
         if(target) requestAnimationFrame(function(){
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -1,0 +1,118 @@
+/* ============================================================================
+ * mm-tokens.css
+ * Sistema de diseño de Marilia Magazine.
+ *
+ * Los HEX son los mismos que ya usaba el sitio, no se cambian.
+ * Lo que cambia es el ROL de cada uno para que el sitio se sienta menos
+ * boutique-editorial y mas tienda departamental:
+ *
+ *   - Crema y blanco dominan el fondo (el sitio respira mas).
+ *   - Terracota deja de tapizar secciones enteras: queda como acento fuerte
+ *     en botones primarios, precios en oferta y etiquetas.
+ *   - Oliva pasa a servir como fondo secundario ocasional (footer, cintas
+ *     de beneficios, bloques informativos).
+ *   - Oro es solo detalle (linea decorativa, borde de logo, hover fino).
+ *   - Ink es texto principal; warm-gray es texto secundario.
+ *
+ * Tipografia:
+ *   - Serif (Cormorant Garamond): solo logo y titulos H1/H2 muy puntuales
+ *     de campanas editoriales. Sin cursiva por default.
+ *   - Sans (Montserrat): navegacion, precios, cards, filtros, botones,
+ *     descripciones, todo lo funcional.
+ * ============================================================================ */
+
+:root {
+  /* ── Color ────────────────────────────────────────────────────────────── */
+  --mm-cream: #F7F3E6;          /* fondo base, dominante */
+  --mm-cream-2: #EFE9D8;         /* superficie alternativa (cards, hovers sutiles) */
+  --mm-white: #FFFFFF;           /* fondo neutro cuando el crema queda pesado */
+  --mm-ink: #1E1B16;             /* texto principal, contraste alto */
+  --mm-warm-gray: #8A7F6A;       /* texto secundario, labels, meta */
+  --mm-line: rgba(30, 27, 22, .10);        /* bordes muy sutiles */
+  --mm-line-strong: rgba(30, 27, 22, .22); /* bordes visibles (inputs, cards) */
+
+  --mm-terracota: #C46A4A;       /* acento primario (CTA, precios oferta, chips activos) */
+  --mm-terracota-dark: #A05238;  /* hover / pressed del acento primario */
+  --mm-gold: #D4AF37;            /* detalle fino: separadores, subrayados, hover link */
+  --mm-gold-dark: #C8962A;       /* accent focus, letra dorada del logo */
+  --mm-olive: #7D8A5A;           /* fondo secundario (footer bloque, cintas) */
+  --mm-olive-dark: #626C48;      /* hover sobre olive */
+
+  --mm-success: #4E7D5C;
+  --mm-danger:  #B5432D;
+
+  /* Roles semanticos: usar estos, no los HEX crudos */
+  --mm-bg:            var(--mm-cream);
+  --mm-bg-alt:        var(--mm-white);
+  --mm-bg-soft:       var(--mm-cream-2);
+  --mm-fg:            var(--mm-ink);
+  --mm-fg-muted:      var(--mm-warm-gray);
+  --mm-border:        var(--mm-line);
+  --mm-border-strong: var(--mm-line-strong);
+
+  --mm-accent:        var(--mm-terracota);
+  --mm-accent-hover:  var(--mm-terracota-dark);
+  --mm-accent-fg:     var(--mm-white);
+
+  --mm-focus:         var(--mm-gold-dark);
+
+  /* ── Tipografia ───────────────────────────────────────────────────────── */
+  --mm-font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --mm-font-sans:  'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  --mm-fs-eyebrow: 10px;      /* etiquetas, breadcrumbs, badges */
+  --mm-fs-caption: 12px;
+  --mm-fs-body:    14px;
+  --mm-fs-lead:    16px;
+  --mm-fs-h4:      18px;
+  --mm-fs-h3:      22px;
+  --mm-fs-h2:      clamp(26px, 3.2vw, 42px);
+  --mm-fs-h1:      clamp(36px, 5vw, 72px);
+
+  --mm-track-tight:  .02em;
+  --mm-track-normal: .04em;
+  --mm-track-wide:   .18em;
+  --mm-track-widest: .28em;
+
+  --mm-lh-tight: 1.15;
+  --mm-lh-body:  1.55;
+  --mm-lh-loose: 1.85;
+
+  /* ── Layout ───────────────────────────────────────────────────────────── */
+  --mm-container: 1560px;
+  --mm-gutter: clamp(16px, 4vw, 56px);
+
+  --mm-radius-sm: 2px;
+  --mm-radius-md: 4px;
+  --mm-radius-pill: 999px;
+
+  --mm-space-1: 4px;
+  --mm-space-2: 8px;
+  --mm-space-3: 12px;
+  --mm-space-4: 16px;
+  --mm-space-5: 24px;
+  --mm-space-6: 32px;
+  --mm-space-7: 48px;
+  --mm-space-8: 72px;
+  --mm-space-9: 96px;
+
+  /* ── Superficies ──────────────────────────────────────────────────────── */
+  --mm-shadow-1: 0 1px 2px rgba(30,27,22,.06);
+  --mm-shadow-2: 0 4px 12px rgba(30,27,22,.10);
+  --mm-shadow-3: 0 12px 28px rgba(30,27,22,.14);
+
+  /* ── Movimiento ───────────────────────────────────────────────────────── */
+  --mm-t-fast: .18s;
+  --mm-t-base: .32s;
+  --mm-t-slow: .55s;
+  --mm-ease:      cubic-bezier(.22, 1, .36, 1);
+  --mm-ease-out:  cubic-bezier(.16, 1, .3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mm-t-fast: .01s;
+    --mm-t-base: .01s;
+    --mm-t-slow: .01s;
+  }
+}

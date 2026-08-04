@@ -38,6 +38,13 @@ const SCRIPTS = [
   "image-slot.js",
 ];
 
+/** Stylesheets del sitio (design system compartido). */
+const STYLESHEETS = [
+  "mm-tokens.css",
+  "mm-base.css",
+  "mm-components.css",
+];
+
 /** Rewrites de URL limpia → archivo real. */
 const RUTAS = [
   ["inicio", "Marilia Magazine.dc.html"],
@@ -65,12 +72,18 @@ function assetsMencionados(texto) {
   return encontrados;
 }
 
-/** Agrega ?v=<version> a los <script src> locales para romper el caché. */
-function versionarScripts(html) {
-  return html.replace(
-    /(<script[^>]*\ssrc=")(\.\/)?([A-Za-z0-9_\-.]+\.js)(")/g,
-    (_todo, pre, punto, archivo, post) => `${pre}${punto ?? ""}${archivo}?v=${VERSION}${post}`
-  );
+/** Agrega ?v=<version> a los <script src> y <link href="*.css"> locales para
+ * romper el cache del navegador entre deploys. */
+function versionarAssets(html) {
+  return html
+    .replace(
+      /(<script[^>]*\ssrc=")(\.\/)?([A-Za-z0-9_\-.]+\.js)(")/g,
+      (_t, pre, punto, archivo, post) => `${pre}${punto ?? ""}${archivo}?v=${VERSION}${post}`
+    )
+    .replace(
+      /(<link[^>]*\shref=")(\.\/)?([A-Za-z0-9_\-.]+\.css)(")/g,
+      (_t, pre, punto, archivo, post) => `${pre}${punto ?? ""}${archivo}?v=${VERSION}${post}`
+    );
 }
 
 const HTACCESS = `# Marilia Magazine — configuración para Hostinger (Apache / LiteSpeed)
@@ -199,8 +212,18 @@ async function main() {
       continue;
     }
     for (const a of assetsMencionados(html)) assets.add(a);
-    await fs.writeFile(path.join(dist, nombre), versionarScripts(html), "utf8");
+    await fs.writeFile(path.join(dist, nombre), versionarAssets(html), "utf8");
     paginasCopiadas++;
+  }
+
+  for (const nombre of STYLESHEETS) {
+    const origen = path.join(raiz, nombre);
+    try {
+      const css = await fs.readFile(origen, "utf8");
+      await fs.writeFile(path.join(dist, nombre), css, "utf8");
+    } catch {
+      console.warn(`· falta ${nombre}, se saltea`);
+    }
   }
 
   for (const nombre of SCRIPTS) {
@@ -235,7 +258,7 @@ async function main() {
 
   const mb = (bytes / 1024 / 1024).toFixed(1);
   console.log(`\ndist/ listo`);
-  console.log(`  ${paginasCopiadas} páginas · ${SCRIPTS.length} scripts · ${copiados} assets (${mb} MB)`);
+  console.log(`  ${paginasCopiadas} páginas · ${SCRIPTS.length} scripts · ${STYLESHEETS.length} stylesheets · ${copiados} assets (${mb} MB)`);
   console.log(`  versión de cache-busting: ${VERSION}`);
   if (faltantes.length > 0) {
     console.log(`\n  referencias rotas (${faltantes.length}) — el HTML las pide y no están en el repo:`);

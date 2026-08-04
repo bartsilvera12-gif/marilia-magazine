@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marilia Magazine</title>
+<link rel="stylesheet" href="./mm-tokens.css">
+<link rel="stylesheet" href="./mm-base.css">
+<link rel="stylesheet" href="./mm-components.css">
 <script src="./sitio-erp-shadow-hack.js"></script>
 <script src="./support.js"></script>
 <script>
@@ -77,22 +80,52 @@
 
 <div style="position:relative;overflow-x:hidden;background:#F7F3E6">
 
-  <header style="position:sticky;top:0;z-index:60;background:#F7F3E6;border-bottom:1px solid rgba(30,27,22,.10)">
-    <div style="max-width:1560px;margin:0 auto;padding:0 clamp(20px,4vw,56px);height:96px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-      <nav style="flex:1 1 0;display:flex;align-items:center;gap:clamp(10px,1.1vw,22px);font-size:10px;letter-spacing:.13em;text-transform:uppercase">
-        <a href="./Marilia Magazine.dc.html">Inicio</a>
-        <a href="./Catalogo.dc.html">Catálogo</a>
-        <a href="./Marilia Magazine.dc.html#categorias">Categorías</a>
-      </nav>
-      <a href="./Marilia Magazine.dc.html" style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px">
-        <span style="font:400 clamp(26px,3.4vw,40px)/1 'Cormorant Garamond',serif;font-style:italic">Marilia</span>
-        <span style="font-size:8.5px;letter-spacing:.52em;text-transform:uppercase;color:#8A7F6A;padding-left:.52em">Magazine</span>
+  <div class="mm-topbar" role="region" aria-label="Anuncios">
+    <div class="mm-topbar__slide">
+      <span>Envío a todo Paraguay</span>
+      <span style="opacity:.4">·</span>
+      <span>Cambios dentro de 30 días</span>
+      <span style="opacity:.4">·</span>
+      <a href="https://wa.me/595981000000">Atención por WhatsApp</a>
+    </div>
+  </div>
+
+  <header data-header class="mm-header">
+    <div data-header-inner class="mm-header__inner">
+      <button data-menu-open class="mm-header__mobile-toggle" aria-label="Abrir menú">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <span style="font:500 10.5px/1 var(--mm-font-sans);letter-spacing:.22em;text-transform:uppercase">Menú</span>
+      </button>
+
+      <a href="./Marilia Magazine.dc.html" data-logo class="mm-header__logo" aria-label="Marilia Magazine — inicio">
+        <span class="mm-header__logo-name">Marilia</span>
+        <span class="mm-header__logo-sub">Magazine</span>
       </a>
-      <div style="flex:1 1 0;display:flex;align-items:center;justify-content:flex-end;gap:clamp(12px,1.6vw,26px);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase">
-        <a href="./Catalogo.dc.html">Favoritos <span data-fav-count style="color:#C8962A">(0)</span></a>
-        <a href="./Catalogo.dc.html">Bolsa <span data-cart-count style="color:#C8962A">(0)</span></a>
+
+      <form class="mm-header__search" role="search" onsubmit="event.preventDefault(); var q=this.querySelector('input').value.trim(); if(q) window.location.href='./Catalogo.dc.html?q='+encodeURIComponent(q);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" name="q" placeholder="Buscar productos, categorías y marcas" aria-label="Buscar en Marilia Magazine">
+      </form>
+
+      <div class="mm-header__actions">
+        <a href="./Catalogo.dc.html" aria-label="Favoritos">Favoritos <span class="mm-count" data-fav-count>(0)</span></a>
+        <a href="./Catalogo.dc.html" aria-label="Bolsa">Bolsa <span class="mm-count" data-cart-count>(0)</span></a>
       </div>
     </div>
+
+    <nav class="mm-nav" aria-label="Departamentos">
+      <div class="mm-nav__inner">
+        <a class="mm-nav__item" href="./Catalogo.dc.html?genero=mujer">Mujer</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?genero=hombre">Hombre</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=accesorios">Accesorios</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=abrigos">Abrigos</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=camisas">Camisas</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?cat=pantalones">Pantalones</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?nuevo=1" data-highlight>Novedades</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html?oferta=1" data-highlight>Ofertas</a>
+        <a class="mm-nav__item" href="./Catalogo.dc.html">Ver todo</a>
+      </div>
+    </nav>
   </header>
 
   <nav aria-label="Breadcrumb" style="padding:22px clamp(20px,5vw,72px) 0;max-width:1560px;margin:0 auto;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8A7F6A">
@@ -159,10 +192,10 @@
         </div>
 
         <div class="mm-pd-info" style="position:sticky;top:120px;display:flex;flex-direction:column;gap:16px;padding-top:8px">
-          <div data-cat-lbl style="font:600 10px/1 'Montserrat',sans-serif;letter-spacing:.3em;text-transform:uppercase;color:#8A7F6A">—</div>
-          <h1 data-name style="margin:0;font:400 clamp(38px,5vw,72px)/1.02 'Cormorant Garamond',serif;letter-spacing:-.015em;color:#25251F">Producto</h1>
-          <p data-sub style="margin:0;font:300 15px/1.75 'Montserrat',sans-serif;color:#4A443A">—</p>
-          <div data-price style="font:500 20px/1 'Montserrat',sans-serif;color:#25251F;margin-top:6px">Gs. —</div>
+          <div data-cat-lbl class="mm-eyebrow">—</div>
+          <h1 data-name style="margin:0;font:500 clamp(28px,3.4vw,40px)/1.1 var(--mm-font-sans);letter-spacing:-.01em;color:var(--mm-ink)">Producto</h1>
+          <p data-sub style="margin:0;font:400 14.5px/1.6 var(--mm-font-sans);color:var(--mm-fg-muted)">—</p>
+          <div data-price style="font:500 22px/1 var(--mm-font-sans);color:var(--mm-ink);margin-top:6px">Gs. —</div>
 
           <div style="display:flex;align-items:center;gap:10px;font-size:10.5px;letter-spacing:.16em;color:#7D8A5A;text-transform:uppercase">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="#7D8A5A"/><circle cx="12" cy="12" r="10" stroke="#7D8A5A" stroke-width="1"/></svg>
@@ -188,7 +221,7 @@
               <span data-qty style="min-width:34px;text-align:center;font:500 13px/1 'Montserrat',sans-serif">1</span>
               <button data-qty-inc aria-label="Sumar" style="background:none;border:0;width:44px;height:52px;font-size:18px;cursor:pointer;color:#1E1B16">+</button>
             </div>
-            <button data-add-cart style="flex:1;background:#1E1B16;color:#F7F3E6;border:0;padding:0 22px;font:600 11px/1 'Montserrat',sans-serif;letter-spacing:.28em;text-transform:uppercase;cursor:pointer;transition:background .35s ease">Añadir a la bolsa</button>
+            <button data-add-cart class="mm-btn mm-btn--primary" style="flex:1">Añadir a la bolsa</button>
             <button data-add-fav aria-label="Favorito" style="background:#F7F3E6;color:#1E1B16;border:1px solid rgba(30,27,22,.25);width:52px;font-size:18px;cursor:pointer;transition:color .3s ease">♡</button>
           </div>
 
@@ -230,29 +263,64 @@
     </div>
   </section>
 
-  <footer style="background:#1E1B16;color:#F7F3E6;padding:clamp(56px,7vw,100px) clamp(20px,5vw,72px) 36px">
-    <div style="max-width:1560px;margin:0 auto">
-      <div style="display:flex;flex-wrap:wrap;gap:clamp(30px,4vw,72px);padding-bottom:clamp(40px,5vw,72px);border-bottom:1px solid rgba(247,243,230,.16)">
-        <div style="flex:1.4 1 280px;min-width:250px">
-          <div style="font:400 34px/1 'Cormorant Garamond',serif;font-style:italic;margin-bottom:8px">Marilia</div>
-          <div style="font-size:8.5px;letter-spacing:.52em;text-transform:uppercase;color:#A79C86;margin-bottom:26px">Magazine</div>
-          <p style="margin:0;max-width:300px;font-size:12.5px;line-height:2;font-weight:300;color:rgba(247,243,230,.72)">Av. Mariscal López 2340, Villa Morra, Asunción.</p>
-        </div>
-        <div style="flex:1 1 160px;min-width:150px">
-          <div style="font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#D4AF37;margin-bottom:22px">Navegación</div>
-          <div style="display:flex;flex-direction:column;gap:12px;font-size:12px">
-            <a href="./Marilia Magazine.dc.html" style="color:rgba(247,243,230,.78)">Inicio</a>
-            <a href="./Catalogo.dc.html" style="color:rgba(247,243,230,.78)">Catálogo</a>
-            <a href="./Privacidad.dc.html" style="color:rgba(247,243,230,.78)">Política de privacidad</a>
-          </div>
+  <footer class="mm-footer" role="contentinfo">
+    <div class="mm-footer__grid">
+      <div>
+        <div class="mm-footer__brand-name">Marilia</div>
+        <div class="mm-footer__brand-sub">Magazine</div>
+        <p class="mm-footer__brand-copy">Tienda departamental — ropa, accesorios y más. Envíos a todo Paraguay.</p>
+        <div style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://www.instagram.com/marilia.magazine" aria-label="Instagram" style="color:rgba(247,243,230,.78)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+          <a href="https://wa.me/595981000000" aria-label="WhatsApp" style="color:rgba(247,243,230,.78)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12a8 8 0 1 1-14.7 4.4L4 20l3.7-1.2A8 8 0 0 1 20 12z"/><path d="M9 10c.4 2 1.7 3.6 3.6 4.4l1.4-1.4 2.5 1.2c-.2 1.2-1.3 2-2.7 1.8-3.2-.4-5.6-2.9-6-6-.1-1.4.7-2.5 1.9-2.7L11 9.7 9.5 11z" fill="currentColor" stroke="none"/></svg></a>
         </div>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;padding-top:28px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(247,243,230,.5)">
-        <span>© 2026 Marilia Magazine · Asunción, Paraguay</span>
-        <span>Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noopener noreferrer" style="color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.45)">Neura</a></span>
+      <div class="mm-footer__col">
+        <h4>Marilia Magazine</h4>
+        <ul>
+          <li><a href="./Marilia Magazine.dc.html#nosotros">Sobre nosotros</a></li>
+          <li><a href="./Marilia Magazine.dc.html#contacto">Contacto</a></li>
+          <li><a href="./Marilia Magazine.dc.html#tiendas">Tienda física</a></li>
+        </ul>
+      </div>
+      <div class="mm-footer__col">
+        <h4>Ayuda</h4>
+        <ul>
+          <li><a href="./Marilia Magazine.dc.html#envios">Envíos</a></li>
+          <li><a href="./Marilia Magazine.dc.html#cambios">Cambios y devoluciones</a></li>
+          <li><a href="./Marilia Magazine.dc.html#faq">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+      <div class="mm-footer__col">
+        <h4>Departamentos</h4>
+        <ul>
+          <li><a href="./Catalogo.dc.html?genero=hombre">Hombre</a></li>
+          <li><a href="./Catalogo.dc.html?genero=mujer">Mujer</a></li>
+          <li><a href="./Catalogo.dc.html?cat=accesorios">Accesorios</a></li>
+          <li><a href="./Catalogo.dc.html">Ver todo</a></li>
+        </ul>
+      </div>
+      <div class="mm-footer__col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="./Privacidad.dc.html">Política de privacidad</a></li>
+          <li><a href="#terminos">Términos y condiciones</a></li>
+        </ul>
       </div>
     </div>
+    <div class="mm-footer__bottom">
+      <span>© 2026 Marilia Magazine · Asunción, Paraguay</span>
+      <span>Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noopener noreferrer">Neura</a></span>
+    </div>
   </footer>
+
+  <a href="https://wa.me/595981000000" class="mm-whatsapp" aria-label="Chatear por WhatsApp">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 3.6 17L2 22l5.2-1.4a11 11 0 0 0 5.3 1.4h.1A11 11 0 0 0 20.5 3.5zM12.6 20.1a9 9 0 0 1-4.6-1.3l-.3-.2-3.1.8.8-3-.2-.3a9 9 0 1 1 7.4 4zm5.1-6.7c-.3-.1-1.7-.8-1.9-.9s-.4-.1-.6.1-.7.9-.8 1.1-.3.2-.5.1c-.3-.1-1.2-.5-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9s0-.4.1-.5l.4-.4c.1-.2.2-.3.3-.5s0-.4 0-.5c-.1-.1-.6-1.5-.8-2z\"/></svg>
+  </a>
+
+  <!-- SEO: JSON-LD Product. Se rellena en runtime en initProducto(). -->
+  <script type="application/ld+json" data-product-jsonld>
+  {"@context":"https://schema.org","@type":"Product","name":"","image":"","description":""}
+  </script>
 
   <div data-toast style="position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);background:#25251F;color:#F7F3E6;padding:14px 22px;font:500 10.5px/1 'Montserrat',sans-serif;letter-spacing:.22em;text-transform:uppercase;border-radius:2px;z-index:110;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .35s cubic-bezier(.22,1,.36,1);border:1px solid rgba(212,175,55,.4)">Añadido</div>
 
@@ -342,6 +410,29 @@
     $('[data-sub]').textContent = p.sub;
     $('[data-price]').textContent = fmtGs(p.price);
     $('[data-desc]').textContent = p.desc;
+
+    // JSON-LD Product para SEO
+    var ld = $('[data-product-jsonld]');
+    if(ld){
+      var absImg = new URL(p.img || '', location.href).toString();
+      ld.textContent = JSON.stringify({
+        "@context":"https://schema.org",
+        "@type":"Product",
+        "name": p.name,
+        "image": absImg,
+        "description": p.desc || p.sub || '',
+        "sku": p.id,
+        "category": p.cat,
+        "brand": {"@type":"Brand","name":"Marilia Magazine"},
+        "offers": {
+          "@type":"Offer",
+          "priceCurrency":"PYG",
+          "price": String(p.price || ''),
+          "availability":"https://schema.org/InStock",
+          "url": location.href
+        }
+      });
+    }
     // ── Gallery: one hero + clickable thumbnails ──────────────────────────
     // Only real photographs make a thumbnail. A piece with a single shot gets
     // no thumbnail row at all rather than the same image repeated.
