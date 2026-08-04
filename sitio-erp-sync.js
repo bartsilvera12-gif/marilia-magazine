@@ -1493,9 +1493,22 @@
   Object.keys(COPY_ES_PT).forEach(function (k) { COPY_PT_ES[COPY_ES_PT[k]] = k; });
 
   // Walker que traduce text nodes ATRAVESANDO SHADOW DOM
+  // Nodos ya traducidos, con el texto exacto que les dejamos.
+  //
+  // Sin esto el observador vuelve a pasar sobre el mismo nodo y, cuando la
+  // traducción CONTIENE a su clave ("Política de privacidad" → "Política de
+  // privacidade"), la vuelve a matchear y le agrega una letra en cada pasada:
+  // así aparecía "privacidadeeeeeeeee…". Se reinicia al cambiar de idioma.
+  var yaTraducidos = new WeakMap();
+  var ultimoLangTraducido = null;
+
   function translatePageDeep() {
     var dict = LANG === "pt" ? COPY_ES_PT : COPY_PT_ES;
     var keys = Object.keys(dict).sort(function (a, b) { return b.length - a.length; });
+    if (ultimoLangTraducido !== LANG) {
+      yaTraducidos = new WeakMap();
+      ultimoLangTraducido = LANG;
+    }
     function processRoot(root) {
       if (!root) return;
       var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -1515,8 +1528,15 @@
       while ((n = walker.nextNode())) nodes.push(n);
       nodes.forEach(function (node) {
         var t = node.nodeValue;
+        // Ya lo tradujimos y nadie lo tocó desde entonces: no repasar.
+        if (yaTraducidos.get(node) === t) return;
         var trimmed = t.trim();
-        if (dict[trimmed]) { node.nodeValue = t.replace(trimmed, dict[trimmed]); return; }
+        if (dict[trimmed]) {
+          var salida = t.replace(trimmed, dict[trimmed]);
+          node.nodeValue = salida;
+          yaTraducidos.set(node, salida);
+          return;
+        }
         // Reemplazo por frase/palabra CON word boundary — evita romper "Casacos" al buscar "Casa"
         for (var i = 0; i < keys.length; i++) {
           var k = keys[i];
@@ -1533,6 +1553,7 @@
           }
         }
         if (t !== node.nodeValue) node.nodeValue = t;
+        yaTraducidos.set(node, t);
       });
       // Recursar en shadow roots
       var all = root.querySelectorAll ? root.querySelectorAll("*") : [];
