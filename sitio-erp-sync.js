@@ -864,15 +864,33 @@
     var container = document.querySelector('[data-mm-sync="filtros"]');
     if (!container) return;
 
-    var cats = await api("/categorias_productos?select=id,nombre&order=nombre.asc");
+    // Ordenadas por cantidad de modelos: con 64 categorías, el orden
+    // alfabético dejaba CAMISETA (1.858 modelos) al mismo nivel que CERVEJA (2).
+    var cats = await api("/sitio_categorias?select=id,nombre,modelos&order=modelos.desc");
+    if (!cats || cats.length === 0) {
+      cats = await api("/categorias_productos?select=id,nombre&order=nombre.asc");
+    }
     if (!cats || cats.length === 0) return;
 
     var template = container.querySelector("button, a");
     if (!template) return;
 
+    // Una sola fila deslizable en vez de un muro de seis. Mantiene la estética
+    // de chips y no se come media pantalla.
+    container.style.display = "flex";
+    container.style.flexWrap = "nowrap";
+    container.style.overflowX = "auto";
+    container.style.gap = "0.5rem";
+    container.style.paddingBottom = "0.5rem";
+    container.style.scrollbarWidth = "thin";
+    container.style.webkitOverflowScrolling = "touch";
+    container.style.maskImage = "linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 28px), transparent 100%)";
+    container.style.webkitMaskImage = container.style.maskImage;
+
     // Limpiamos hijos excepto el primero ("Todo")
     var childs = Array.prototype.slice.call(container.children);
     childs.slice(1).forEach(function (c) { c.remove(); });
+    if (container.firstElementChild) container.firstElementChild.style.flex = "0 0 auto";
 
     cats.forEach(function (c) {
       var btn = template.cloneNode(true);
@@ -883,6 +901,11 @@
         }).join(" ");
       }
       btn.textContent = display;
+      btn.title = c.modelos != null
+        ? c.modelos + (LANG === "pt" ? " modelos" : " modelos")
+        : display;
+      btn.style.flex = "0 0 auto";
+      btn.style.whiteSpace = "nowrap";
       btn.setAttribute("data-cat", c.nombre.toLowerCase());
       // El id va en el botón: el filtrado lo resuelve el servidor.
       btn.setAttribute("data-cat-id", c.id);
