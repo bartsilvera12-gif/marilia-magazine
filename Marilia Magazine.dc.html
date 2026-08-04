@@ -245,87 +245,182 @@
     </div>
 
     <style>
-      /* Cada tile es un departamento. Los que ya tienen productos usan foto;
-         los que estan por incorporarse usan solo tipografia sobre color plano
-         — mas honesto que forzar una foto de ropa fingiendo ser tecnologia. */
-      .mm-cats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; max-width:var(--mm-container); margin:0 auto; }
-      @media (max-width: 1080px) { .mm-cats { grid-template-columns:repeat(2,1fr); } }
-      @media (max-width: 540px)  {
-        .mm-cats { grid-template-columns:auto; grid-auto-flow:column; grid-auto-columns:62vw;
-          overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:4px; scrollbar-width:none; }
-        .mm-cats::-webkit-scrollbar { display:none; }
-        .mm-cat { scroll-snap-align:start; }
+      /* Composicion bento: departamentos con productos reales pesan mas
+         (tiles anchos con foto) y los que aun no tienen stock son bloques
+         mas compactos con inicial grande de la letra como marca de agua.
+         Asi hay jerarquia real entre lo que hay y lo que viene. */
+      .mm-cats {
+        max-width: var(--mm-container); margin: 0 auto;
+        display: grid; gap: 14px;
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: minmax(240px, auto);
       }
+      /* Con productos reales: ocupan 2 columnas (mas ancho, se leen como
+         portada de departamento). */
+      .mm-cat[data-featured] { grid-column: span 2; grid-row: span 2; }
+      .mm-cat:not([data-tone]):not([data-featured]) { grid-column: span 2; }
+      .mm-cat[data-tone] { grid-column: span 2; }
+
+      @media (max-width: 1080px) {
+        .mm-cats { grid-template-columns: repeat(4, 1fr); }
+        .mm-cat[data-featured] { grid-column: span 2; grid-row: span 2; }
+      }
+      @media (max-width: 700px) {
+        .mm-cats { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(200px, auto); }
+        .mm-cat, .mm-cat[data-featured], .mm-cat[data-tone] { grid-column: span 1; grid-row: span 1; }
+        .mm-cat[data-featured] { grid-column: span 2; }
+      }
+
       .mm-cat {
-        position:relative; display:flex; align-items:flex-end; overflow:hidden;
-        aspect-ratio:5/4; padding:20px;
-        border-radius:var(--mm-radius-sm);
-        color:var(--mm-cream);
+        position: relative; overflow: hidden;
+        display: flex; align-items: flex-end;
+        padding: clamp(18px, 2vw, 26px);
+        border-radius: var(--mm-radius-sm);
+        color: var(--mm-cream);
+        text-decoration: none;
         transition: transform var(--mm-t-base) var(--mm-ease);
       }
-      .mm-cat:hover { color:var(--mm-cream); }
-      .mm-cat img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%;
-        transition: transform .6s var(--mm-ease); z-index:0; }
+      .mm-cat:hover { color: var(--mm-cream); }
+      .mm-cat img {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; object-position: center 25%;
+        transition: transform .6s var(--mm-ease); z-index: 0;
+      }
       .mm-cat:hover img { transform: scale(1.04); }
       .mm-cat::before {
-        content:''; position:absolute; inset:0; z-index:1;
-        background: linear-gradient(to top, rgba(30,27,22,.68) 0%, rgba(30,27,22,.10) 65%);
+        content: ''; position: absolute; inset: 0; z-index: 1;
+        background: linear-gradient(to top, rgba(30,27,22,.75) 0%, rgba(30,27,22,.15) 55%, rgba(30,27,22,0) 85%);
       }
-      /* Departamento sin foto: color plano de la paleta actual */
+
+      /* Fondos planos: cada departamento pendiente con su color. Se elige
+         para que ningun bloque desentone con la paleta y todos tengan
+         buen contraste con el chip "Muy pronto". */
       .mm-cat[data-tone="terracota"] { background: var(--mm-terracota); }
       .mm-cat[data-tone="olive"]     { background: var(--mm-olive); }
       .mm-cat[data-tone="ink"]       { background: var(--mm-ink); }
-      .mm-cat[data-tone="cream"]     { background: var(--mm-cream-2); color: var(--mm-ink); }
-      .mm-cat[data-tone="cream"]::before { display:none; }
-      .mm-cat[data-tone] img { display:none; }
-      .mm-cat[data-tone] .mm-cat__soon { opacity:.9; }
+      .mm-cat[data-tone="warm"]      { background: #4A443A; }
+      .mm-cat[data-tone] img { display: none; }
+
+      /* Inicial gigante como marca de agua tipografica en los "muy pronto".
+         Le da textura sin usar fotos falsas. */
+      .mm-cat[data-tone]::after {
+        content: attr(data-initial);
+        position: absolute; right: -.02em; bottom: -.28em; z-index: 0;
+        font: 900 clamp(160px, 20vw, 260px)/.75 var(--mm-font-serif);
+        color: rgba(247,243,230,.14);
+        letter-spacing: -.05em; pointer-events: none;
+      }
+      .mm-cat[data-tone]::before { display: none; }
+
+      /* Etiqueta: eyebrow chico + titulo grande + linea de sub */
       .mm-cat__label {
-        position:relative; z-index:2;
-        font: 600 16px/1.15 var(--mm-font-sans);
-        letter-spacing: .06em;
-        text-transform: uppercase;
-        display:flex; flex-direction:column; gap:6px;
+        position: relative; z-index: 2;
+        display: flex; flex-direction: column; gap: 4px;
+      }
+      .mm-cat__name {
+        font: 600 clamp(18px, 1.6vw, 24px)/1.1 var(--mm-font-sans);
+        letter-spacing: .04em; text-transform: uppercase;
       }
       .mm-cat__sub {
-        font:400 11px/1 var(--mm-font-sans);
-        letter-spacing:.24em; opacity:.85; text-transform:uppercase;
+        font: 400 11px/1.3 var(--mm-font-sans);
+        letter-spacing: .18em; text-transform: uppercase;
+        color: rgba(247,243,230,.78);
+        margin-top: 2px;
       }
+      .mm-cat__arrow {
+        position: absolute; top: clamp(16px, 2vw, 22px); right: clamp(16px, 2vw, 22px); z-index: 2;
+        width: 34px; height: 34px; border-radius: 50%;
+        background: rgba(247,243,230,.16);
+        color: var(--mm-cream);
+        display: flex; align-items: center; justify-content: center;
+        transition: background var(--mm-t-fast) var(--mm-ease),
+                    transform var(--mm-t-fast) var(--mm-ease);
+      }
+      .mm-cat:hover .mm-cat__arrow { background: var(--mm-cream); color: var(--mm-ink); transform: translate(2px,-2px); }
+
+      /* Chip "Muy pronto" con mejor contraste sobre color plano */
       .mm-cat__soon {
-        display:inline-block; margin-top:8px;
-        font:500 9.5px/1 var(--mm-font-sans);
-        letter-spacing:.24em; text-transform:uppercase;
-        border:1px solid currentColor; padding:5px 10px;
-        opacity:.75;
+        display: inline-flex; align-items: center; gap: 6px;
+        margin-top: 12px;
+        padding: 5px 10px;
+        font: 600 9.5px/1 var(--mm-font-sans);
+        letter-spacing: .22em; text-transform: uppercase;
+        background: rgba(247,243,230,.14);
+        border: 1px solid rgba(247,243,230,.35);
+        color: var(--mm-cream);
+        border-radius: var(--mm-radius-pill);
+      }
+      .mm-cat__soon::before {
+        content: ''; width: 6px; height: 6px; border-radius: 50%;
+        background: var(--mm-gold);
       }
     </style>
 
     <div class="mm-cats">
+      <a class="mm-cat" data-featured href="./Catalogo.dc.html?genero=mujer">
+        <img src="./uploads/mujer.webp" alt="Departamento Mujer"/>
+        <span class="mm-cat__arrow" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17L17 7M8 7h9v9"/></svg>
+        </span>
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Moda mujer</span>
+          <span class="mm-cat__sub">Vestidos · Blusas · Faldas</span>
+        </span>
+      </a>
       <a class="mm-cat" href="./Catalogo.dc.html?genero=hombre">
         <img src="./uploads/hombre.webp" alt="Departamento Hombre"/>
-        <span class="mm-cat__label">Moda hombre<span class="mm-cat__sub">Camisas · Pantalones · Abrigos</span></span>
-      </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?genero=mujer">
-        <img src="./uploads/mujer.webp" alt="Departamento Mujer"/>
-        <span class="mm-cat__label">Moda mujer<span class="mm-cat__sub">Vestidos · Blusas · Faldas</span></span>
+        <span class="mm-cat__arrow" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17L17 7M8 7h9v9"/></svg>
+        </span>
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Moda hombre</span>
+          <span class="mm-cat__sub">Camisas · Pantalones · Abrigos</span>
+        </span>
       </a>
       <a class="mm-cat" href="./Catalogo.dc.html?cat=accesorios">
         <img src="./uploads/accesorios.webp" alt="Accesorios"/>
-        <span class="mm-cat__label">Accesorios<span class="mm-cat__sub">Bolsos · Cinturones · Pañuelos</span></span>
+        <span class="mm-cat__arrow" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17L17 7M8 7h9v9"/></svg>
+        </span>
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Accesorios</span>
+          <span class="mm-cat__sub">Bolsos · Cinturones · Pañuelos</span>
+        </span>
       </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?dept=infantil" data-tone="olive">
-        <span class="mm-cat__label">Infantil<span class="mm-cat__sub">Ropa · Accesorios</span><span class="mm-cat__soon">Muy pronto</span></span>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=infantil" data-tone="olive" data-initial="I">
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Infantil</span>
+          <span class="mm-cat__sub">Ropa · Accesorios</span>
+          <span class="mm-cat__soon">Muy pronto</span>
+        </span>
       </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?dept=belleza" data-tone="terracota">
-        <span class="mm-cat__label">Belleza<span class="mm-cat__sub">Cuidado · Perfumería</span><span class="mm-cat__soon">Muy pronto</span></span>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=belleza" data-tone="terracota" data-initial="B">
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Belleza</span>
+          <span class="mm-cat__sub">Cuidado · Perfumería</span>
+          <span class="mm-cat__soon">Muy pronto</span>
+        </span>
       </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?dept=hogar" data-tone="ink">
-        <span class="mm-cat__label">Hogar<span class="mm-cat__sub">Textiles · Decoración</span><span class="mm-cat__soon">Muy pronto</span></span>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=hogar" data-tone="ink" data-initial="H">
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Hogar</span>
+          <span class="mm-cat__sub">Textiles · Decoración</span>
+          <span class="mm-cat__soon">Muy pronto</span>
+        </span>
       </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?dept=tecnologia" data-tone="cream">
-        <span class="mm-cat__label">Tecnología<span class="mm-cat__sub">Audio · Accesorios</span><span class="mm-cat__soon">Muy pronto</span></span>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=tecnologia" data-tone="warm" data-initial="T">
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Tecnología</span>
+          <span class="mm-cat__sub">Audio · Accesorios</span>
+          <span class="mm-cat__soon">Muy pronto</span>
+        </span>
       </a>
-      <a class="mm-cat" href="./Catalogo.dc.html?dept=deportes" data-tone="olive">
-        <span class="mm-cat__label">Deportes<span class="mm-cat__sub">Indumentaria · Equipo</span><span class="mm-cat__soon">Muy pronto</span></span>
+      <a class="mm-cat" href="./Catalogo.dc.html?dept=deportes" data-tone="olive" data-initial="D">
+        <span class="mm-cat__label">
+          <span class="mm-cat__name">Deportes</span>
+          <span class="mm-cat__sub">Indumentaria · Equipo</span>
+          <span class="mm-cat__soon">Muy pronto</span>
+        </span>
       </a>
     </div>
   </section>
