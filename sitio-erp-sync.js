@@ -1467,9 +1467,24 @@
       "font:600 11px/1 'Montserrat',sans-serif", "letter-spacing:.14em",
     ].join(";");
 
+    // Banderas como SVG inline. Windows renderiza mal los emojis de
+    // bandera (se ven como "PY" / "BR" en texto plano), asi que las
+    // dibujamos con formas simples que se ven igual en cualquier sistema.
+    var FLAG_PY = '<svg viewBox="0 0 15 10" width="18" height="12" style="border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:0 0 auto" aria-hidden="true">' +
+      '<rect width="15" height="3.33" y="0" fill="#D52B1E"/>' +
+      '<rect width="15" height="3.34" y="3.33" fill="#FFFFFF"/>' +
+      '<rect width="15" height="3.33" y="6.67" fill="#0038A8"/>' +
+      '<circle cx="7.5" cy="5" r="1.1" fill="none" stroke="#D4AF37" stroke-width=".18"/>' +
+    '</svg>';
+    var FLAG_BR = '<svg viewBox="0 0 20 14" width="18" height="12" style="border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:0 0 auto" aria-hidden="true">' +
+      '<rect width="20" height="14" fill="#009C3B"/>' +
+      '<polygon points="10,1.5 18.5,7 10,12.5 1.5,7" fill="#FFDF00"/>' +
+      '<circle cx="10" cy="7" r="3" fill="#002776"/>' +
+    '</svg>';
+
     var LABEL = {
-      es: { flag: "🇵🇾", code: "ES", full: "Español", other: "Ver em português" },
-      pt: { flag: "🇧🇷", code: "PT", full: "Português", other: "Ver en español" },
+      es: { flag: FLAG_PY, code: "ES", full: "Español" },
+      pt: { flag: FLAG_BR, code: "PT", full: "Português" },
     };
 
     function makeOpt(lang) {
@@ -1478,7 +1493,7 @@
       var isActive = (LANG === lang);
       b.setAttribute("aria-pressed", isActive ? "true" : "false");
       b.title = isActive ? LABEL[lang].full : "Cambiar a " + LABEL[lang].full;
-      b.innerHTML = '<span aria-hidden="true" style="font-size:14px;line-height:1">' + LABEL[lang].flag + '</span> <span>' + LABEL[lang].code + '</span>';
+      b.innerHTML = LABEL[lang].flag + '<span>' + LABEL[lang].code + '</span>';
       b.style.cssText = [
         "display:inline-flex", "align-items:center", "gap:6px",
         "padding:7px 12px", "border:0", "cursor:pointer",
