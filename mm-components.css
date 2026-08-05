@@ -453,7 +453,9 @@
 .mm-footer__grid {
   max-width: var(--mm-container); margin: 0 auto;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  /* 4 columnas: marca + Departamentos + Ayuda + Legal. Eran 5, pero se
+     quitaron los enlaces que no llevaban a ninguna parte. */
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: var(--mm-space-7);
 }
 @media (max-width: 1080px) { .mm-footer__grid { grid-template-columns: 1fr 1fr 1fr; } }

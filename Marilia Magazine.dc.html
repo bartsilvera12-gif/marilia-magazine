@@ -1217,30 +1217,33 @@
         <a href="https://wa.me/595981000000" class="mm-btn mm-btn--primary">Escribir por WhatsApp</a>
       </div>
       <div class="mm-help-cards">
-        <a class="mm-benefit" href="#envios" style="text-decoration:none">
+        <!-- Tarjetas informativas, no enlaces: apuntaban a #envios, #cambios,
+             #talles y #pedido, secciones que no existen. Se dejan como texto
+             hasta que haya páginas reales adonde mandar al usuario. -->
+        <div class="mm-benefit">
           <div>
             <h3 class="mm-benefit__title">Envíos y entregas</h3>
-            <p class="mm-benefit__body">Tiempos, zonas y costos.</p>
+            <p class="mm-benefit__body">A todo Paraguay, en 24–48 h.</p>
           </div>
-        </a>
-        <a class="mm-benefit" href="#cambios" style="text-decoration:none">
+        </div>
+        <div class="mm-benefit">
           <div>
             <h3 class="mm-benefit__title">Cambios y devoluciones</h3>
-            <p class="mm-benefit__body">Cómo funciona y qué pedimos.</p>
+            <p class="mm-benefit__body">Hasta 30 días, en su estado original.</p>
           </div>
-        </a>
-        <a class="mm-benefit" href="#talles" style="text-decoration:none">
+        </div>
+        <div class="mm-benefit">
           <div>
             <h3 class="mm-benefit__title">Guía de talles</h3>
-            <p class="mm-benefit__body">Medidas por categoría.</p>
+            <p class="mm-benefit__body">Consultanos por WhatsApp antes de comprar.</p>
           </div>
-        </a>
-        <a class="mm-benefit" href="#pedido" style="text-decoration:none">
+        </div>
+        <div class="mm-benefit">
           <div>
             <h3 class="mm-benefit__title">Seguimiento de pedido</h3>
-            <p class="mm-benefit__body">Consultá el estado con tu número.</p>
+            <p class="mm-benefit__body">Te avisamos por WhatsApp cuando sale.</p>
           </div>
-        </a>
+        </div>
       </div>
     </div>
   </section>
@@ -1261,27 +1264,11 @@
         </div>
       </div>
 
-      <div class="mm-footer__col">
-        <h4>Marilia Magazine</h4>
-        <ul>
-          <li><a href="#nosotros">Sobre nosotros</a></li>
-          <li><a href="#contacto">Contacto</a></li>
-          <li><a href="#tiendas">Tienda física</a></li>
-          <li><a href="#trabajo">Trabajá con nosotros</a></li>
-        </ul>
-      </div>
-
-      <div class="mm-footer__col">
-        <h4>Ayuda</h4>
-        <ul>
-          <li><a href="#como-comprar">Cómo comprar</a></li>
-          <li><a href="#envios">Envíos</a></li>
-          <li><a href="#cambios">Cambios y devoluciones</a></li>
-          <li><a href="#faq">Preguntas frecuentes</a></li>
-          <li><a href="#pagos">Medios de pago</a></li>
-        </ul>
-      </div>
-
+      <!-- Solo destinos que existen de verdad. Se sacaron 13 enlaces que
+           apuntaban a anclas inexistentes (#nosotros, #contacto, #tiendas,
+           #trabajo, #como-comprar, #envios, #cambios, #faq, #pagos,
+           #terminos, #cookies): daban click y no pasaba nada.
+           Cuando existan esas páginas, se vuelven a agregar acá. -->
       <div class="mm-footer__col">
         <h4>Departamentos</h4>
         <ul>
@@ -1297,12 +1284,18 @@
       </div>
 
       <div class="mm-footer__col">
+        <h4>Ayuda</h4>
+        <ul>
+          <li><a href="https://wa.me/595981000000">Atención por WhatsApp</a></li>
+          <li><a href="./Catalogo.dc.html?nuevo=1">Novedades</a></li>
+          <li><a href="./Catalogo.dc.html?oferta=1">Ofertas</a></li>
+        </ul>
+      </div>
+
+      <div class="mm-footer__col">
         <h4>Legal</h4>
         <ul>
           <li><a href="./Privacidad.dc.html">Política de privacidad</a></li>
-          <li><a href="#terminos">Términos y condiciones</a></li>
-          <li><a href="#cambios">Política de cambios</a></li>
-          <li><a href="#cookies">Cookies</a></li>
         </ul>
       </div>
     </div>

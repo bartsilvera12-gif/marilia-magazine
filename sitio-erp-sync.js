@@ -1170,7 +1170,11 @@
     // Ayuda / beneficios
     "Asesoría": "Atendimento",
     "Seguimiento de pedido": "Acompanhamento do pedido",
-    "Consultá el estado con tu número.": "Consulte o status com seu número.",
+    "A todo Paraguay, en 24–48 h.": "Para todo o Paraguai, em 24–48 h.",
+    "Hasta 30 días, en su estado original.": "Até 30 dias, no estado original.",
+    "Consultanos por WhatsApp antes de comprar.": "Fale com a gente pelo WhatsApp antes de comprar.",
+    "Te avisamos por WhatsApp cuando sale.": "Avisamos pelo WhatsApp quando sair.",
+    "Atención por WhatsApp": "Atendimento pelo WhatsApp",
     "Escribinos por WhatsApp — respondemos consultas de talles, disponibilidad, envíos y cambios.":
       "Fale com a gente pelo WhatsApp — tiramos dúvidas de tamanhos, disponibilidade, envios e trocas.",
     "Escribinos por WhatsApp": "Fale com a gente pelo WhatsApp",
