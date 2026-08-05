@@ -204,7 +204,7 @@
     "completo": "completo",
     "Shop the look": "Shop the look",
     "Ver completa": "Ver completo",
-    "Vista rápida": "Vista rápida",
+    "Vista rápida": "Visualização rápida",
     // Acciones
     "Añadir a la bolsa": "Adicionar à sacola",
     "Añadir el look": "Adicionar o look",
@@ -1122,6 +1122,113 @@
 
   // Frases específicas de Marilia (copywriting). Ampliar cuando se sume nueva copy.
   var COPY_ES_PT = {
+    // ── QA de traducción ───────────────────────────────────────────────────
+    // Todo lo que quedaba en español al recorrer home / catálogo / ficha en
+    // modo PT. Las frases completas van primero (el walker ordena por
+    // longitud) para que no se traduzcan palabra por palabra y quede mezcla.
+
+    // Hero y campañas del carrusel
+    "Un catálogo pensado para cada estilo.": "Um catálogo pensado para cada estilo.",
+    "Selecciones curadas para vos, tu familia y tu casa. Cada semana algo nuevo.":
+      "Seleções escolhidas para você, sua família e sua casa. Toda semana, algo novo.",
+    "Detalles que suman en cada día.": "Detalhes que somam no dia a dia.",
+    "Bolsos, cinturones, pañuelos y complementos. Piezas atemporales.":
+      "Bolsas, cintos, lenços e complementos. Peças atemporais.",
+    "Ver accesorios": "Ver acessórios",
+    "Ver novedades": "Ver novidades",
+    "Novedades": "Novidades",
+
+    // Accesos por categoría
+    "Comprá por categoría": "Compre por categoria",
+    "Ver todas": "Ver todas",
+
+    // Recién llegados
+    "Recién llegados": "Recém-chegados",
+    "Los productos más nuevos y buscados de Marilia Magazine. Filtrá por departamento para acotar.":
+      "Os produtos mais novos e procurados da Marilia Magazine. Filtre por departamento para refinar.",
+
+    // Bloque departamental / promos
+    // ("Un catálogo pensado para todo" ya estaba más abajo en este mismo objeto)
+    "Ver el catálogo": "Ver o catálogo",
+    "Lo último que entró": "O último que chegou",
+    "Actualizamos el catálogo cada semana con productos recién llegados.":
+      "Atualizamos o catálogo toda semana com produtos recém-chegados.",
+    "Precios rebajados": "Preços com desconto",
+    "Selección de productos con descuento por tiempo limitado.":
+      "Seleção de produtos com desconto por tempo limitado.",
+
+    // Marcas
+    "Las marcas que trabajamos": "As marcas que trabalhamos",
+    "Seleccionamos marcas por calidad y respaldo.": "Escolhemos marcas por qualidade e procedência.",
+    "Hoy trabajamos una marca. A medida que sumemos más, van a aparecer acá.":
+      "Hoje trabalhamos com uma marca. Conforme somarmos mais, vão aparecer aqui.",
+    "Moda masculina y femenina, calzado y accesorios.":
+      "Moda masculina e feminina, calçados e acessórios.",
+    "Ver productos": "Ver produtos",
+    "productos": "produtos",
+
+    // Ayuda / beneficios
+    "Asesoría": "Atendimento",
+    "Seguimiento de pedido": "Acompanhamento do pedido",
+    "Consultá el estado con tu número.": "Consulte o status com seu número.",
+    "Escribinos por WhatsApp — respondemos consultas de talles, disponibilidad, envíos y cambios.":
+      "Fale com a gente pelo WhatsApp — tiramos dúvidas de tamanhos, disponibilidade, envios e trocas.",
+    "Escribinos por WhatsApp": "Fale com a gente pelo WhatsApp",
+    "Trabajá con nosotros": "Trabalhe com a gente",
+    "Cómo comprar": "Como comprar",
+    "Desarrollado por": "Desenvolvido por",
+
+    // ── Catálogo ───────────────────────────────────────────────────────────
+    "Todas las piezas disponibles. Filtrá por departamento, ordená por precio y encontrá lo que buscás.":
+      "Todas as peças disponíveis. Filtre por departamento, ordene por preço e encontre o que procura.",
+    "Buscar productos, categorías y marcas": "Buscar produtos, categorias e marcas",
+    "Precio asc": "Preço asc",
+    "Precio desc": "Preço desc",
+    "Nombre A–Z": "Nome A–Z",
+    "Sin resultados": "Sem resultados",
+    "No encontramos productos con estos filtros. Probá con otra categoría o limpiá los filtros.":
+      "Não encontramos produtos com esses filtros. Tente outra categoria ou limpe os filtros.",
+    "Limpiar filtros": "Limpar filtros",
+    "Búsqueda": "Busca",
+    "Inicio": "Início",
+    "Menú": "Menu",
+
+    // Carrito
+    "Tu bolsa está vacía.": "Sua sacola está vazia.",
+    "Empezá por el catálogo": "Comece pelo catálogo",
+    "Tu bolsa": "Sua sacola",
+    "Envío calculado al finalizar. Envío sin costo desde Gs. 750.000.":
+      "Frete calculado na finalização. Frete grátis a partir de Gs. 750.000.",
+    "o comprar por WhatsApp": "ou comprar pelo WhatsApp",
+
+    // ── Ficha de producto ──────────────────────────────────────────────────
+    "En stock · Envío en 48 h": "Em estoque · Envio em 48 h",
+    "Materiales y cuidado": "Materiais e cuidados",
+    "Fibras naturales seleccionadas": "Fibras naturais selecionadas",
+    "Lavar a mano con agua fría": "Lavar à mão com água fria",
+    "Secar a la sombra, sin escurrir": "Secar à sombra, sem torcer",
+    "Planchar del revés a temperatura media": "Passar do avesso em temperatura média",
+    "Envío y devoluciones": "Envio e devoluções",
+    "Podría gustarte": "Você também pode gostar",
+    "Descripción": "Descrição",
+    "Talle": "Tamanho",
+    "Vestido midi en lino lavado, corte fluido con cintura marcada. Confección artesanal en el atelier con tejido de origen paraguayo.":
+      "Vestido midi em linho lavado, corte fluido com cintura marcada. Confecção artesanal no ateliê com tecido de origem paraguaia.",
+    "Vestido midi en lino lavado": "Vestido midi em linho lavado",
+    "Envío sin costo dentro de Asunción para compras desde Gs. 750.000. Interior a coordinar. Cambios dentro de 30 días con etiqueta original.":
+      "Frete grátis em Assunção para compras a partir de Gs. 750.000. Interior a combinar. Trocas em até 30 dias com a etiqueta original.",
+
+    // Pie
+    "Tienda departamental — ropa, accesorios y más. Envíos a todo Paraguay.":
+      "Loja de departamentos — roupa, acessórios e mais. Enviamos para todo o Paraguai.",
+    "Tienda departamental — moda, hogar, belleza, tecnología y más. Envíos a todo Paraguay.":
+      "Loja de departamentos — moda, casa, beleza, tecnologia e mais. Enviamos para todo o Paraguai.",
+    "Atelier y showroom: Av. Mariscal López 2340, Villa Morra, Asunción. Lunes a sábados de 10 a 19 h.":
+      "Atelier e showroom: Av. Mariscal López 2340, Villa Morra, Assunção. Segunda a sábado, das 10h às 19h.",
+    "Envíos": "Envios",
+    "Envío": "Envio",
+    "Asunción": "Assunção",
+
     // ── Hero y textos de portada ───────────────────────────────────────────
     // La frase completa va ANTES que sus palabras sueltas: el walker ordena
     // por longitud, si no "Todo" se traduciría solo y quedaba "Tudo lo que…".
@@ -1205,7 +1312,7 @@
     "Añadido": "Adicionado",
     "Añadir": "Adicionar",
     "Añadir +": "Adicionar +",
-    "Vista rápida": "Vista rápida",
+    "Vista rápida": "Visualização rápida",
     "Ver completa": "Ver completo",
     "Consultar": "Consultar",
     "Consultar precio": "Consultar preço",
