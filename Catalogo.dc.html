@@ -16,6 +16,7 @@
   };
 </script>
 <script src="./mm-marcas.js"></script>
+<script defer src="./mm-menu.js"></script>
 <script defer src="./sitio-erp-sync.js"></script>
 </head>
 <body>
@@ -89,7 +90,7 @@
 
   <header data-header class="mm-header">
     <div data-header-inner class="mm-header__inner">
-      <button data-menu-open class="mm-header__mobile-toggle" aria-label="Abrir menú">
+      <button data-menu-open data-menu-js class="mm-header__mobile-toggle" aria-label="Abrir menú">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <span style="font:500 10.5px/1 var(--mm-font-sans);letter-spacing:.22em;text-transform:uppercase">Menú</span>
       </button>
@@ -452,7 +453,7 @@
       </div>
 
       <div class="mm-cg" data-cg data-mm-sync="catalogo">
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h1" data-cat="hombre camisas" data-name="Camisa Sauce" data-price="590000" data-sub="Camisa de lino en azul profundo" data-img="./uploads/destacado/camisa-azul.webp" data-sizes="S,M,L,XL" data-colors="#1F4E6B,#E4DCC6,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h1" data-cat="hombre camisas" data-name="Camisa Sauce" data-price="590000" data-sub="Camisa de lino en azul profundo" data-img="./uploads/destacado/camisa-azul.webp" data-sizes="S,M,L,XL" data-colors="#1F4E6B,#E4DCC6,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/camisa-azul.webp" alt="Camisa Sauce" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -473,7 +474,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p1" data-cat="mujer vestidos" data-name="Vestido Aurelia" data-price="1290000" data-sub="Vestido midi en lino lavado" data-img="./uploads/mujer.webp" data-sizes="XS,S,M,L" data-colors="#C46A4A,#E4DCC6,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p1" data-cat="mujer vestidos" data-name="Vestido Aurelia" data-price="1290000" data-sub="Vestido midi en lino lavado" data-img="./uploads/mujer.webp" data-sizes="XS,S,M,L" data-colors="#C46A4A,#E4DCC6,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/mujer.webp" alt="Vestido Aurelia" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -494,7 +495,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p2" data-cat="mujer conjuntos" data-name="Conjunto Sienna" data-price="980000" data-sub="Camisa y pantalón en algodón peinado" data-img="./uploads/1.webp" data-sizes="S,M,L" data-colors="#8A7F6A,#E4DCC6">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p2" data-cat="mujer conjuntos" data-name="Conjunto Sienna" data-price="980000" data-sub="Camisa y pantalón en algodón peinado" data-img="./uploads/1.webp" data-sizes="S,M,L" data-colors="#8A7F6A,#E4DCC6">
           <div class="mm-cg-frame">
             <img src="./uploads/1.webp" alt="Conjunto Sienna" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -515,7 +516,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h2" data-cat="hombre abrigos" data-name="Blazer Roble" data-price="1490000" data-sub="Blazer de lana en verde oscuro" data-img="./uploads/destacado/blazer-verde.webp" data-sizes="S,M,L,XL" data-colors="#2C3B2E,#4A443A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h2" data-cat="hombre abrigos" data-name="Blazer Roble" data-price="1490000" data-sub="Blazer de lana en verde oscuro" data-img="./uploads/destacado/blazer-verde.webp" data-sizes="S,M,L,XL" data-colors="#2C3B2E,#4A443A">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/blazer-verde.webp" alt="Blazer Roble" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -536,7 +537,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p3" data-cat="mujer blusas" data-name="Blusa Loreta" data-price="540000" data-sub="Blusa de seda lavada, manga globo" data-img="./uploads/2.webp" data-sizes="XS,S,M,L" data-colors="#F7F3E6,#C46A4A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p3" data-cat="mujer blusas" data-name="Blusa Loreta" data-price="540000" data-sub="Blusa de seda lavada, manga globo" data-img="./uploads/2.webp" data-sizes="XS,S,M,L" data-colors="#F7F3E6,#C46A4A">
           <div class="mm-cg-frame">
             <img src="./uploads/2.webp" alt="Blusa Loreta" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -557,7 +558,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p4" data-cat="mujer accesorios" data-name="Bolso Nieve" data-price="820000" data-sub="Bolso estructurado en cuero vegetal" data-img="./uploads/3.webp" data-sizes="Único" data-colors="#1E1B16,#8A7F6A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p4" data-cat="mujer accesorios" data-name="Bolso Nieve" data-price="820000" data-sub="Bolso estructurado en cuero vegetal" data-img="./uploads/3.webp" data-sizes="Único" data-colors="#1E1B16,#8A7F6A">
           <div class="mm-cg-frame">
             <img src="./uploads/3.webp" alt="Bolso Nieve" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -578,7 +579,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h3" data-cat="hombre pantalones" data-name="Pantalón Arenal" data-price="720000" data-sub="Pantalón de franela con pinzas" data-img="./uploads/destacado/pantalon-gris.webp" data-sizes="S,M,L,XL" data-colors="#4A4A4E,#E4DCC6,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h3" data-cat="hombre pantalones" data-name="Pantalón Arenal" data-price="720000" data-sub="Pantalón de franela con pinzas" data-img="./uploads/destacado/pantalon-gris.webp" data-sizes="S,M,L,XL" data-colors="#4A4A4E,#E4DCC6,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/pantalon-gris.webp" alt="Pantalón Arenal" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -599,7 +600,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p5" data-cat="mujer faldas" data-name="Falda Amaranta" data-price="690000" data-sub="Falda plisada midi en gasa" data-img="./uploads/explorar/falda.webp" data-sizes="XS,S,M" data-colors="#C46A4A,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p5" data-cat="mujer faldas" data-name="Falda Amaranta" data-price="690000" data-sub="Falda plisada midi en gasa" data-img="./uploads/explorar/falda.webp" data-sizes="XS,S,M" data-colors="#C46A4A,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/explorar/falda.webp" alt="Falda Amaranta" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -620,7 +621,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h4" data-cat="hombre conjuntos" data-name="Traje Sendero" data-price="2450000" data-sub="Traje de lana en gris claro" data-img="./uploads/destacado/traje-gris.webp" data-sizes="S,M,L,XL" data-colors="#B9B4AC,#1F4E6B">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h4" data-cat="hombre conjuntos" data-name="Traje Sendero" data-price="2450000" data-sub="Traje de lana en gris claro" data-img="./uploads/destacado/traje-gris.webp" data-sizes="S,M,L,XL" data-colors="#B9B4AC,#1F4E6B">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/traje-gris.webp" alt="Traje Sendero" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -641,7 +642,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p6" data-cat="mujer vestidos" data-name="Vestido Bruna" data-price="1150000" data-sub="Vestido largo en seda con cinturón" data-img="./uploads/explorar/vestido2.webp" data-sizes="S,M,L" data-colors="#C46A4A,#E4DCC6,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p6" data-cat="mujer vestidos" data-name="Vestido Bruna" data-price="1150000" data-sub="Vestido largo en seda con cinturón" data-img="./uploads/explorar/vestido2.webp" data-sizes="S,M,L" data-colors="#C46A4A,#E4DCC6,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/explorar/vestido2.webp" alt="Vestido Bruna" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -662,7 +663,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p7" data-cat="mujer camisas" data-name="Blusa Cándida" data-price="620000" data-sub="Blusa de algodón con cuello alto" data-img="./uploads/explorar/camisa.webp" data-sizes="XS,S,M,L" data-colors="#C46A4A,#F7F3E6,#8A7F6A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p7" data-cat="mujer camisas" data-name="Blusa Cándida" data-price="620000" data-sub="Blusa de algodón con cuello alto" data-img="./uploads/explorar/camisa.webp" data-sizes="XS,S,M,L" data-colors="#C46A4A,#F7F3E6,#8A7F6A">
           <div class="mm-cg-frame">
             <img src="./uploads/explorar/camisa.webp" alt="Blusa Cándida" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -683,7 +684,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h5" data-cat="hombre abrigos" data-name="Abrigo Norte" data-price="1890000" data-sub="Abrigo largo de lana en burdeos" data-img="./uploads/destacado/abrigo-burdeos.webp" data-sizes="S,M,L,XL" data-colors="#5C2A2E,#4A4A4E">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h5" data-cat="hombre abrigos" data-name="Abrigo Norte" data-price="1890000" data-sub="Abrigo largo de lana en burdeos" data-img="./uploads/destacado/abrigo-burdeos.webp" data-sizes="S,M,L,XL" data-colors="#5C2A2E,#4A4A4E">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/abrigo-burdeos.webp" alt="Abrigo Norte" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -704,7 +705,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p8" data-cat="mujer abrigos" data-name="Abrigo Duna" data-price="1780000" data-sub="Abrigo de lana con corte recto" data-img="./uploads/explorar/abrigo.webp" data-sizes="S,M,L,XL" data-colors="#C9B79A,#8A7F6A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p8" data-cat="mujer abrigos" data-name="Abrigo Duna" data-price="1780000" data-sub="Abrigo de lana con corte recto" data-img="./uploads/explorar/abrigo.webp" data-sizes="S,M,L,XL" data-colors="#C9B79A,#8A7F6A">
           <div class="mm-cg-frame">
             <img src="./uploads/explorar/abrigo.webp" alt="Abrigo Duna" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -725,7 +726,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h6" data-cat="hombre accesorios" data-name="Cinturón Cedro" data-price="340000" data-sub="Cinturón de cuero con hebilla dorada" data-img="./uploads/accesorios.webp" data-sizes="85,90,95,100" data-colors="#4A3428,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h6" data-cat="hombre accesorios" data-name="Cinturón Cedro" data-price="340000" data-sub="Cinturón de cuero con hebilla dorada" data-img="./uploads/accesorios.webp" data-sizes="85,90,95,100" data-colors="#4A3428,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/accesorios.webp" alt="Cinturón Cedro" loading="lazy" style="object-position:35% 65%"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -746,7 +747,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p9" data-cat="mujer accesorios" data-name="Pañuelo Olivar" data-price="310000" data-sub="Pañuelo de seda estampado a mano" data-img="./uploads/explorar/panuelo.webp" data-sizes="Único" data-colors="#7D8A5A,#C46A4A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p9" data-cat="mujer accesorios" data-name="Pañuelo Olivar" data-price="310000" data-sub="Pañuelo de seda estampado a mano" data-img="./uploads/explorar/panuelo.webp" data-sizes="Único" data-colors="#7D8A5A,#C46A4A">
           <div class="mm-cg-frame">
             <img src="./uploads/explorar/panuelo.webp" alt="Pañuelo Olivar" loading="lazy" />
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -767,7 +768,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="p10" data-cat="mujer accesorios" data-name="Sandalia Rea" data-price="740000" data-sub="Sandalia de cuero con tira fina" data-img="./uploads/explorar/sandalia.webp" data-sizes="36,37,38,39,40" data-colors="#B0764A,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="p10" data-cat="mujer accesorios" data-name="Sandalia Rea" data-price="740000" data-sub="Sandalia de cuero con tira fina" data-img="./uploads/explorar/sandalia.webp" data-sizes="36,37,38,39,40" data-colors="#B0764A,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/explorar/sandalia.webp" alt="Sandalia Rea" loading="lazy" style="object-position:center 60%"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -788,7 +789,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h7" data-cat="hombre abrigos" data-name="Blazer Oliva" data-price="1390000" data-sub="Blazer de lino en verde oliva" data-img="./uploads/destacado/blazer-oliva.webp" data-sizes="S,M,L,XL" data-colors="#5A6248,#E4DCC6">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h7" data-cat="hombre abrigos" data-name="Blazer Oliva" data-price="1390000" data-sub="Blazer de lino en verde oliva" data-img="./uploads/destacado/blazer-oliva.webp" data-sizes="S,M,L,XL" data-colors="#5A6248,#E4DCC6">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/blazer-oliva.webp" alt="Blazer Oliva" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -809,7 +810,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="t1" data-cat="mujer vestidos" data-name="Vestido Amaranta" data-price="1390000" data-sub="Vestido cruzado en crepé burdeos" data-img="./uploads/temporada/vestido-burdeos.webp" data-sizes="XS,S,M,L" data-colors="#6B1F2E,#1E1B16,#E4DCC6">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="t1" data-cat="mujer vestidos" data-name="Vestido Amaranta" data-price="1390000" data-sub="Vestido cruzado en crepé burdeos" data-img="./uploads/temporada/vestido-burdeos.webp" data-sizes="XS,S,M,L" data-colors="#6B1F2E,#1E1B16,#E4DCC6">
           <div class="mm-cg-frame">
             <img src="./uploads/temporada/vestido-burdeos.webp" alt="Vestido Amaranta" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -830,7 +831,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="t2" data-cat="mujer camisas" data-name="Blusa Glicina" data-price="640000" data-sub="Blusa de seda en lila con lazada" data-img="./uploads/temporada/blusa-lila.webp" data-sizes="S,M,L,XL" data-colors="#B49AC9,#F7F3E6,#8A7F6A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="t2" data-cat="mujer camisas" data-name="Blusa Glicina" data-price="640000" data-sub="Blusa de seda en lila con lazada" data-img="./uploads/temporada/blusa-lila.webp" data-sizes="S,M,L,XL" data-colors="#B49AC9,#F7F3E6,#8A7F6A">
           <div class="mm-cg-frame">
             <img src="./uploads/temporada/blusa-lila.webp" alt="Blusa Glicina" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -851,7 +852,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h8" data-cat="hombre camisas" data-name="Polo Duna" data-price="480000" data-sub="Polo de punto de algodón peinado" data-img="./uploads/destacado/polo-marfil.webp" data-sizes="S,M,L,XL" data-colors="#F0E9D8,#5A6248">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h8" data-cat="hombre camisas" data-name="Polo Duna" data-price="480000" data-sub="Polo de punto de algodón peinado" data-img="./uploads/destacado/polo-marfil.webp" data-sizes="S,M,L,XL" data-colors="#F0E9D8,#5A6248">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/polo-marfil.webp" alt="Polo Duna" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -872,7 +873,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="t3" data-cat="mujer conjuntos" data-name="Conjunto Esmeralda" data-price="1290000" data-sub="Chaleco y pantalón en verde esmeralda" data-img="./uploads/temporada/conjunto-verde.webp" data-sizes="S,M,L,XL" data-colors="#0F5C46,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="t3" data-cat="mujer conjuntos" data-name="Conjunto Esmeralda" data-price="1290000" data-sub="Chaleco y pantalón en verde esmeralda" data-img="./uploads/temporada/conjunto-verde.webp" data-sizes="S,M,L,XL" data-colors="#0F5C46,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/temporada/conjunto-verde.webp" alt="Conjunto Esmeralda" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -893,7 +894,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h9" data-cat="hombre abrigos" data-name="Abrigo Camel" data-price="1980000" data-sub="Abrigo largo de lana en camel" data-img="./uploads/destacado/abrigo-camel.webp" data-sizes="S,M,L,XL" data-colors="#C2A47C,#E4DCC6">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h9" data-cat="hombre abrigos" data-name="Abrigo Camel" data-price="1980000" data-sub="Abrigo largo de lana en camel" data-img="./uploads/destacado/abrigo-camel.webp" data-sizes="S,M,L,XL" data-colors="#C2A47C,#E4DCC6">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/abrigo-camel.webp" alt="Abrigo Camel" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -914,7 +915,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="t4" data-cat="mujer faldas" data-name="Falda Sol" data-price="750000" data-sub="Falda plisada midi en mostaza" data-img="./uploads/temporada/falda-mostaza.webp" data-sizes="XS,S,M,L" data-colors="#C8901A,#E4DCC6,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="t4" data-cat="mujer faldas" data-name="Falda Sol" data-price="750000" data-sub="Falda plisada midi en mostaza" data-img="./uploads/temporada/falda-mostaza.webp" data-sizes="XS,S,M,L" data-colors="#C8901A,#E4DCC6,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/temporada/falda-mostaza.webp" alt="Falda Sol" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -935,7 +936,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="t5" data-cat="mujer conjuntos" data-name="Traje Marino" data-price="1980000" data-sub="Traje de crepé en azul marino" data-img="./uploads/temporada/traje-azul.webp" data-sizes="S,M,L,XL" data-colors="#1B2A4A,#1E1B16">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="t5" data-cat="mujer conjuntos" data-name="Traje Marino" data-price="1980000" data-sub="Traje de crepé en azul marino" data-img="./uploads/temporada/traje-azul.webp" data-sizes="S,M,L,XL" data-colors="#1B2A4A,#1E1B16">
           <div class="mm-cg-frame">
             <img src="./uploads/temporada/traje-azul.webp" alt="Traje Marino" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -956,7 +957,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="h10" data-cat="hombre conjuntos" data-name="Traje Olivar" data-price="2290000" data-sub="Traje de lino en marfil" data-img="./uploads/destacado/traje-lino.webp" data-sizes="S,M,L,XL" data-colors="#EFE6D2,#C2A47C">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="h10" data-cat="hombre conjuntos" data-name="Traje Olivar" data-price="2290000" data-sub="Traje de lino en marfil" data-img="./uploads/destacado/traje-lino.webp" data-sizes="S,M,L,XL" data-colors="#EFE6D2,#C2A47C">
           <div class="mm-cg-frame">
             <img src="./uploads/destacado/traje-lino.webp" alt="Traje Olivar" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -977,7 +978,7 @@
           </div>
         </article>
 
-        <article class="mm-cg-card" data-cg-card data-hidden data-id="t6" data-cat="mujer abrigos" data-name="Abrigo Cacao" data-price="2190000" data-sub="Abrigo largo de lana en cacao" data-img="./uploads/temporada/abrigo-marron.webp" data-sizes="S,M,L,XL" data-colors="#4A3428,#8A7F6A">
+        <article class="mm-cg-card" data-cg-card data-hidden data-fallback data-id="t6" data-cat="mujer abrigos" data-name="Abrigo Cacao" data-price="2190000" data-sub="Abrigo largo de lana en cacao" data-img="./uploads/temporada/abrigo-marron.webp" data-sizes="S,M,L,XL" data-colors="#4A3428,#8A7F6A">
           <div class="mm-cg-frame">
             <img src="./uploads/temporada/abrigo-marron.webp" alt="Abrigo Cacao" loading="lazy"/>
             <button class="mm-cg-fav" data-fav aria-label="Añadir a favoritos">♡</button>
@@ -1257,6 +1258,25 @@
     var forceEmpty = false; // departamentos aun no cargados en ERP
     var currentMarca = null; // objeto de mm-marcas.js, o null
 
+    // Las 26 tarjetas `data-fallback` del HTML son el respaldo para SEO.
+    // syncCatalogo las saca del DOM, pero recién después de pedirle las
+    // categorías al ERP: en esa ida y vuelta quedaban visibles y se veía
+    // un segundo el catálogo viejo al recargar (por ejemplo al cambiar de
+    // idioma). Acá las mantenemos ocultas hasta que llegue el sync.
+    //
+    // Nota: NO sirve marcar el HTML con un atributo y esconderlo por CSS —
+    // el runtime DC reconcilia los atributos contra su template y lo borra
+    // (probado). Por eso el filtro se aplica desde applyFilter(), que corre
+    // después de cada render.
+    var syncPendiente = true;
+    function terminarEspera(){
+      if(!syncPendiente) return;
+      syncPendiente = false;
+      applyFilter();
+    }
+    document.addEventListener('mm:catalogo-loaded', terminarEspera);
+    setTimeout(terminarEspera, 4000);
+
     // Normaliza texto para busqueda tolerante: minusculas + sin tildes.
     function norm(s){
       return String(s||'').toLowerCase()
@@ -1286,7 +1306,9 @@
       cards.forEach(function(c){
         // Cuando el usuario aterriza en un dept que aun no tiene productos,
         // forzamos vacio para mostrar el mensaje "muy pronto".
-        var ok = !forceEmpty && hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery)
+        var ok = !forceEmpty
+                 && !(syncPendiente && c.hasAttribute('data-fallback'))
+                 && hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery)
                  && (!currentMarca || !window.mmProductoEsDeMarca || window.mmProductoEsDeMarca(currentMarca, c.dataset.name));
         if(ok){ c.removeAttribute('data-hidden'); visible++; }
         else c.setAttribute('data-hidden','');

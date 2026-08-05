@@ -487,6 +487,11 @@
       card.style.display = "";
       card.style.visibility = "visible";  // resetear el hide inicial que se propaga del template
       card.removeAttribute("data-hidden");
+      // El template clonado es una de las 26 tarjetas de respaldo del HTML y
+      // arrastra su `data-fallback`. Sin sacarlo, el catálogo las trataría
+      // como respaldo y las escondería hasta que termine el sync… que es
+      // justo este código.
+      card.removeAttribute("data-fallback");
       // El diseño arranca las cards con `data-pending` (opacity:0) y las revela
       // con un IntersectionObserver que solo mira las del HTML original. Las
       // nuestras se agregan después: si se lo dejamos puesto, nunca se ven.
