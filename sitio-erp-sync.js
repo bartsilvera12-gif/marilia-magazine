@@ -431,10 +431,13 @@
     var catById = {};
     cats.forEach(function (c) { catById[c.id] = c.nombre; });
 
-    // Las cards de la maqueta se sacan del DOM (no se ocultan): si quedan, el
-    // contador propio del diseño las suma y muestra "50 piezas".
+    // Las cards de la maqueta se ocultan, NO se borran: si el ERP no responde
+    // tienen que poder volver a mostrarse como respaldo (antes el catálogo
+    // quedaba vacío para siempre). El contador del diseño no las suma porque
+    // Catalogo.dc.html las excluye por `data-fallback` mientras haya datos
+    // reales; el `data-hidden` de acá es solo el estado inicial.
     Array.prototype.slice.call(container.querySelectorAll("article"))
-      .forEach(function (a) { a.parentNode.removeChild(a); });
+      .forEach(function (a) { a.setAttribute("data-hidden", ""); });
 
     /** Trae las variantes de los modelos de la página y arma sus swatches. */
     async function armarGrupos(modelosPagina) {

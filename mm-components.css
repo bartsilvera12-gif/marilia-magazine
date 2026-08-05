@@ -497,6 +497,23 @@
 }
 .mm-footer__bottom a { color: var(--mm-gold); }
 
+/* ── Respaldo del catálogo ─────────────────────────────────────────────
+ * Las 26 tarjetas `data-fallback` del HTML son la maqueta de respaldo.
+ * Se ocultan desde el primer pintado para que no se vea el catálogo viejo
+ * mientras llega el ERP, y solo vuelven si el ERP no contesta (la clase la
+ * pone Catalogo.dc.html en <html>, que el runtime DC no reconcilia).
+ *
+ * Va en CSS y no en JS a propósito: cualquier atributo o estilo que le
+ * agreguemos a estos nodos lo borra el runtime al re-renderizar (probado
+ * con data-esperando-erp, data-hidden y style inline).
+ * ──────────────────────────────────────────────────────────────────────── */
+.mm-cg-card[data-fallback] { display: none; }
+html.mm-erp-sin-respuesta .mm-cg-card[data-fallback] { display: block; }
+/* Sin JS el sync nunca corre: la maqueta es lo único que hay para mostrar. */
+@media (scripting: none) {
+  .mm-cg-card[data-fallback] { display: block; }
+}
+
 /* ── Menú móvil (páginas que no son la home; ver mm-menu.js) ──────────── */
 .mm-menu {
   position: fixed; inset: 0; z-index: 95;

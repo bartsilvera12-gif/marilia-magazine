@@ -443,12 +443,16 @@
         }
       </style>
 
+      <!-- Estado vacío GENÉRICO: aparece cuando ningún producto pasa los
+           filtros (búsqueda sin coincidencias, combinación imposible, etc).
+           Antes decía "Muy pronto / este departamento", que era el texto de
+           los departamentos sin stock — pero esos links ya no existen, así
+           que el mensaje salía en el caso equivocado. -->
       <div data-empty hidden style="grid-column:1/-1;padding:60px 20px;text-align:center;color:var(--mm-fg-muted);font:400 15px/1.7 var(--mm-font-sans);letter-spacing:.02em;max-width:60ch;margin:0 auto">
-        <div style="font:500 11px/1 var(--mm-font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--mm-accent);margin-bottom:12px">Muy pronto</div>
-        <div>Todavía no cargamos productos en este departamento. Mientras tanto, explorá el resto del catálogo o dejanos tu email para avisarte cuando estén disponibles.</div>
+        <div style="font:500 11px/1 var(--mm-font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--mm-accent);margin-bottom:12px">Sin resultados</div>
+        <div>No encontramos productos con estos filtros. Probá con otra categoría o limpiá los filtros.</div>
         <div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
           <a href="./Catalogo.dc.html" class="mm-btn mm-btn--primary">Ver el catálogo</a>
-          
         </div>
       </div>
 
@@ -1255,7 +1259,6 @@
     var currentQuery = '';
     var currentNew = false;
     var currentSale = false;
-    var forceEmpty = false; // departamentos aun no cargados en ERP
     var currentMarca = null; // objeto de mm-marcas.js, o null
 
     // Las 26 tarjetas `data-fallback` del HTML son el respaldo para SEO.
@@ -1268,14 +1271,24 @@
     // el runtime DC reconcilia los atributos contra su template y lo borra
     // (probado). Por eso el filtro se aplica desde applyFilter(), que corre
     // después de cada render.
-    var syncPendiente = true;
-    function terminarEspera(){
-      if(!syncPendiente) return;
-      syncPendiente = false;
+    // Y si el ERP nunca contesta, el respaldo tiene que volver a aparecer:
+    // un catálogo vacío para siempre es peor que uno con la maqueta.
+    //
+    // El respaldo arranca oculto por CSS (ver mm-components.css) y solo
+    // vuelve si el ERP no contesta. La marca va en <html>, que es el único
+    // nodo que el runtime DC no reconcilia: cualquier atributo o estilo
+    // puesto sobre las tarjetas se pierde en el siguiente render (probado
+    // con data-esperando-erp, data-hidden y style inline).
+    var mostrarRespaldo = false;
+    var erpRespondio = false;
+
+    document.addEventListener('mm:catalogo-loaded', function(){ erpRespondio = true; });
+    setTimeout(function(){
+      if(erpRespondio) return;
+      mostrarRespaldo = true;
+      document.documentElement.classList.add('mm-erp-sin-respuesta');
       applyFilter();
-    }
-    document.addEventListener('mm:catalogo-loaded', terminarEspera);
-    setTimeout(terminarEspera, 4000);
+    }, 4000);
 
     // Normaliza texto para busqueda tolerante: minusculas + sin tildes.
     function norm(s){
@@ -1306,8 +1319,9 @@
       cards.forEach(function(c){
         // Cuando el usuario aterriza en un dept que aun no tiene productos,
         // forzamos vacio para mostrar el mensaje "muy pronto".
-        var ok = !forceEmpty
-                 && !(syncPendiente && c.hasAttribute('data-fallback'))
+        // El respaldo lo maneja pintarRespaldo(): acá solo se excluye del
+        // filtro y del conteo mientras no toque mostrarlo.
+        var ok = !(c.hasAttribute('data-fallback') && !mostrarRespaldo)
                  && hasTag(c, currentGender) && hasTag(c, currentFilter) && matchesQuery(c, currentQuery)
                  && (!currentMarca || !window.mmProductoEsDeMarca || window.mmProductoEsDeMarca(currentMarca, c.dataset.name));
         if(ok){ c.removeAttribute('data-hidden'); visible++; }
@@ -1338,12 +1352,7 @@
       if(currentGender && currentGender !== 'todo') chips.push({k:'gender', l: currentGender.charAt(0).toUpperCase()+currentGender.slice(1)});
       if(currentFilter && currentFilter !== 'todo') chips.push({k:'cat', l: currentFilter.charAt(0).toUpperCase()+currentFilter.slice(1)});
       if(currentMarca) chips.push({k:'marca', l: 'Marca: ' + currentMarca.nombre});
-      if(currentQuery && !forceEmpty) chips.push({k:'q', l: 'Búsqueda: "' + currentQuery + '"'});
-      if(forceEmpty){
-        // El dept aun no tiene productos: chip informativo (URL param `dept`).
-        var qp = new URLSearchParams(location.search);
-        var dLbl = qp.get('dept'); if(dLbl) chips.push({k:'dept', l: dLbl.charAt(0).toUpperCase()+dLbl.slice(1)});
-      }
+      if(currentQuery) chips.push({k:'q', l: 'Búsqueda: "' + currentQuery + '"'});
       if(currentNew) chips.push({k:'new', l:'Novedades'});
       if(currentSale) chips.push({k:'sale', l:'Ofertas'});
       if(chips.length === 0){ wrap.style.display='none'; wrap.innerHTML=''; return; }
@@ -1634,13 +1643,6 @@
       currentMarca = (marcaSlug && window.mmMarcaPorSlug) ? window.mmMarcaPorSlug(marcaSlug) : null;
       var isNew = q.get('nuevo') === '1' || q.get('nuevo') === 'true';
       var isSale = q.get('oferta') === '1' || q.get('oferta') === 'true';
-      // Nombres de departamentos amplios (fuera del ERP hoy: activar cuando
-      // haya productos y quitarlos de esta lista).
-      var DEPT_LABELS = {
-        infantil:'Infantil', calzados:'Calzados', belleza:'Belleza',
-        hogar:'Hogar', tecnologia:'Tecnología', deportes:'Deportes'
-      };
-
       var gBtn = g ? Array.from(genderBtns).find(function(b){ return b.dataset.gender === g; }) : null;
       if(gBtn){
         genderBtns.forEach(function(x){ x.removeAttribute('data-on'); });
@@ -1672,12 +1674,6 @@
         subtxt = currentMarca.desc || ('Todos los productos de ' + currentMarca.nombre + '.');
       }
       else if(t){ etiqueta = 'Resultados: "' + q.get('q') + '"'; subtxt = 'Estos son los productos que coinciden con tu búsqueda.'; }
-      else if(d && DEPT_LABELS[d]){
-        // Departamento amplio sin productos aun — mensaje "muy pronto".
-        etiqueta = DEPT_LABELS[d];
-        subtxt = 'Muy pronto vas a encontrar productos de ' + DEPT_LABELS[d].toLowerCase() + ' en Marilia Magazine. Mientras tanto, explorá el resto del catálogo.';
-        forceEmpty = true;
-      }
       else if(isSale){ etiqueta = 'Ofertas'; subtxt = 'Piezas con precio rebajado por tiempo limitado.'; }
       else if(isNew){ etiqueta = 'Novedades'; subtxt = 'Lo último que ingresó a Marilia Magazine.'; }
       else if(f && g){ etiqueta = g.charAt(0).toUpperCase()+g.slice(1) + ' · ' + f.charAt(0).toUpperCase()+f.slice(1); subtxt = 'Selección de ' + f + ' para ' + g + '.'; }
