@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marilia Magazine</title>
+<meta name="description" content="Todo el catálogo de Marilia Magazine: ropa, calzados, accesorios, bolsos y bijou. Filtrá por departamento y marca.">
+<title>Catálogo — Marilia Magazine</title>
 <link rel="stylesheet" href="./mm-tokens.css">
 <link rel="stylesheet" href="./mm-base.css">
 <link rel="stylesheet" href="./mm-components.css">
@@ -1079,7 +1080,9 @@
   <div data-qv-backdrop style="position:fixed;inset:0;background:rgba(20,15,10,.6);z-index:100;opacity:0;pointer-events:none;transition:opacity .4s ease;display:flex;align-items:center;justify-content:center;padding:24px">
     <div data-qv-modal style="background:#F7F3E6;max-width:920px;width:100%;max-height:88vh;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:0;transform:translateY(20px);transition:transform .45s cubic-bezier(.22,1,.36,1);border-radius:2px">
       <div data-qv-imgbox style="background:#EFE9D8;aspect-ratio:3/4;position:relative;overflow:hidden">
-        <img data-qv-img style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%" />
+        <!-- alt="" de arranque: el src y el alt reales los pone openQv() al
+             abrir un producto. Sin esto queda un <img> sin alt en el DOM. -->
+        <img data-qv-img alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%" />
       </div>
       <div style="padding:36px 32px;display:flex;flex-direction:column;gap:14px;position:relative">
         <button data-qv-close aria-label="Cerrar" style="position:absolute;top:14px;right:16px;background:none;border:0;font:300 26px/1 'Cormorant Garamond',serif;color:#1E1B16;cursor:pointer">×</button>

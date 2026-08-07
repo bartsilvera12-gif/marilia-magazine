@@ -1518,16 +1518,12 @@
     "del sur": "do sul",
     "Encuentra": "Encontre",
     "encuentra": "encontre",
-    "tu estilo": "seu estilo",
     "Tu estilo": "Seu estilo",
     "TU ESTILO": "SEU ESTILO",
     "El look": "O look",
     "el look": "o look",
     "ADICIONAR O LOOK": "ADICIONAR O LOOK",
-    "Añadir el look": "Adicionar o look",
-    "AÑADIR EL LOOK": "ADICIONAR O LOOK",
     "GS.": "GS.",
-    "Añadido a la bolsa": "Adicionado à sacola",
     "Ver la ficha": "Ver a ficha",
     "TALLA": "TAMANHO",
     "Talla": "Tamanho",
@@ -1554,8 +1550,6 @@
       "Comprei o vestido Aurelia para o casamento da minha irmã e acabei usando o verão inteiro.",
     "É la única marca donde compramos los dos sin probarnos.":
       "É a única marca onde compramos os dois sem provar.",
-    "Los talles son consistentes y las telas duran años.":
-      "Os tamanhos são consistentes e os tecidos duram anos.",
     "los dos sin probarnos": "os dois sem provar",
     "sin probarnos": "sem provar",
     "probarnos": "provar",
@@ -1566,7 +1560,6 @@
     "las telas duran años": "os tecidos duram anos",
     "duran años": "duram anos",
     "duran": "duram",
-    "años": "anos",
     // Nav header catálogo
     "INICIO": "INÍCIO",
     "CATÁLOGO": "CATÁLOGO",
@@ -1583,7 +1576,6 @@
     "El": "O",
     "catálogo": "catálogo",
     "CATÁLOGO COMPLETO": "CATÁLOGO COMPLETO",
-    "Catálogo completo": "Catálogo completo",
     "Todas las peças disponibles del atelier — filtrá por categoría, ordená por precio y explorá":
       "Todas as peças disponíveis do ateliê — filtre por categoria, ordene por preço e explore",
     "Todas las": "Todas as",

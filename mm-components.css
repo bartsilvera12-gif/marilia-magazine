@@ -112,6 +112,11 @@
 }
 @media (max-width: 780px) {
   .mm-header__search { display: none; }
+  /* Objetivos táctiles: "Favoritos" y "Bolsa" medían 20px de alto. La
+     referencia de accesibilidad es 44px; el texto no cambia de tamaño,
+     se agranda el área que responde al dedo. */
+  .mm-header__actions a,
+  .mm-header__actions button { min-height: 44px; }
 }
 
 .mm-header__mobile-toggle {
@@ -120,7 +125,7 @@
   color: var(--mm-ink);
 }
 @media (max-width: 780px) {
-  .mm-header__mobile-toggle { display: inline-flex; align-items: center; gap: 8px; }
+  .mm-header__mobile-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
 }
 
 /* ── Navegacion departamental (mega-menu en desktop, drawer en movil) ─── */
@@ -234,6 +239,10 @@
   border-radius: 0;
 }
 .mm-btn--link:hover { color: var(--mm-accent); transform: none; }
+/* En móvil recupera los 44px de área táctil (la regla base lo pone en 0). */
+@media (max-width: 780px) {
+  .mm-btn.mm-btn--link { min-height: 44px; }
+}
 
 /* ── Chips / etiquetas ────────────────────────────────────────────────── */
 .mm-chip {
@@ -475,6 +484,12 @@
   margin: 6px 0 18px;
 }
 .mm-footer__brand-copy { font-size: 13px; line-height: 1.7; opacity: .78; max-width: 30ch; }
+/* Los iconos de redes miden 20x20: se les da un área táctil de 44px sin
+   agrandar el dibujo. */
+.mm-footer__redes a {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; margin: -12px;
+}
 .mm-footer__col h4 {
   font: 600 11px/1 var(--mm-font-sans);
   letter-spacing: var(--mm-track-widest);
@@ -489,6 +504,12 @@
   font-size: 13px;
   transition: color var(--mm-t-fast) var(--mm-ease);
 }
+/* En móvil los enlaces del pie median 16px de alto. Se les da padding y se
+   compensa el margen del <li>, así crece el área táctil sin estirar el pie. */
+@media (max-width: 780px) {
+  .mm-footer__col li { margin-bottom: 2px; }
+  .mm-footer__col a { display: inline-block; padding: 9px 0; }
+}
 .mm-footer__col a:hover { color: var(--mm-gold); }
 
 .mm-footer__bottom {
@@ -500,7 +521,7 @@
   font-size: 11px; letter-spacing: var(--mm-track-wide); text-transform: uppercase;
   color: rgba(247,243,230,.6);
 }
-.mm-footer__bottom a { color: var(--mm-gold); }
+.mm-footer__bottom a { color: var(--mm-gold); display: inline-block; padding: 8px 4px; margin: -8px -4px; }
 
 /* ── Selector de idioma ────────────────────────────────────────────────
  * Vive dentro de la barra de departamentos, al lado de "Ver todo". Antes

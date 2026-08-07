@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marilia Magazine</title>
+<meta name="description" content="Moda, calzados, accesorios y bijou en un solo lugar. Envíos a todo Paraguay en 24–48 h.">
+<title>Marilia Magazine — Tienda departamental</title>
 <link rel="stylesheet" href="./mm-tokens.css">
 <link rel="stylesheet" href="./mm-base.css">
 <link rel="stylesheet" href="./mm-components.css">
@@ -237,13 +238,20 @@
         display:flex; gap:10px;
       }
       .mm-hero__dot {
+        /* Se ve como una línea de 2px pero el área que se puede tocar mide
+           30px de alto: el padding cuenta para el clic y background-clip
+           deja pintado solo el centro. El objetivo real era de 32x2 px. */
         width:32px; height:2px;
+        padding:14px 0;
         background:rgba(247,243,230,.28);
-        border:0; padding:0; cursor:pointer;
+        background-clip:content-box;
+        border:0; cursor:pointer;
         transition: background var(--mm-t-fast) var(--mm-ease);
       }
-      .mm-hero__dot[aria-current="true"] { background:var(--mm-cream); }
-      .mm-hero__dot:hover { background:rgba(247,243,230,.6); }
+      /* background-clip se repite porque el shorthand `background` lo
+         reinicia a border-box y volvería a pintarse todo el área táctil. */
+      .mm-hero__dot[aria-current="true"] { background:var(--mm-cream); background-clip:content-box; }
+      .mm-hero__dot:hover { background:rgba(247,243,230,.6); background-clip:content-box; }
 
       @media (max-width: 700px) {
         .mm-hero__track { height: 78vh; min-height: 480px; }
@@ -671,6 +679,9 @@
       #explorar .mm-ex-nav[data-car-next]:hover { transform:translateX(3px) }
 
       @media (max-width: 780px) {
+        /* Los filtros medían 22px de alto: se agranda el área táctil sin
+           cambiar el tamaño del texto. */
+        #explorar .mm-filter { padding-top:12px; padding-bottom:22px }
         #explorar .mm-ex-card { flex:0 0 82vw !important; margin-top:0 !important }
         #explorar .mm-ex-card[data-featured] { flex:0 0 86vw !important }
         #explorar .mm-ex-nav { display:none }
@@ -1261,7 +1272,7 @@
         <div class="mm-footer__brand-name">Marilia</div>
         <div class="mm-footer__brand-sub">Magazine</div>
         <p class="mm-footer__brand-copy">Tienda de moda — ropa, calzado, accesorios y bijou. Envíos a todo Paraguay.</p>
-        <div style="display:flex;gap:14px;margin-top:16px">
+        <div class="mm-footer__redes" style="display:flex;gap:26px;margin-top:24px">
           <a href="https://www.instagram.com/marilia.magazine" aria-label="Instagram" style="color:rgba(247,243,230,.78)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
           <a href="https://wa.me/595981000000" aria-label="WhatsApp" style="color:rgba(247,243,230,.78)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12a8 8 0 1 1-14.7 4.4L4 20l3.7-1.2A8 8 0 0 1 20 12z"/><path d="M9 10c.4 2 1.7 3.6 3.6 4.4l1.4-1.4 2.5 1.2c-.2 1.2-1.3 2-2.7 1.8-3.2-.4-5.6-2.9-6-6-.1-1.4.7-2.5 1.9-2.7L11 9.7 9.5 11z" fill="currentColor" stroke="none"/></svg></a>
         </div>
