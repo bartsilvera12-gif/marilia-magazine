@@ -66,6 +66,11 @@
         bloque("Departamentos", DEPARTAMENTOS, true) +
         bloque("Descubrí", DESCUBRI, false) +
       "</nav>" +
+      // La barra de departamentos se oculta en móvil, así que el selector de
+      // idioma se monta acá (lo llena sitio-erp-sync.js, ver [data-lang-slot]).
+      '<div class="mm-menu__idioma" data-lang-slot>' +
+        '<span class="mm-menu__label" style="padding-top:0">Idioma</span>' +
+      "</div>" +
       '<div class="mm-menu__foot">' +
         '<a href="./Catalogo.dc.html">Favoritos</a>' +
         '<a href="./Catalogo.dc.html">Bolsa</a>' +
@@ -84,6 +89,11 @@
     });
 
     document.body.appendChild(overlay);
+
+    // El overlay se crea al primer clic, después de que corrió
+    // injectLangToggle(): hay que pedirle el selector explícitamente.
+    var slot = overlay.querySelector("[data-lang-slot]");
+    if (slot && window.mmCrearLangToggle) slot.appendChild(window.mmCrearLangToggle());
   }
 
   function abrir() {

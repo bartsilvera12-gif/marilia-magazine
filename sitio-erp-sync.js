@@ -1759,88 +1759,85 @@
     document.cookie = "googtrans=" + val + ";path=/;domain=" + location.hostname;
   }
 
-  function injectLangToggle() {
-    if (document.getElementById("mm-lang-toggle")) return;
-    // Contenedor con dos opciones visibles: bandera + codigo. La activa
-    // esta remarcada, la otra transparente — se lee como un toggle claro
-    // de idioma, no como un chip con codigo suelto.
+  // Banderas y etiquetas del selector de idioma (definidas afuera para que
+  // las use tanto el montaje inicial como los menús que se crean después).
+  var FLAG_PY, FLAG_BR, LABEL;
+
+  /**
+   * Crea un selector de idioma nuevo. Se llama una vez por contenedor:
+   * la barra de departamentos en escritorio y el menú en móvil (donde esa
+   * barra está oculta). Antes era un único chip `position:fixed` abajo a la
+   * izquierda que tapaba el texto del pie.
+   */
+  function crearLangToggle() {
     var wrap = document.createElement("div");
-    wrap.id = "mm-lang-toggle";
+    wrap.className = "mm-langtoggle";
     wrap.setAttribute("role", "group");
     wrap.setAttribute("aria-label", "Cambiar idioma / Trocar idioma");
-    wrap.style.cssText = [
-      "position:fixed", "bottom:20px", "left:20px", "z-index:99999",
-      "display:inline-flex", "align-items:center", "gap:4px", "padding:4px",
-      "background:#1E1B16", "border:1px solid #C8962A",
-      "border-radius:999px",
-      "box-shadow:0 4px 12px rgba(0,0,0,.18)",
-      "font:600 11px/1 'Montserrat',sans-serif", "letter-spacing:.14em",
-    ].join(";");
-
-    // Banderas como SVG inline. Windows renderiza mal los emojis de
-    // bandera (se ven como "PY" / "BR" en texto plano), asi que las
-    // dibujamos con formas simples que se ven igual en cualquier sistema.
-    var FLAG_PY = '<svg viewBox="0 0 15 10" width="18" height="12" style="border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:0 0 auto" aria-hidden="true">' +
-      '<rect width="15" height="3.33" y="0" fill="#D52B1E"/>' +
-      '<rect width="15" height="3.34" y="3.33" fill="#FFFFFF"/>' +
-      '<rect width="15" height="3.33" y="6.67" fill="#0038A8"/>' +
-      '<circle cx="7.5" cy="5" r="1.1" fill="none" stroke="#D4AF37" stroke-width=".18"/>' +
-    '</svg>';
-    var FLAG_BR = '<svg viewBox="0 0 20 14" width="18" height="12" style="border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:0 0 auto" aria-hidden="true">' +
-      '<rect width="20" height="14" fill="#009C3B"/>' +
-      '<polygon points="10,1.5 18.5,7 10,12.5 1.5,7" fill="#FFDF00"/>' +
-      '<circle cx="10" cy="7" r="3" fill="#002776"/>' +
-    '</svg>';
-
-    var LABEL = {
-      es: { flag: FLAG_PY, code: "ES", full: "Español" },
-      pt: { flag: FLAG_BR, code: "PT", full: "Português" },
-    };
-
-    function makeOpt(lang) {
-      var b = document.createElement("button");
-      b.type = "button";
-      var isActive = (LANG === lang);
-      b.setAttribute("aria-pressed", isActive ? "true" : "false");
-      b.title = isActive ? LABEL[lang].full : "Cambiar a " + LABEL[lang].full;
-      b.innerHTML = LABEL[lang].flag + '<span>' + LABEL[lang].code + '</span>';
-      b.style.cssText = [
-        "display:inline-flex", "align-items:center", "gap:6px",
-        "padding:7px 12px", "border:0", "cursor:pointer",
-        "background:" + (isActive ? "#F7F3E6" : "transparent"),
-        "color:" + (isActive ? "#1E1B16" : "#F7F3E6"),
-        "border-radius:999px",
-        "font:inherit",
-        "transition:background .2s ease, color .2s ease",
-      ].join(";");
-      b.addEventListener("click", function () {
-        if (LANG === lang) return; // ya activo
-        LANG = lang;
-        localStorage.setItem("mm_lang", lang);
-        setGoogleLang(lang);
-        location.reload();
-      });
-      if (!isActive) {
-        b.addEventListener("mouseenter", function () { b.style.background = "rgba(247,243,230,.14)"; });
-        b.addEventListener("mouseleave", function () { b.style.background = "transparent"; });
-      }
-      return b;
-    }
-
     wrap.appendChild(makeOpt("es"));
     wrap.appendChild(makeOpt("pt"));
-    document.body.appendChild(wrap);
-
-    // El toggle es fijo y en el celular quedaba encima del logo del pie.
-    // Se le reserva altura al final de la página para que no lo tape.
-    if (!document.getElementById("mm-lang-space")) {
-      var space = document.createElement("style");
-      space.id = "mm-lang-space";
-      space.textContent =
-        "@media (max-width:700px){footer,.mm-footer{padding-bottom:88px}}";
-      document.head.appendChild(space);
-    }
+    return wrap;
   }
+  window.mmCrearLangToggle = crearLangToggle;
+
+  // Banderas como SVG inline. Windows renderiza mal los emojis de bandera
+  // (se ven como "PY" / "BR" en texto plano), asi que las dibujamos con
+  // formas simples que se ven igual en cualquier sistema.
+  FLAG_PY = '<svg viewBox="0 0 15 10" width="17" height="11" style="border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:0 0 auto" aria-hidden="true">' +
+    '<rect width="15" height="3.33" y="0" fill="#D52B1E"/>' +
+    '<rect width="15" height="3.34" y="3.33" fill="#FFFFFF"/>' +
+    '<rect width="15" height="3.33" y="6.67" fill="#0038A8"/>' +
+    '<circle cx="7.5" cy="5" r="1.1" fill="none" stroke="#D4AF37" stroke-width=".18"/>' +
+  '</svg>';
+  FLAG_BR = '<svg viewBox="0 0 20 14" width="17" height="11" style="border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:0 0 auto" aria-hidden="true">' +
+    '<rect width="20" height="14" fill="#009C3B"/>' +
+    '<polygon points="10,1.5 18.5,7 10,12.5 1.5,7" fill="#FFDF00"/>' +
+    '<circle cx="10" cy="7" r="3" fill="#002776"/>' +
+  '</svg>';
+
+  LABEL = {
+    es: { flag: FLAG_PY, code: "ES", full: "Español" },
+    pt: { flag: FLAG_BR, code: "PT", full: "Português" },
+  };
+
+  function makeOpt(lang) {
+    var b = document.createElement("button");
+    b.type = "button";
+    var isActive = (LANG === lang);
+    b.setAttribute("aria-pressed", isActive ? "true" : "false");
+    b.title = isActive ? LABEL[lang].full : "Cambiar a " + LABEL[lang].full;
+    b.innerHTML = LABEL[lang].flag + '<span>' + LABEL[lang].code + '</span>';
+    b.addEventListener("click", function () {
+      if (LANG === lang) return; // ya activo
+      LANG = lang;
+      localStorage.setItem("mm_lang", lang);
+      setGoogleLang(lang);
+      location.reload();
+    });
+    return b;
+  }
+
+  /**
+   * Monta el selector donde corresponda:
+   *   - barra de departamentos (escritorio), al lado de "Ver todo"
+   *   - cualquier [data-lang-slot] (los menús móviles, que se arman después)
+   * Se puede llamar varias veces: no duplica.
+   */
+  function injectLangToggle() {
+    var destinos = [].slice.call(document.querySelectorAll(".mm-nav__inner, [data-lang-slot]"));
+    destinos.forEach(function (destino) {
+      if (destino.querySelector(".mm-langtoggle")) return;
+      destino.appendChild(crearLangToggle());
+    });
+  }
+
+  // El menú de la home lo arma el runtime DC recién al abrirlo, o sea después
+  // de este montaje. Se vuelve a intentar en cuanto alguien toca "Menú".
+  document.addEventListener("click", function (ev) {
+    if (!ev.target.closest("[data-menu-open]")) return;
+    setTimeout(injectLangToggle, 60);
+    setTimeout(injectLangToggle, 300);
+  });
 
   // MutationObserver: re-traduce cada vez que el DOM cambia (útil cuando
   // el runtime DC hidrata headlines tarde). Debounced para no ir a 60fps.
