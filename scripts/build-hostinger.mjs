@@ -38,6 +38,7 @@ const SCRIPTS = [
   "image-slot.js",
   "mm-marcas.js",
   "mm-menu.js",
+  "mm-ui.js",
 ];
 
 /** Stylesheets del sitio (design system compartido). */

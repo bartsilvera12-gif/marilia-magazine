@@ -457,10 +457,11 @@
 .mm-footer {
   background: var(--mm-ink);
   color: var(--mm-cream);
-  /* El padding inferior deja pasar al botón flotante de WhatsApp, que es
-     fixed y al llegar al final de la página se sentaba encima de
-     "Desarrollado por Neura". */
-  padding: clamp(48px, 6vw, 80px) var(--mm-gutter) clamp(88px, 9vw, 104px);
+  /* El padding inferior era de hasta 104px para dejar pasar al botón
+     flotante de WhatsApp, que se sentaba encima de "Desarrollado por
+     Neura". Ahora el botón se esconde solo al llegar al pie (mm-ui.js),
+     así que el hueco ya no hace falta y el pie ocupa bastante menos. */
+  padding: clamp(36px, 4vw, 56px) var(--mm-gutter) clamp(24px, 3vw, 32px);
 }
 .mm-footer__grid {
   max-width: var(--mm-container); margin: 0 auto;
@@ -468,53 +469,57 @@
   /* 4 columnas: marca + Departamentos + Ayuda + Legal. Eran 5, pero se
      quitaron los enlaces que no llevaban a ninguna parte. */
   grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: var(--mm-space-7);
+  gap: var(--mm-space-6);
 }
 @media (max-width: 1080px) { .mm-footer__grid { grid-template-columns: 1fr 1fr 1fr; } }
 @media (max-width: 640px)  { .mm-footer__grid { grid-template-columns: 1fr 1fr; gap: var(--mm-space-6); } }
 .mm-footer__brand-name {
   font-family: var(--mm-font-serif);
   font-weight: 500;
-  font-size: 28px;
+  font-size: 22px;
   line-height: 1;
 }
 .mm-footer__brand-sub {
-  font-size: 8.5px; letter-spacing: .48em;
+  font-size: 8px; letter-spacing: .44em;
   text-transform: uppercase; color: var(--mm-gold);
-  margin: 6px 0 18px;
+  margin: 5px 0 12px;
 }
-.mm-footer__brand-copy { font-size: 13px; line-height: 1.7; opacity: .78; max-width: 30ch; }
+.mm-footer__brand-copy { font-size: 12.5px; line-height: 1.6; opacity: .78; max-width: 32ch; }
 /* Los iconos de redes miden 20x20: se les da un área táctil de 44px sin
-   agrandar el dibujo. */
+   agrandar el dibujo. El margen negativo evita que ese área infle el pie. */
+.mm-footer__redes {
+  display: flex; gap: 18px; margin-top: 10px;
+}
 .mm-footer__redes a {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; margin: -12px;
 }
+.mm-footer__redes a + a { margin-left: 6px; }
 .mm-footer__col h4 {
   font: 600 11px/1 var(--mm-font-sans);
   letter-spacing: var(--mm-track-widest);
   text-transform: uppercase;
   color: var(--mm-gold);
-  margin: 0 0 var(--mm-space-4);
+  margin: 0 0 12px;
 }
 .mm-footer__col ul { list-style: none; padding: 0; margin: 0; }
-.mm-footer__col li { margin-bottom: 10px; }
+.mm-footer__col li { margin-bottom: 6px; }
 .mm-footer__col a {
   color: rgba(247,243,230,.78);
-  font-size: 13px;
+  font-size: 12.5px;
   transition: color var(--mm-t-fast) var(--mm-ease);
 }
 /* En móvil los enlaces del pie median 16px de alto. Se les da padding y se
    compensa el margen del <li>, así crece el área táctil sin estirar el pie. */
 @media (max-width: 780px) {
-  .mm-footer__col li { margin-bottom: 2px; }
-  .mm-footer__col a { display: inline-block; padding: 9px 0; }
+  .mm-footer__col li { margin-bottom: 0; }
+  .mm-footer__col a { display: inline-block; padding: 8px 0; }
 }
 .mm-footer__col a:hover { color: var(--mm-gold); }
 
 .mm-footer__bottom {
-  max-width: var(--mm-container); margin: 40px auto 0;
-  padding-top: 24px;
+  max-width: var(--mm-container); margin: 28px auto 0;
+  padding-top: 16px;
   border-top: 1px solid rgba(247,243,230,.14);
   display: flex; justify-content: space-between; align-items: center;
   flex-wrap: wrap; gap: 14px;
@@ -644,9 +649,26 @@ html.mm-erp-sin-respuesta .mm-cg-card[data-fallback] { display: block; }
   background: #25D366; color: var(--mm-white);
   display: flex; align-items: center; justify-content: center;
   box-shadow: var(--mm-shadow-2);
-  transition: transform var(--mm-t-fast) var(--mm-ease);
+  transition: transform var(--mm-t-fast) var(--mm-ease),
+              opacity 220ms var(--mm-ease), visibility 220ms;
 }
 .mm-whatsapp:hover { transform: scale(1.06); color: var(--mm-white); }
+/* Al llegar al pie el botón estorba: tapaba "Desarrollado por Neura" y los
+   enlaces de la última fila. mm-ui.js marca <html> cuando el pie entra en
+   pantalla (o, en las páginas sin pie, al tocar el final).
+   La marca va en <html> y no en el propio botón porque el runtime de DC
+   reconcilia los atributos de los nodos que renderiza y los borra.
+   visibility, no display: así la transición se ve y el botón deja de ser
+   clicable mientras está oculto. */
+html.mm-en-pie .mm-whatsapp {
+  opacity: 0; visibility: hidden;
+  transform: translateY(12px) scale(.92);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-whatsapp { transition: opacity 1ms linear, visibility 1ms; }
+  html.mm-en-pie .mm-whatsapp { transform: none; }
+}
 @media (max-width: 780px) {
   .mm-whatsapp { right: 14px; bottom: 76px; width: 46px; height: 46px; }
 }
